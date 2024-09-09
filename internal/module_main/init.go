@@ -1,4 +1,4 @@
-package main
+package module_main
 
 import "C"
 import (
@@ -18,8 +18,6 @@ import (
    Date Time: 2024/9/9
    File: init.go
 */
-
-func main() {}
 
 var w = &lib.Warrper{}
 

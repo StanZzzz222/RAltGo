@@ -47,7 +47,7 @@ func onTick() {
 func (w *Warrper) InitDLL(path string) {
 	dllPath = path
 	dll = syscall.MustLoadDLL(dllPath)
-	mainProc = dll.MustFindProc("main")
+	mainProc = dll.MustFindProc("module_main")
 	freeProc = dll.MustFindProc("free_c_str")
 	freePlayerProc = dll.MustFindProc("free_player")
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
@@ -65,7 +65,7 @@ func (w *Warrper) InitDLL(path string) {
 func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
 	ret, _, err := mainProc.Call(altVersion, core, resourceName, resourceHandlers, moduleHandlers)
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
-		_ = fmt.Errorf("load main failed: %v", err.Error())
+		_ = fmt.Errorf("load module_main failed: %v", err.Error())
 		os.Exit(-1)
 	}
 	return ret != 0
