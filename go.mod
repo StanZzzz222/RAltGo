@@ -1,4 +1,4 @@
-module gamemode
+module raltgo
 
 go 1.22
 
