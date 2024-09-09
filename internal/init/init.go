@@ -56,23 +56,26 @@ func onStop() {
 }
 
 //export onPlayerConnect
-func onPlayerConnect(cPlayer *entity.CPlayer) {
+func onPlayerConnect(cPtr *C.CPlayer) {
 	var player = &models.IPlayer{}
 	var cb = &alt_events.Callback{}
-	var ptr = uintptr(unsafe.Pointer(cPlayer))
+	var ptr = uintptr(unsafe.Pointer(cPtr))
 	defer w.FreePlayer(ptr)
+	cPlayer := (*entity.CPlayer)(unsafe.Pointer(cPtr))
 	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 	cb = cb.New()
 	cb.TriggerOnPlayerConnect(player)
 }
 
 //export onEnterVehicle
-func onEnterVehicle(cPlayer *entity.CPlayer, cVehicle *entity.CVehicle, seat uint8) {
+func onEnterVehicle(cPtr *C.CPlayer, cvPtr *C.CVehicle, seat uint8) {
 	var player = &models.IPlayer{}
 	var vehicle = &models.IVehicle{}
 	var cb = &alt_events.Callback{}
-	var ptr = uintptr(unsafe.Pointer(cVehicle))
+	var ptr = uintptr(unsafe.Pointer(cvPtr))
 	defer w.FreeVehicle(ptr)
+	cPlayer := (*entity.CPlayer)(unsafe.Pointer(cPtr))
+	cVehicle := (*entity.CVehicle)(unsafe.Pointer(cvPtr))
 	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 	vehicle = vehicle.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 	cb.TriggerOnEnterVehicle(player, vehicle, seat)

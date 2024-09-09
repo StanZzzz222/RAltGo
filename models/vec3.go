@@ -12,11 +12,7 @@ import (
    File: vec3.go
 */
 
-type Vector3 struct {
-	X float32
-	Y float32
-	Z float32
-}
+type Vector3 struct{ X, Y, Z float32 }
 
 func NewVector3(x, y, z float32) *Vector3 {
 	return &Vector3{x, y, z}
