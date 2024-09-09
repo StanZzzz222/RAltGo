@@ -1,4 +1,4 @@
-module raltgo
+module RAltGo
 
 go 1.22
 
