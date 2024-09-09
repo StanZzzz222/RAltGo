@@ -1,4 +1,4 @@
-package module_main
+package init
 
 import "C"
 import (
@@ -20,6 +20,8 @@ import (
 */
 
 var w = &lib.Warrper{}
+
+func Mounted() {}
 
 //export onModuleInit
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
