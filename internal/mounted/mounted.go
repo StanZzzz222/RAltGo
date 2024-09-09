@@ -1,4 +1,4 @@
-package init
+package mounted
 
 import "C"
 import (
@@ -25,7 +25,7 @@ import "C"
 /*
    Create by zyx
    Date Time: 2024/9/9
-   File: init.go
+   File: mounted.go
 */
 
 var w = &lib.Warrper{}

@@ -1,6 +1,6 @@
 package mounted
 
-import "github.com/StanZzzz222/RAltGo/internal/init"
+import "github.com/StanZzzz222/RAltGo/internal/mounted"
 
 /*
    Create by zyx
@@ -8,4 +8,4 @@ import "github.com/StanZzzz222/RAltGo/internal/init"
    File: mounted.go
 */
 
-func InitModule() { init.Mounted() }
+func InitModule() { mounted.Mounted() }
