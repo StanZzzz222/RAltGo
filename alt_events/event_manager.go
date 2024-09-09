@@ -1,7 +1,6 @@
 package alt_events
 
 import (
-	"github.com/StanZzzz222/RAltGo/internal/init"
 	"github.com/StanZzzz222/RAltGo/models"
 )
 
@@ -28,8 +27,6 @@ func OnStart(cb OnStartCallback) {
 		onStartCallback = cb
 	}
 }
-
-func InitModule() { init.Mounted() }
 
 func OnStop(cb OnStopCallback) {
 	if onStopCallback == nil {
