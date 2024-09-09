@@ -1,7 +1,7 @@
 package models
 
 import (
-	"gamemode/internal/lib"
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"strings"
 )
 

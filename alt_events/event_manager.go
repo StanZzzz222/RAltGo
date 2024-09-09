@@ -1,7 +1,7 @@
 package alt_events
 
 import (
-	"gamemode/models"
+	"github.com/StanZzzz222/RAltGo/models"
 )
 
 /*

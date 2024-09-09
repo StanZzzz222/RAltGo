@@ -3,7 +3,7 @@ package lib
 import "C"
 import (
 	"fmt"
-	"gamemode/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/bwmarrin/snowflake"
 	"math"
 	"os"

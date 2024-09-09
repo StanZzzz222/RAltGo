@@ -1,7 +1,7 @@
 package entity
 
 import "C"
-import "gamemode/models"
+import "github.com/StanZzzz222/RAltGo/models"
 
 /*
    Create by zyx

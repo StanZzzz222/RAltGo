@@ -1,9 +1,9 @@
 package models
 
 import (
-	"gamemode/enums/ped"
-	"gamemode/enums/weapon"
-	"gamemode/internal/enum"
+	"github.com/StanZzzz222/RAltGo/enums/ped"
+	"github.com/StanZzzz222/RAltGo/enums/weapon"
+	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
 	"net"
 	"strings"
