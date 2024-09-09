@@ -47,7 +47,7 @@ func onTick() {
 func (w *Warrper) InitDLL(path string) {
 	dllPath = path
 	dll = syscall.MustLoadDLL(dllPath)
-	mainProc = dll.MustFindProc("mounted")
+	mainProc = dll.MustFindProc("main")
 	freeProc = dll.MustFindProc("free_c_str")
 	freePlayerProc = dll.MustFindProc("free_player")
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
