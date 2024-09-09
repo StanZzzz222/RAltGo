@@ -1,4 +1,4 @@
-module RAltGo
+module github.com/StanZzzz222/RAltGo
 
 go 1.22
 
