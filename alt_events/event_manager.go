@@ -46,10 +46,24 @@ func OnEnterVehicle(cb OnEnterVehicleCallback) {
 	}
 }
 
-func (cb *Callback) New() *Callback                                { return &Callback{} }
-func (cb *Callback) TriggerOnStart()                               { onStartCallback() }
-func (cb *Callback) TriggerOnStop()                                { onStopCallback() }
-func (cb *Callback) TriggerOnPlayerConnect(player *models.IPlayer) { onPlayerConnectCallback(player) }
+func (cb *Callback) New() *Callback { return &Callback{} }
+func (cb *Callback) TriggerOnStart() {
+	if onStartCallback != nil {
+		onStartCallback()
+	}
+}
+func (cb *Callback) TriggerOnStop() {
+	if onStopCallback != nil {
+		onStopCallback()
+	}
+}
+func (cb *Callback) TriggerOnPlayerConnect(player *models.IPlayer) {
+	if onPlayerConnectCallback != nil {
+		onPlayerConnectCallback(player)
+	}
+}
 func (cb *Callback) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
-	onEnterVehicleCallback(player, vehicle, seat)
+	if onEnterVehicleCallback != nil {
+		onEnterVehicleCallback(player, vehicle, seat)
+	}
 }
