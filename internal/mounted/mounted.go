@@ -14,11 +14,33 @@ import (
 )
 
 /*
-	#cgo CFLAGS: -I../../internal/entity
-	#cgo LDFLAGS: -L../../internal/entity -lc_player -lc_vector3 -lc_vehicle
-	#include "c_player.h"
-	#include "c_vector3.h"
-	#include "c_vehicle.h"
+	#include <stdint.h>
+
+	typedef struct {
+		float x;
+		float y;
+		float z;
+	} Vector3;
+
+	typedef struct {
+		uint32_t id;
+		const char *name;
+		const char *ip;
+		const char *auth_token;
+		uint64_t hwid_hash;
+		uint64_t hwid_ex_hash;
+		const Vector3 *position;
+		const Vector3 *rotation;
+	} CPlayer;
+
+	typedef struct {
+		uint32_t id;
+		uint32_t model;
+		uint8_t primary_color;
+		uint8_t second_color;
+		const Vector3 *position;
+		const Vector3 *rotation;
+	} CVehicle;
 */
 import "C"
 
