@@ -14,6 +14,15 @@ import (
 )
 
 /*
+	#cgo CFLAGS: -I../../internal/entity
+	#cgo LDFLAGS: -L../../internal/entity -lc_player -lc_vector3 -lc_vehicle
+	#include "c_player.h"
+	#include "c_vector3.h"
+	#include "c_vehicle.h"
+*/
+import "C"
+
+/*
    Create by zyx
    Date Time: 2024/9/9
    File: init.go

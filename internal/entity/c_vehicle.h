@@ -2,7 +2,7 @@
 #define VEHICLE_H
 
 #include <stdint.h>
-#include "vector3.h"
+#include "c_vector3.h"
 
 typedef struct {
     uint32_t id;
