@@ -6,7 +6,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/common"
 	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/models"
-	"github.com/StanZzzz222/RAltGo/modules"
 	"github.com/StanZzzz222/RAltGo/utils"
 	"math"
 	"unsafe"
@@ -39,7 +38,7 @@ func CreateVehicle(model string, numberPlate string, position, rotation *models.
 }
 
 func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, rotation *models.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
-	var moduleTickDone = &modules.ModuleTick{}
+	var moduleTickDone = &common.ModuleTick{}
 	var veh = &models.IVehicle{}
 	if moduleTickDone.GetModuleTickDone() {
 		posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
