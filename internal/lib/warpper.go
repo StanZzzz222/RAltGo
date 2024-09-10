@@ -32,7 +32,6 @@ var createVehicleProc *syscall.Proc
 var dllPath string
 var tasks = &sync.Map{}
 var snowflakeNode *snowflake.Node
-var onTickDone = make(chan bool)
 var onTickLoad = atomic.Bool{}
 
 type Warrper struct{}
@@ -40,9 +39,7 @@ type Warrper struct{}
 //export onTick
 func onTick() {
 	if !onTickLoad.Load() {
-		onTickDone <- true
 		onTickLoad.Store(true)
-		fmt.Println("执行了")
 	}
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
@@ -124,7 +121,7 @@ func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) uintptr {
 	var ch = make(chan uintptr)
 	if !onTickLoad.Load() {
-		<-onTickDone
+		time.Sleep(time.Millisecond * 3)
 		return w.CreateVehicle(model, posData, posMetaData, rotData, rotMetaData, numberplate, primaryColor, secondColor)
 	}
 	tasks.Store(snowflakeNode.Generate().String(), func() {
