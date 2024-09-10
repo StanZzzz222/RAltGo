@@ -1,4 +1,4 @@
-package entity
+package mounted
 
 /*
 	#cgo CFLAGS: -I../headers
@@ -8,7 +8,6 @@ package entity
 */
 import "C"
 import (
-	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/models"
 	"unsafe"
 )
@@ -18,8 +17,6 @@ import (
    Date Time: 2024/9/9
    File: entitys.go
 */
-
-var w = &lib.Warrper{}
 
 type CPlayer struct {
 	ID         uint32
