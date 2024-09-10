@@ -1,7 +1,7 @@
 package alt_events
 
 import (
-	"github.com/StanZzzz222/RAltGo/internal/mounted"
+	"github.com/StanZzzz222/RAltGo/internal/init_mounted"
 	"github.com/StanZzzz222/RAltGo/models"
 )
 
@@ -27,7 +27,7 @@ func OnStart(cb OnStartCallback) {
 	if onStartCallback == nil {
 		onStartCallback = cb
 	}
-	mounted.Mounted()
+	init_mounted.InitMounted()
 }
 
 func OnStop(cb OnStopCallback) {
