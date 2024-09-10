@@ -8,7 +8,6 @@ package mounted
 */
 import "C"
 import (
-	"fmt"
 	"github.com/StanZzzz222/RAltGo/alt_events"
 	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
@@ -32,20 +31,6 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 	logger.LogInfo(":: Go module Initialize mounting")
 	defer logger.LogSuccess(":: Go module Initialize mounting done")
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
-}
-
-//export onTick
-func onTick() {
-	fmt.Println("执行了")
-	w.GetTasks().Range(func(key, value any) bool {
-		handler, ok := value.(func())
-		if ok {
-			handler()
-			fmt.Println("执行了2")
-			w.TaskDelete(key.(string))
-		}
-		return true
-	})
 }
 
 //export onStart
