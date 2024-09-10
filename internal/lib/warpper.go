@@ -110,6 +110,7 @@ func (w *Warrper) TaskDelete(key string) {
 }
 
 func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) uintptr {
+
 	var ch = make(chan uintptr)
 	tasks.Store(snowflakeNode.Generate().String(), func() {
 		ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
