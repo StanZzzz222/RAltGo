@@ -10,6 +10,7 @@ import (
 	"os"
 	"sync"
 	"syscall"
+	"time"
 	"unsafe"
 )
 
@@ -46,15 +47,22 @@ func onTick() {
 }
 
 func init() {
+	path, _ := os.Getwd()
+	//path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
+	path = fmt.Sprintf("%v/resources/rs-go-module/server/target/debug/server.dll", path)
 	node, err := snowflake.NewNode(1)
 	if err != nil {
 		logger.LogErrorf("Snowflake NewNode err: %v", err)
 		return
 	}
 	snowflakeNode = node
-}
-
-func (w *Warrper) InitDLL(path string) {
+	_, err = os.Stat(path)
+	if os.IsNotExist(err) {
+		logger.LogErrorf(":: Please check if %v exists", path)
+		time.Sleep(time.Second * 3)
+		os.Exit(-1)
+		return
+	}
 	dllPath = path
 	dll = syscall.MustLoadDLL(dllPath)
 	mainProc = dll.MustFindProc("main")

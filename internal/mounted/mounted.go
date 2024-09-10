@@ -8,14 +8,11 @@ package mounted
 */
 import "C"
 import (
-	"fmt"
 	"github.com/StanZzzz222/RAltGo/alt_events"
 	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/StanZzzz222/RAltGo/models"
-	"os"
-	"time"
 	"unsafe"
 )
 
@@ -31,19 +28,8 @@ func Mounted() {}
 
 //export onModuleInit
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
-	path, _ := os.Getwd()
-	path = fmt.Sprintf("%v/resources/rs-go-module/server/target/debug/server.dll", path)
-	//path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
 	logger.LogInfo(":: Go module Initialize mounting")
 	defer logger.LogSuccess(":: Go module Initialize mounting done")
-	_, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		logger.LogErrorf(":: Please check if %v exists", path)
-		time.Sleep(time.Second * 3)
-		os.Exit(-1)
-		return false
-	}
-	w.InitDLL(path)
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
 }
 
