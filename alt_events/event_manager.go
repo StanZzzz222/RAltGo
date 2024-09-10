@@ -46,7 +46,6 @@ func OnEnterVehicle(cb OnEnterVehicleCallback) {
 	}
 }
 
-func (cb *Callback) New() *Callback { return &Callback{} }
 func (cb *Callback) TriggerOnStart() {
 	if onStartCallback != nil {
 		onStartCallback()

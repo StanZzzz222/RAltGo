@@ -4,6 +4,7 @@ import "C"
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/alt_events"
+	"github.com/StanZzzz222/RAltGo/internal/entity"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/StanZzzz222/RAltGo/models"
@@ -77,62 +78,35 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 //export onStart
 func onStart() {
 	var cb = &alt_events.Callback{}
-	cb = cb.New()
 	cb.TriggerOnStart()
-	fmt.Println("测试")
 }
 
 //export onStop
 func onStop() {
 	var cb = &alt_events.Callback{}
-	cb = cb.New()
 	cb.TriggerOnStop()
-	fmt.Println("测试关闭")
 }
 
 //export onPlayerConnect
-func onPlayerConnect(cPlayer *C.CPlayer) {
+func onPlayerConnect(cPtr *C.CPlayer) {
 	var player = &models.IPlayer{}
+	var cPlayer = entity.ConvertCPlayer(cPtr)
 	var cb = &alt_events.Callback{}
-	var ptr = uintptr(unsafe.Pointer(cPlayer))
-	cb = cb.New()
-	defer w.FreePlayer(ptr)
-	id := uint32(cPlayer.id)
-	name := w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.name)))
-	ip := w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.ip)))
-	authToken := w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.auth_token)))
-	hwIdHash := uint64(cPlayer.hwid_hash)
-	hwIdExHash := uint64(cPlayer.hwid_ex_hash)
-	pos := (*models.Vector3)(unsafe.Pointer(cPlayer.position))
-	rot := (*models.Vector3)(unsafe.Pointer(cPlayer.rotation))
-	player = player.NewIPlayer(id, name, ip, authToken, hwIdHash, hwIdExHash, pos, rot)
+	defer w.FreePlayer(uintptr(unsafe.Pointer(cPtr)))
+	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 	cb.TriggerOnPlayerConnect(player)
 }
 
 //export onEnterVehicle
-func onEnterVehicle(cPlayer *C.CPlayer, cVehicle *C.CVehicle, seat uint8) {
+func onEnterVehicle(cPtr *C.CPlayer, cvPtr *C.CVehicle, seat uint8) {
 	var player = &models.IPlayer{}
 	var vehicle = &models.IVehicle{}
 	var cb = &alt_events.Callback{}
-	var playerPtr = uintptr(unsafe.Pointer(cPlayer))
-	defer w.FreePlayer(playerPtr)
-	var vehiclePtr = uintptr(unsafe.Pointer(cVehicle))
-	defer w.FreeVehicle(vehiclePtr)
-	id := uint32(cPlayer.id)
-	name := w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.name)))
-	ip := w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.ip)))
-	authToken := w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.auth_token)))
-	hwIdHash := uint64(cPlayer.hwid_hash)
-	hwIdExHash := uint64(cPlayer.hwid_ex_hash)
-	pos := (*models.Vector3)(unsafe.Pointer(cPlayer.position))
-	rot := (*models.Vector3)(unsafe.Pointer(cPlayer.rotation))
-	player = player.NewIPlayer(id, name, ip, authToken, hwIdHash, hwIdExHash, pos, rot)
-	vehId := uint32(cVehicle.id)
-	vehModel := uint32(cVehicle.model)
-	vehPrimaryColor := uint8(cVehicle.model)
-	vehSecondColor := uint8(cVehicle.model)
-	pos = (*models.Vector3)(unsafe.Pointer(cVehicle.position))
-	rot = (*models.Vector3)(unsafe.Pointer(cVehicle.rotation))
-	vehicle = vehicle.NewIVehicle(vehId, vehModel, vehPrimaryColor, vehSecondColor, pos, rot)
+	var cPlayer = entity.ConvertCPlayer(cPtr)
+	var cVehicle = entity.ConvertCVehicle(cvPtr)
+	defer w.FreePlayer(uintptr(unsafe.Pointer(cPtr)))
+	defer w.FreeVehicle(uintptr(unsafe.Pointer(cvPtr)))
+	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+	vehicle = vehicle.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 	cb.TriggerOnEnterVehicle(player, vehicle, seat)
 }

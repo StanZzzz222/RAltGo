@@ -1,13 +1,19 @@
 package entity
 
 import "C"
-import "github.com/StanZzzz222/RAltGo/models"
+import (
+	"github.com/StanZzzz222/RAltGo/internal/lib"
+	"github.com/StanZzzz222/RAltGo/models"
+	"unsafe"
+)
 
 /*
    Create by zyx
    Date Time: 2024/9/9
    File: entitys.go
 */
+
+var w = &lib.Warrper{}
 
 type CPlayer struct {
 	ID         uint32
@@ -27,4 +33,28 @@ type CVehicle struct {
 	SecondColor  uint8
 	Position     *models.Vector3
 	Rotation     *models.Vector3
+}
+
+func ConvertCPlayer(cPlayer *C.CPlayer) *CPlayer {
+	return &CPlayer{
+		ID:         uint32(cPlayer.id),
+		Name:       w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.name))),
+		IP:         w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.ip))),
+		AuthToken:  w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.auth_token))),
+		HWIDHash:   uint64(cPlayer.hwid_hash),
+		HWIDExHash: uint64(cPlayer.hwid_ex_hash),
+		Position:   (*models.Vector3)(unsafe.Pointer(cPlayer.position)),
+		Rotation:   (*models.Vector3)(unsafe.Pointer(cPlayer.rotation)),
+	}
+}
+
+func ConvertCVehicle(cVehicle *C.CVehicle) *CVehicle {
+	return &CVehicle{
+		ID:           uint32(cVehicle.id),
+		Model:        uint32(cVehicle.model),
+		PrimaryColor: uint8(cVehicle.primary_color),
+		SecondColor:  uint8(cVehicle.second_color),
+		Position:     (*models.Vector3)(unsafe.Pointer(cVehicle.position)),
+		Rotation:     (*models.Vector3)(unsafe.Pointer(cVehicle.position)),
+	}
 }
