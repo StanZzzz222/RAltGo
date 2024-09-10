@@ -1,11 +1,11 @@
-package init_mounted
+package modules
 
 import "github.com/StanZzzz222/RAltGo/internal/mounted"
 
 /*
    Create by zyx
    Date Time: 2024/9/10
-   File: init_mounted.go
+   File: modules.go
 */
 
 func InitMounted() { mounted.Mounted() }
