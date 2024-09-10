@@ -10,6 +10,7 @@ import "C"
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/alt_events"
+	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/StanZzzz222/RAltGo/models"
@@ -61,7 +62,7 @@ func onStop() {
 //export onPlayerConnect
 func onPlayerConnect(cPtr *C.CPlayer) {
 	var player = &models.IPlayer{}
-	var cPlayer = ConvertCPlayer(cPtr)
+	var cPlayer = entitys.ConvertCPlayer(cPtr)
 	var cb = &alt_events.Callback{}
 	defer w.FreePlayer(uintptr(unsafe.Pointer(cPtr)))
 	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
@@ -73,8 +74,8 @@ func onEnterVehicle(cPtr *C.CPlayer, cvPtr *C.CVehicle, seat uint8) {
 	var player = &models.IPlayer{}
 	var vehicle = &models.IVehicle{}
 	var cb = &alt_events.Callback{}
-	var cPlayer = ConvertCPlayer(cPtr)
-	var cVehicle = ConvertCVehicle(cvPtr)
+	var cPlayer = entitys.ConvertCPlayer(cPtr)
+	var cVehicle = entitys.ConvertCVehicle(cvPtr)
 	defer w.FreePlayer(uintptr(unsafe.Pointer(cPtr)))
 	defer w.FreeVehicle(uintptr(unsafe.Pointer(cvPtr)))
 	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)

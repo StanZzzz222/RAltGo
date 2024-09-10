@@ -1,13 +1,14 @@
-package mounted
+package entitys
 
 /*
-	#cgo CFLAGS: -I../headers
+	#cgo CFLAGS: -I./headers
 	#include "c_vector3.h"
 	#include "c_player.h"
 	#include "c_vehicle.h"
 */
 import "C"
 import (
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/models"
 	"unsafe"
 )
@@ -17,6 +18,8 @@ import (
    Date Time: 2024/9/9
    File: entitys.go
 */
+
+var w = &lib.Warrper{}
 
 type CPlayer struct {
 	ID         uint32

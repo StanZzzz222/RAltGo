@@ -3,7 +3,7 @@ package vehicle
 import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/enums/vehicle"
-	"github.com/StanZzzz222/RAltGo/internal/entity"
+	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/models"
 	"github.com/StanZzzz222/RAltGo/utils"
 	"math"
@@ -27,7 +27,7 @@ func CreateVehicle(model string, numberPlate string, position, rotation *models.
 	case 0:
 		return nil
 	default:
-		cVeh := (*entity.CVehicle)(unsafe.Pointer(ret))
+		cVeh := (*entitys.CVehicle)(unsafe.Pointer(ret))
 		return veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
 	}
 }
@@ -43,8 +43,7 @@ func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, 
 	case 0:
 		return nil
 	default:
-		cVeh := (*entity.CVehicle)(unsafe.Pointer(ret))
+		cVeh := (*entitys.CVehicle)(unsafe.Pointer(ret))
 		return veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
 	}
-	return nil
 }
