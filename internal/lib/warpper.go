@@ -4,6 +4,7 @@ import "C"
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/bwmarrin/snowflake"
 	"math"
 	"os"
@@ -44,6 +45,15 @@ func onTick() {
 	})
 }
 
+func init() {
+	node, err := snowflake.NewNode(1)
+	if err != nil {
+		logger.LogErrorf("Snowflake NewNode err: %v", err)
+		return
+	}
+	snowflakeNode = node
+}
+
 func (w *Warrper) InitDLL(path string) {
 	dllPath = path
 	dll = syscall.MustLoadDLL(dllPath)
@@ -54,12 +64,6 @@ func (w *Warrper) InitDLL(path string) {
 	spawnPlayerProc = dll.MustFindProc("spawn_player")
 	setPlayerDataProc = dll.MustFindProc("set_player_data")
 	createVehicleProc = dll.MustFindProc("create_vehicle")
-	node, err := snowflake.NewNode(1)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	snowflakeNode = node
 }
 
 func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
