@@ -1,7 +1,7 @@
 package alt_events
 
 import (
-	mountedinternal "github.com/StanZzzz222/RAltGo/internal/mounted"
+	"github.com/StanZzzz222/RAltGo/internal/mounted"
 	"github.com/StanZzzz222/RAltGo/models"
 )
 
@@ -10,9 +10,6 @@ import (
    Date Time: 2024/9/9
    File: alt_events.go
 */
-
-//export mounted
-func mounted() { mountedinternal.Mounted() }
 
 type Callback struct{}
 
@@ -30,6 +27,7 @@ func OnStart(cb OnStartCallback) {
 	if onStartCallback == nil {
 		onStartCallback = cb
 	}
+	mounted.Mounted()
 }
 
 func OnStop(cb OnStopCallback) {
