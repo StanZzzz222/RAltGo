@@ -1,4 +1,4 @@
-package mounted
+package main
 
 /*
 	#cgo CFLAGS: -I../headers
@@ -24,6 +24,8 @@ import (
    Date Time: 2024/9/9
    File: mounted.go
 */
+
+func main() {}
 
 var w = &lib.Warrper{}
 
@@ -60,24 +62,27 @@ func onStop() {
 }
 
 //export onPlayerConnect
-func onPlayerConnect(cPtr *C.CPlayer) {
+func onPlayerConnect(cplayer *C.CPlayer) {
 	var player = &models.IPlayer{}
+	var cPtr = uintptr(unsafe.Pointer(cplayer))
 	var cPlayer = entitys.ConvertCPlayer(cPtr)
 	var cb = &alt_events.Callback{}
-	defer w.FreePlayer(uintptr(unsafe.Pointer(cPtr)))
+	defer w.FreePlayer(cPtr)
 	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 	cb.TriggerOnPlayerConnect(player)
 }
 
 //export onEnterVehicle
-func onEnterVehicle(cPtr *C.CPlayer, cvPtr *C.CVehicle, seat uint8) {
+func onEnterVehicle(cplayer *C.CPlayer, cvehicle *C.CVehicle, seat uint8) {
 	var player = &models.IPlayer{}
 	var vehicle = &models.IVehicle{}
 	var cb = &alt_events.Callback{}
+	var cPtr = uintptr(unsafe.Pointer(cplayer))
+	var cvPtr = uintptr(unsafe.Pointer(cvehicle))
 	var cPlayer = entitys.ConvertCPlayer(cPtr)
 	var cVehicle = entitys.ConvertCVehicle(cvPtr)
-	defer w.FreePlayer(uintptr(unsafe.Pointer(cPtr)))
-	defer w.FreeVehicle(uintptr(unsafe.Pointer(cvPtr)))
+	defer w.FreePlayer(cPtr)
+	defer w.FreeVehicle(cvPtr)
 	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 	vehicle = vehicle.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 	cb.TriggerOnEnterVehicle(player, vehicle, seat)

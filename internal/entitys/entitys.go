@@ -1,7 +1,7 @@
 package entitys
 
 /*
-	#cgo CFLAGS: -I./headers
+	#cgo CFLAGS: -I../headers
 	#include "c_vector3.h"
 	#include "c_player.h"
 	#include "c_vehicle.h"
@@ -41,26 +41,28 @@ type CVehicle struct {
 	Rotation     *models.Vector3
 }
 
-func ConvertCPlayer(cPtr *C.CPlayer) *CPlayer {
+func ConvertCPlayer(cPtr uintptr) *CPlayer {
+	cPlayer := (*C.CPlayer)(unsafe.Pointer(cPtr))
 	return &CPlayer{
-		ID:         uint32(cPtr.id),
-		Name:       w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPtr.name))),
-		IP:         w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPtr.ip))),
-		AuthToken:  w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPtr.auth_token))),
-		HWIDHash:   uint64(cPtr.hwid_hash),
-		HWIDExHash: uint64(cPtr.hwid_ex_hash),
-		Position:   (*models.Vector3)(unsafe.Pointer(cPtr.position)),
-		Rotation:   (*models.Vector3)(unsafe.Pointer(cPtr.rotation)),
+		ID:         uint32(cPlayer.id),
+		Name:       w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.name))),
+		IP:         w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.ip))),
+		AuthToken:  w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.auth_token))),
+		HWIDHash:   uint64(cPlayer.hwid_hash),
+		HWIDExHash: uint64(cPlayer.hwid_ex_hash),
+		Position:   (*models.Vector3)(unsafe.Pointer(cPlayer.position)),
+		Rotation:   (*models.Vector3)(unsafe.Pointer(cPlayer.rotation)),
 	}
 }
 
-func ConvertCVehicle(cvPtr *C.CVehicle) *CVehicle {
+func ConvertCVehicle(cvPtr uintptr) *CVehicle {
+	cVehicle := (*C.CVehicle)(unsafe.Pointer(cvPtr))
 	return &CVehicle{
-		ID:           uint32(cvPtr.id),
-		Model:        uint32(cvPtr.model),
-		PrimaryColor: uint8(cvPtr.primary_color),
-		SecondColor:  uint8(cvPtr.second_color),
-		Position:     (*models.Vector3)(unsafe.Pointer(cvPtr.position)),
-		Rotation:     (*models.Vector3)(unsafe.Pointer(cvPtr.position)),
+		ID:           uint32(cVehicle.id),
+		Model:        uint32(cVehicle.model),
+		PrimaryColor: uint8(cVehicle.primary_color),
+		SecondColor:  uint8(cVehicle.second_color),
+		Position:     (*models.Vector3)(unsafe.Pointer(cVehicle.position)),
+		Rotation:     (*models.Vector3)(unsafe.Pointer(cVehicle.position)),
 	}
 }
