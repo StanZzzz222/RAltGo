@@ -53,6 +53,9 @@ var w = &lib.Warrper{}
 
 func Mounted() {}
 
+//export mounted
+func mounted() {}
+
 //export onModuleInit
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
 	path, _ := os.Getwd()
@@ -76,6 +79,7 @@ func onStart() {
 	var cb = &alt_events.Callback{}
 	cb = cb.New()
 	cb.TriggerOnStart()
+	fmt.Println("测试")
 }
 
 //export onStop
@@ -83,6 +87,7 @@ func onStop() {
 	var cb = &alt_events.Callback{}
 	cb = cb.New()
 	cb.TriggerOnStop()
+	fmt.Println("测试关闭")
 }
 
 //export onPlayerConnect
