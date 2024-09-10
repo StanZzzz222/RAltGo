@@ -1,6 +1,7 @@
 package alt_events
 
 import (
+	mounted2 "github.com/StanZzzz222/RAltGo/internal/mounted"
 	"github.com/StanZzzz222/RAltGo/models"
 )
 
@@ -9,6 +10,9 @@ import (
    Date Time: 2024/9/9
    File: alt_events.go
 */
+
+//export mounted
+func mounted() { mounted2.Mounted() }
 
 type Callback struct{}
 
