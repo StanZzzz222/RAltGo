@@ -2,7 +2,7 @@
 #define C_PLAYER_H
 
 #include <stdint.h>
-#include "c_verctor3.h"
+#include "c_vector3.h"
 
 typedef struct {
     uint32_t id;
