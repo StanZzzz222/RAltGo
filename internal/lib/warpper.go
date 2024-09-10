@@ -3,7 +3,6 @@ package lib
 import "C"
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/internal/common"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/bwmarrin/snowflake"
@@ -32,15 +31,11 @@ var createVehicleProc *syscall.Proc
 var dllPath string
 var tasks = &sync.Map{}
 var snowflakeNode *snowflake.Node
-var moduleTickDone = &common.ModuleTick{}
 
 type Warrper struct{}
 
 //export onTick
 func onTick() {
-	if !moduleTickDone.GetModuleTickDone() {
-		moduleTickDone.ModuleTickDone()
-	}
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
 		if ok {
@@ -131,6 +126,17 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 	})
 	res := <-ch
 	return res
+}
+
+func (w *Warrper) ExecuteTasks() {
+	tasks.Range(func(key, value any) bool {
+		handler, ok := value.(func())
+		if ok {
+			handler()
+			tasks.Delete(key)
+		}
+		return true
+	})
 }
 
 func (w *Warrper) Free(ptr uintptr) {

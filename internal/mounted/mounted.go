@@ -37,12 +37,14 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 func onStart() {
 	var cb = &alt_events.Callback{}
 	cb.TriggerOnStart()
+	w.ExecuteTasks()
 }
 
 //export onStop
 func onStop() {
 	var cb = &alt_events.Callback{}
 	cb.TriggerOnStop()
+	w.ExecuteTasks()
 }
 
 //export onPlayerConnect
