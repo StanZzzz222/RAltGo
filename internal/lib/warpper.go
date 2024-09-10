@@ -105,7 +105,7 @@ func (w *Warrper) GetTasks() *sync.Map {
 	return tasks
 }
 
-func (w *Warrper) TaskDelete(key string) *sync.Map {
+func (w *Warrper) TaskDelete(key string) {
 	tasks.Delete(key)
 }
 
