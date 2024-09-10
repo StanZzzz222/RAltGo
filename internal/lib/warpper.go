@@ -3,6 +3,7 @@ package lib
 import "C"
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/internal/common"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/bwmarrin/snowflake"
@@ -31,11 +32,15 @@ var createVehicleProc *syscall.Proc
 var dllPath string
 var tasks = &sync.Map{}
 var snowflakeNode *snowflake.Node
+var moduleTickDone = &common.ModuleTick{}
 
 type Warrper struct{}
 
 //export onTick
 func onTick() {
+	if !moduleTickDone.GetModuleTickDone() {
+		moduleTickDone.ModuleTickDone()
+	}
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
 		if ok {
@@ -44,19 +49,6 @@ func onTick() {
 		}
 		return true
 	})
-}
-
-//export onTickLocal
-func onTickLocal() {
-	fmt.Println("执行中...")
-	//tasks.Range(func(key, value any) bool {
-	//	handler, ok := value.(func())
-	//	if ok {
-	//		handler()
-	//		tasks.Delete(key)
-	//	}
-	//	return true
-	//})
 }
 
 func init() {
