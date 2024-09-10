@@ -33,6 +33,18 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
 }
 
+//export onTick
+func onTick() {
+	w.GetTasks().Range(func(key, value any) bool {
+		handler, ok := value.(func())
+		if ok {
+			handler()
+			w.TaskDelete(key.(string))
+		}
+		return true
+	})
+}
+
 //export onStart
 func onStart() {
 	var cb = &alt_events.Callback{}
