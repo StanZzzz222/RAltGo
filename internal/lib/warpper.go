@@ -46,6 +46,19 @@ func onTick() {
 	})
 }
 
+//export onTickLocal
+func onTickLocal() {
+	fmt.Println("执行中...")
+	//tasks.Range(func(key, value any) bool {
+	//	handler, ok := value.(func())
+	//	if ok {
+	//		handler()
+	//		tasks.Delete(key)
+	//	}
+	//	return true
+	//})
+}
+
 func init() {
 	path, _ := os.Getwd()
 	//path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
