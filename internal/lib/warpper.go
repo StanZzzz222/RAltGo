@@ -9,6 +9,7 @@ import (
 	"os"
 	"sync"
 	"syscall"
+	"time"
 	"unsafe"
 )
 
@@ -34,6 +35,7 @@ type Warrper struct{}
 
 //export onTick
 func onTick() {
+	fmt.Println("当前时间: ", time.Now().UnixNano())
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
 		if ok {
