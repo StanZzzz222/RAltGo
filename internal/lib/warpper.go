@@ -9,7 +9,6 @@ import (
 	"math"
 	"os"
 	"sync"
-	"sync/atomic"
 	"syscall"
 	"time"
 	"unsafe"
@@ -32,18 +31,15 @@ var createVehicleProc *syscall.Proc
 var dllPath string
 var tasks = &sync.Map{}
 var snowflakeNode *snowflake.Node
-var onLoad = atomic.Bool{}
 
 type Warrper struct{}
 
 //export onTick
 func onTick() {
-	fmt.Println("执行了")
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
 		if ok {
 			handler()
-			fmt.Println("执行了2")
 			tasks.Delete(key)
 		}
 		return true
@@ -51,7 +47,6 @@ func onTick() {
 }
 
 func init() {
-	onLoad.Store(false)
 	path, _ := os.Getwd()
 	//path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
 	path = fmt.Sprintf("%v/resources/rs-go-module/server/target/debug/server.dll", path)
@@ -85,11 +80,6 @@ func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, m
 		_ = fmt.Errorf("load mounted failed: %v", err.Error())
 		os.Exit(-1)
 	}
-	defer func() {
-		time.AfterFunc(time.Millisecond*100, func() {
-			onLoad.Store(true)
-		})
-	}()
 	return ret != 0
 }
 
@@ -124,22 +114,18 @@ func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 }
 
 func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) uintptr {
-	if onLoad.Load() {
-		var ch = make(chan uintptr)
-		tasks.Store(snowflakeNode.Generate().String(), func() {
-			ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
-			if err != nil && err.Error() != "The operation completed successfully." {
-				_ = fmt.Errorf("set player data failed: %v", err.Error())
-				ch <- uintptr(0)
-				return
-			}
-			ch <- ret
-		})
-		res := <-ch
-		close(ch)
-		return res
-	}
-	return w.CreateVehicle(model, posData, posMetaData, rotData, rotMetaData, numberplate, primaryColor, secondColor)
+	var ch = make(chan uintptr)
+	tasks.Store(snowflakeNode.Generate().String(), func() {
+		ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
+		if err != nil && err.Error() != "The operation completed successfully." {
+			_ = fmt.Errorf("set player data failed: %v", err.Error())
+			ch <- uintptr(0)
+			return
+		}
+		ch <- ret
+	})
+	res := <-ch
+	return res
 }
 
 func (w *Warrper) Free(ptr uintptr) {
