@@ -1,4 +1,4 @@
-package main
+package mounted
 
 /*
 	#cgo CFLAGS: -I../headers
@@ -24,8 +24,6 @@ import (
    Date Time: 2024/9/9
    File: mounted.go
 */
-
-func main() {}
 
 var w = &lib.Warrper{}
 
