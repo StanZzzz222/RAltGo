@@ -110,7 +110,6 @@ func (w *Warrper) TaskDelete(key string) {
 }
 
 func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) uintptr {
-
 	var ch = make(chan uintptr)
 	tasks.Store(snowflakeNode.Generate().String(), func() {
 		ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
@@ -121,8 +120,13 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 		}
 		ch <- ret
 	})
-	res := <-ch
-	return res
+	select {
+	case ret := <-ch:
+		return ret
+	case <-time.After(time.Millisecond * 10):
+		close(ch)
+		return w.CreateVehicle(model, posData, posMetaData, rotData, rotMetaData, numberplate, primaryColor, secondColor)
+	}
 }
 
 func (w *Warrper) Free(ptr uintptr) {
