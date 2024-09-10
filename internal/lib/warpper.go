@@ -135,7 +135,7 @@ func (w *Warrper) FreePlayer(ptr uintptr) {
 }
 
 func (w *Warrper) FreeVehicle(ptr uintptr) {
-	_, _, err := freePlayerProc.Call(ptr)
+	_, _, err := freeVehicleProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		_ = fmt.Errorf("free player failed: %v", err.Error())
 		return
