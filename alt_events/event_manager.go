@@ -1,7 +1,7 @@
 package alt_events
 
 import (
-	mounted2 "github.com/StanZzzz222/RAltGo/internal/mounted"
+	mountedinternal "github.com/StanZzzz222/RAltGo/internal/mounted"
 	"github.com/StanZzzz222/RAltGo/models"
 )
 
@@ -12,7 +12,7 @@ import (
 */
 
 //export mounted
-func mounted() { mounted2.Mounted() }
+func mounted() { mountedinternal.Mounted() }
 
 type Callback struct{}
 
