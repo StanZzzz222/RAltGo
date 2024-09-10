@@ -36,6 +36,7 @@ type Warrper struct{}
 
 //export onTick
 func onTick() {
+	println("进入")
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
 		if ok {
