@@ -32,7 +32,6 @@ var createVehicleProc *syscall.Proc
 var dllPath string
 var tasks = &sync.Map{}
 var snowflakeNode *snowflake.Node
-var wg sync.WaitGroup
 var onTickDone = make(chan bool)
 var onTickLoad = atomic.Bool{}
 
@@ -47,16 +46,11 @@ func onTick() {
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
 		if ok {
-			wg.Add(1)
-			go func() {
-				defer wg.Done()
-				handler()
-				tasks.Delete(key)
-			}()
+			handler()
+			tasks.Delete(key)
 		}
 		return true
 	})
-	wg.Wait()
 }
 
 func init() {
