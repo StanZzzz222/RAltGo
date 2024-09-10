@@ -13,6 +13,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/StanZzzz222/RAltGo/models"
+	"time"
 	"unsafe"
 )
 
@@ -36,15 +37,19 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 //export onStart
 func onStart() {
 	var cb = &alt_events.Callback{}
+	time.AfterFunc(time.Second*1, func() {
+		w.ExecuteTasks()
+	})
 	cb.TriggerOnStart()
-	w.ExecuteTasks()
 }
 
 //export onStop
 func onStop() {
 	var cb = &alt_events.Callback{}
+	time.AfterFunc(time.Second*1, func() {
+		w.ExecuteTasks()
+	})
 	cb.TriggerOnStop()
-	w.ExecuteTasks()
 }
 
 //export onPlayerConnect
