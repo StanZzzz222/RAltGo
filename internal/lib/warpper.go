@@ -42,6 +42,7 @@ func onTick() {
 	if !onTickLoad.Load() {
 		onTickDone <- true
 		onTickLoad.Store(true)
+		fmt.Println("执行了")
 	}
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
@@ -124,6 +125,7 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 	var ch = make(chan uintptr)
 	if !onTickLoad.Load() {
 		<-onTickDone
+		return w.CreateVehicle(model, posData, posMetaData, rotData, rotMetaData, numberplate, primaryColor, secondColor)
 	}
 	tasks.Store(snowflakeNode.Generate().String(), func() {
 		ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
