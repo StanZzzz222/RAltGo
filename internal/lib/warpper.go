@@ -9,6 +9,7 @@ import (
 	"math"
 	"os"
 	"sync"
+	"sync/atomic"
 	"syscall"
 	"time"
 	"unsafe"
@@ -31,19 +32,31 @@ var createVehicleProc *syscall.Proc
 var dllPath string
 var tasks = &sync.Map{}
 var snowflakeNode *snowflake.Node
+var wg sync.WaitGroup
+var onTickDone = make(chan bool)
+var onTickLoad = atomic.Bool{}
 
 type Warrper struct{}
 
 //export onTick
 func onTick() {
+	if !onTickLoad.Load() {
+		onTickDone <- true
+		onTickLoad.Store(true)
+	}
 	tasks.Range(func(key, value any) bool {
 		handler, ok := value.(func())
 		if ok {
-			handler()
-			tasks.Delete(key)
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				handler()
+				tasks.Delete(key)
+			}()
 		}
 		return true
 	})
+	wg.Wait()
 }
 
 func init() {
@@ -115,6 +128,9 @@ func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 
 func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) uintptr {
 	var ch = make(chan uintptr)
+	if !onTickLoad.Load() {
+		<-onTickDone
+	}
 	tasks.Store(snowflakeNode.Generate().String(), func() {
 		ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
 		if err != nil && err.Error() != "The operation completed successfully." {
