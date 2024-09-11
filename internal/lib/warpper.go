@@ -49,7 +49,8 @@ func onTick() {
 
 func init() {
 	path, _ := os.Getwd()
-	path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
+	//path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
+	path = fmt.Sprintf("%v/resources/rs-go-module/server/target/debug/server.dll", path)
 	node, err := snowflake.NewNode(1)
 	if err != nil {
 		logger.LogErrorf("Snowflake NewNode err: %v", err)
@@ -186,6 +187,9 @@ func (w *Warrper) GoStringMarshalPtr(s string) uintptr {
 
 func (w *Warrper) PtrMarshalGoString(ret uintptr) string {
 	cStr := (*C.char)(unsafe.Pointer(ret))
-	defer w.Free(uintptr(unsafe.Pointer(&cStr)))
+	ptr := uintptr(unsafe.Pointer(&cStr))
+	if ptr != 0 {
+		defer w.Free(ptr)
+	}
 	return C.GoString(cStr)
 }

@@ -63,9 +63,8 @@ func onStop() {
 }
 
 //export onPlayerConnect
-func onPlayerConnect(cplayer *C.CPlayer) {
+func onPlayerConnect(cPtr uintptr) {
 	var player = &models.IPlayer{}
-	var cPtr = uintptr(unsafe.Pointer(cplayer))
 	var cPlayer = entitys.ConvertCPlayer(cPtr)
 	defer w.FreePlayer(cPtr)
 	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
@@ -73,11 +72,9 @@ func onPlayerConnect(cplayer *C.CPlayer) {
 }
 
 //export onEnterVehicle
-func onEnterVehicle(cplayer *C.CPlayer, cvehicle *C.CVehicle, seat uint8) {
+func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
-	var cPtr = uintptr(unsafe.Pointer(cplayer))
-	var cvPtr = uintptr(unsafe.Pointer(cvehicle))
 	var cPlayer = entitys.ConvertCPlayer(cPtr)
 	var cVehicle = entitys.ConvertCVehicle(cvPtr)
 	defer w.FreePlayer(cPtr)
@@ -88,11 +85,9 @@ func onEnterVehicle(cplayer *C.CPlayer, cvehicle *C.CVehicle, seat uint8) {
 }
 
 //export onLeaveVehicle
-func onLeaveVehicle(cplayer *C.CPlayer, cvehicle *C.CVehicle, seat uint8) {
+func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
-	var cPtr = uintptr(unsafe.Pointer(cplayer))
-	var cvPtr = uintptr(unsafe.Pointer(cvehicle))
 	var cPlayer = entitys.ConvertCPlayer(cPtr)
 	var cVehicle = entitys.ConvertCVehicle(cvPtr)
 	defer w.FreePlayer(cPtr)
