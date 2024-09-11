@@ -5,6 +5,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/enums/ped"
 	"github.com/StanZzzz222/RAltGo/enums/weapon"
+	"github.com/StanZzzz222/RAltGo/enums/weather"
 	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
@@ -106,8 +107,8 @@ func (p *IPlayer) SetDateTimeUTC8(t time.Time) {
 	w.SetPlayerData(p.id, enum.DateTime, t.UTC().Add(time.Hour*8).Unix())
 }
 
-func (p *IPlayer) SetWeather(wather uint16) {
-	p.weather = wather
+func (p *IPlayer) SetWeather(wather weather.WeatherType) {
+	p.weather = uint16(wather)
 	w.SetPlayerData(p.id, enum.Weather, int64(wather))
 }
 
