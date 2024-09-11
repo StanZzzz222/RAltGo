@@ -15,12 +15,14 @@ type OnStopCallback func()
 type OnServerStartedCallback func()
 type OnPlayerConnectCallback func(player *models.IPlayer)
 type OnEnterVehicleCallback func(player *models.IPlayer, vehicle *models.IVehicle, seat uint8)
+type OnLeaveVehicleCallback func(player *models.IPlayer, vehicle *models.IVehicle, seat uint8)
 
 var onStartCallback OnStartCallback
 var onStopCallback OnStopCallback
 var onServerStartedCallback OnServerStartedCallback
 var onPlayerConnectCallback OnPlayerConnectCallback
 var onEnterVehicleCallback OnEnterVehicleCallback
+var onLeaveVehicleCallback OnLeaveVehicleCallback
 
 func OnStart(cb OnStartCallback) {
 	if onStartCallback == nil {
@@ -75,5 +77,10 @@ func (cb *Callback) TriggerOnPlayerConnect(player *models.IPlayer) {
 func (cb *Callback) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
 	if onEnterVehicleCallback != nil {
 		onEnterVehicleCallback(player, vehicle, seat)
+	}
+}
+func (cb *Callback) TriggerOnLeaveVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
+	if onLeaveVehicleCallback != nil {
+		onLeaveVehicleCallback(player, vehicle, seat)
 	}
 }

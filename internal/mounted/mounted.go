@@ -86,3 +86,18 @@ func onEnterVehicle(cplayer *C.CPlayer, cvehicle *C.CVehicle, seat uint8) {
 	veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 	cb.TriggerOnEnterVehicle(player, veh, seat)
 }
+
+//export onLeaveVehicle
+func onLeaveVehicle(cplayer *C.CPlayer, cvehicle *C.CVehicle, seat uint8) {
+	var player = &models.IPlayer{}
+	var veh = &models.IVehicle{}
+	var cPtr = uintptr(unsafe.Pointer(cplayer))
+	var cvPtr = uintptr(unsafe.Pointer(cvehicle))
+	var cPlayer = entitys.ConvertCPlayer(cPtr)
+	var cVehicle = entitys.ConvertCVehicle(cvPtr)
+	defer w.FreePlayer(cPtr)
+	defer w.FreeVehicle(cvPtr)
+	player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+	veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+	cb.TriggerOnLeaveVehicle(player, veh, seat)
+}
