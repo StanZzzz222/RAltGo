@@ -1,7 +1,8 @@
-package models
+package utils
 
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"strconv"
 	"strings"
 )
@@ -9,20 +10,18 @@ import (
 /*
    Create by zyx
    Date Time: 2024/9/5
-   File: vec3.go
+   File: vector3.go
 */
 
-type Vector3 struct{ X, Y, Z float32 }
-
-func NewVector3(x, y, z float32) *Vector3 {
-	return &Vector3{x, y, z}
+func NewVector3(x, y, z float32) *entitys.Vector3 {
+	return &entitys.Vector3{X: x, Y: y, Z: z}
 }
 
-func NewVector3Round(x, y, z float32, round float32) *Vector3 {
-	return &Vector3{x, y, z}
+func NewVector3Round(x, y, z float32, round float32) *entitys.Vector3 {
+	return &entitys.Vector3{X: x, Y: y, Z: z}
 }
 
-func NewVector3FromStr(position string) (*Vector3, error) {
+func NewVector3FromStr(position string) (*entitys.Vector3, error) {
 	position = strings.TrimSpace(position)
 	arr := strings.Split(position, ",")
 	if len(arr) != 3 {

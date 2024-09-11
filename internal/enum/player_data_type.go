@@ -9,7 +9,7 @@ package enum
 type PlayerDataType int32
 
 const (
-	Health PlayerDataType = iota
+	Health PlayerDataType = 0
 	Model
 	Invincible
 	Frozen
@@ -17,7 +17,7 @@ const (
 	Collision
 	Armour
 	DateTime
-	Positon
+	Position
 	MaxHealth
 	MaxArmour
 	Ammo
@@ -25,6 +25,7 @@ const (
 	CurrentWeapon
 	WeaponAmmo
 	Dimension
+	Visible
 	Rot
 	InVehicle
 )

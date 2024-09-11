@@ -1,8 +1,6 @@
 package alt_events
 
-import (
-	"github.com/StanZzzz222/RAltGo/models"
-)
+import "github.com/StanZzzz222/RAltGo/common/models"
 
 /*
    Create by zyx
@@ -14,11 +12,13 @@ type Callback struct{}
 
 type OnStartCallback func()
 type OnStopCallback func()
+type OnServerStartedCallback func()
 type OnPlayerConnectCallback func(player *models.IPlayer)
 type OnEnterVehicleCallback func(player *models.IPlayer, vehicle *models.IVehicle, seat uint8)
 
 var onStartCallback OnStartCallback
 var onStopCallback OnStopCallback
+var onServerStartedCallback OnServerStartedCallback
 var onPlayerConnectCallback OnPlayerConnectCallback
 var onEnterVehicleCallback OnEnterVehicleCallback
 
@@ -31,6 +31,12 @@ func OnStart(cb OnStartCallback) {
 func OnStop(cb OnStopCallback) {
 	if onStopCallback == nil {
 		onStopCallback = cb
+	}
+}
+
+func OnServerStarted(cb OnServerStartedCallback) {
+	if onServerStartedCallback == nil {
+		onServerStartedCallback = cb
 	}
 }
 
@@ -54,6 +60,11 @@ func (cb *Callback) TriggerOnStart() {
 func (cb *Callback) TriggerOnStop() {
 	if onStopCallback != nil {
 		onStopCallback()
+	}
+}
+func (cb *Callback) TriggerOnServerStarted() {
+	if onServerStartedCallback != nil {
+		onServerStartedCallback()
 	}
 }
 func (cb *Callback) TriggerOnPlayerConnect(player *models.IPlayer) {

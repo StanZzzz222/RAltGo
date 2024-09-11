@@ -1,8 +1,11 @@
 package models
 
 import (
+	"github.com/StanZzzz222/RAltGo/common/utils"
+	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/enums/ped"
 	"github.com/StanZzzz222/RAltGo/enums/weapon"
+	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
 	"net"
@@ -29,17 +32,13 @@ type IPlayer struct {
 	weather       uint16
 	maxHealth     uint16
 	maxArmour     uint16
-	dimension     int32
 	currentWeapon string
-	frozen        bool
 	invincible    bool
-	collision     bool
-	position      *Vector3
-	rotation      *Vector3
 	time          time.Time
+	*BaseObject
 }
 
-func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hwIdExHash uint64, position, rotation *Vector3) *IPlayer {
+func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hwIdExHash uint64, position, rotation *entitys.Vector3) *IPlayer {
 	ipParse := net.ParseIP(ip)
 	return &IPlayer{
 		id:         id,
@@ -48,16 +47,15 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 		authToken:  authToken,
 		hwIdHash:   hwIdHash,
 		hwIdExHash: hwIdExHash,
-		position:   position,
-		rotation:   rotation,
+		BaseObject: NewBaseObject(position, rotation, enums.DefaultDimension, false, true, true),
 	}
 }
 
-func (p *IPlayer) Spawn(model string, position *Vector3) {
+func (p *IPlayer) Spawn(model string, position *entitys.Vector3) {
 	if position != nil {
-		p.model = hash(model)
+		p.model = utils.Hash(model)
 		p.position = position
-		w.SpawnPlayer(p.id, hash(model), position.X, position.Y, position.Z)
+		w.SpawnPlayer(p.id, utils.Hash(model), position.X, position.Y, position.Z)
 	}
 }
 
@@ -90,59 +88,59 @@ func (p *IPlayer) GetInvincible() bool  { return p.invincible }
 
 func (p *IPlayer) SetHealth(health uint16) {
 	p.health = health
-	w.SetPlayerData(p.id, enum.Health, uint64(health))
+	w.SetPlayerData(p.id, enum.Health, int64(health))
 }
 
-func (p *IPlayer) SetPosition(position *Vector3) {
+func (p *IPlayer) SetPosition(position *entitys.Vector3) {
 	p.position = position
-	w.SetPlayerMetaData(p.id, enum.Positon, uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
+	w.SetPlayerMetaData(p.id, enum.Position, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
 }
 
 func (p *IPlayer) SetDateTime(t time.Time) {
 	p.time = t.UTC()
-	w.SetPlayerData(p.id, enum.DateTime, uint64(t.UTC().Unix()))
+	w.SetPlayerData(p.id, enum.DateTime, t.UTC().Unix())
 }
 
 func (p *IPlayer) SetDateTimeUTC8(t time.Time) {
 	p.time = t.UTC().Add(time.Hour * 8)
-	w.SetPlayerData(p.id, enum.DateTime, uint64(t.UTC().Add(time.Hour*8).Unix()))
+	w.SetPlayerData(p.id, enum.DateTime, t.UTC().Add(time.Hour*8).Unix())
 }
 
 func (p *IPlayer) SetWeather(wather uint16) {
 	p.weather = wather
-	w.SetPlayerData(p.id, enum.Weather, uint64(wather))
+	w.SetPlayerData(p.id, enum.Weather, int64(wather))
 }
 
 func (p *IPlayer) SetMaxHealth(maxHealth uint16) {
 	p.maxHealth = maxHealth
-	w.SetPlayerData(p.id, enum.MaxHealth, uint64(maxHealth))
+	w.SetPlayerData(p.id, enum.MaxHealth, int64(maxHealth))
 }
 
 func (p *IPlayer) SetMaxArmour(maxArmour uint16) {
 	p.maxArmour = maxArmour
-	w.SetPlayerData(p.id, enum.MaxArmour, uint64(maxArmour))
+	w.SetPlayerData(p.id, enum.MaxArmour, int64(maxArmour))
 }
 
 func (p *IPlayer) SetAmmo(weapon string, ammo uint16) {
-	w.SetPlayerMetaData(p.id, enum.Ammo, uint64(hash(weapon)), uint64(ammo))
+	w.SetPlayerMetaData(p.id, enum.Ammo, int64(utils.Hash(weapon)), uint64(ammo))
 }
 
 func (p *IPlayer) SetMaxAmmo(weapon string, ammo uint16) {
-	w.SetPlayerMetaData(p.id, enum.MaxAmmo, uint64(hash(weapon)), uint64(ammo))
+	w.SetPlayerMetaData(p.id, enum.MaxAmmo, int64(utils.Hash(weapon)), uint64(ammo))
 }
 
 func (p *IPlayer) SetCurrentWeapon(weapon string) {
 	p.currentWeapon = strings.ToLower(weapon)
-	w.SetPlayerData(p.id, enum.CurrentWeapon, uint64(hash(weapon)))
+	w.SetPlayerData(p.id, enum.CurrentWeapon, int64(utils.Hash(weapon)))
 }
 
 func (p *IPlayer) SetCurrentWeaponByHash(weaponHash weapon.ModelHash) {
 	p.currentWeapon = strings.ToLower(weaponHash.String())
-	w.SetPlayerData(p.id, enum.CurrentWeapon, uint64(weaponHash))
+	w.SetPlayerData(p.id, enum.CurrentWeapon, int64(weaponHash))
 }
 
 func (p *IPlayer) SetWeaponAmmo(weapon string, ammo uint16) {
-	w.SetPlayerMetaData(p.id, enum.WeaponAmmo, uint64(hash(weapon)), uint64(ammo))
+	w.SetPlayerMetaData(p.id, enum.WeaponAmmo, int64(utils.Hash(weapon)), uint64(ammo))
 }
 
 func (p *IPlayer) SetCurrentWeaponAmmo(ammo uint16) {
@@ -154,35 +152,39 @@ func (p *IPlayer) SetCurrentWeaponAmmo(ammo uint16) {
 func (p *IPlayer) SetDimension(dimension int32) {
 	if dimension > 0 {
 		p.dimension = dimension
-		w.SetPlayerData(p.id, enum.Dimension, uint64(dimension))
+		w.SetPlayerData(p.id, enum.Dimension, int64(dimension))
 	}
 }
 
-func (p *IPlayer) SetRotation(rotation *Vector3) {
+func (p *IPlayer) SetRotation(rotation *entitys.Vector3) {
 	p.rotation = rotation
-	w.SetPlayerMetaData(p.id, enum.Rot, uint64(math.Float32bits(rotation.X))|(uint64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32)
+	w.SetPlayerMetaData(p.id, enum.Rot, int64(math.Float32bits(rotation.X))|(int64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32)
 }
 
-func (p *IPlayer) SetPositionRotation(position, rotation *Vector3) {
+func (p *IPlayer) SetPositionRotation(position, rotation *entitys.Vector3) {
 	p.position = position
 	p.rotation = rotation
-	w.SetPlayerMetaData(p.id, enum.Positon, uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
-	w.SetPlayerMetaData(p.id, enum.Rot, uint64(math.Float32bits(rotation.X))|(uint64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32)
+	w.SetPlayerMetaData(p.id, enum.Position, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
+	w.SetPlayerMetaData(p.id, enum.Rot, int64(math.Float32bits(rotation.X))|(int64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32)
+}
+
+func (p *IPlayer) SetIntoVehicle(vehicle *IVehicle, seat uint8) {
+	w.SetPlayerMetaData(p.id, enum.InVehicle, int64(vehicle.id), uint64(seat))
 }
 
 func (p *IPlayer) SetArmour(armour uint16) {
 	p.armour = armour
-	w.SetPlayerData(p.id, enum.Armour, uint64(armour))
+	w.SetPlayerData(p.id, enum.Armour, int64(armour))
 }
 
 func (p *IPlayer) SetPedModel(model string) {
-	p.model = hash(model)
-	w.SetPlayerData(p.id, enum.Model, uint64(hash(model)))
+	p.model = utils.Hash(model)
+	w.SetPlayerData(p.id, enum.Model, int64(utils.Hash(model)))
 }
 
 func (p *IPlayer) SetPedModelByHash(modelHash ped.ModelHash) {
 	p.model = uint32(modelHash)
-	w.SetPlayerData(p.id, enum.Model, uint64(modelHash))
+	w.SetPlayerData(p.id, enum.Model, int64(modelHash))
 }
 
 func (p *IPlayer) SetFrozen(frozen bool) {
@@ -191,7 +193,16 @@ func (p *IPlayer) SetFrozen(frozen bool) {
 	if frozen {
 		value = 1
 	}
-	w.SetPlayerData(p.id, enum.Frozen, uint64(value))
+	w.SetPlayerData(p.id, enum.Frozen, int64(value))
+}
+
+func (p *IPlayer) SetVisible(visible bool) {
+	p.visible = visible
+	value := 0
+	if visible {
+		value = 1
+	}
+	w.SetPlayerData(p.id, enum.Visible, int64(value))
 }
 
 func (p *IPlayer) SetCollision(collision bool) {
@@ -200,7 +211,7 @@ func (p *IPlayer) SetCollision(collision bool) {
 	if collision {
 		value = 1
 	}
-	w.SetPlayerData(p.id, enum.Collision, uint64(value))
+	w.SetPlayerData(p.id, enum.Collision, int64(value))
 }
 
 func (p *IPlayer) SetInvincible(invincible bool) {
@@ -209,5 +220,5 @@ func (p *IPlayer) SetInvincible(invincible bool) {
 	if invincible {
 		value = 1
 	}
-	w.SetPlayerData(p.id, enum.Invincible, uint64(value))
+	w.SetPlayerData(p.id, enum.Invincible, int64(value))
 }
