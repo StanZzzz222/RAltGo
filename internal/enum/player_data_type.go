@@ -9,7 +9,7 @@ package enum
 type PlayerDataType int32
 
 const (
-	Health PlayerDataType = 0
+	Health PlayerDataType = iota
 	Model
 	Invincible
 	Frozen
