@@ -54,6 +54,12 @@ func OnEnterVehicle(cb OnEnterVehicleCallback) {
 	}
 }
 
+func OnLeaveVehicle(cb OnLeaveVehicleCallback) {
+	if onLeaveVehicleCallback == nil {
+		onLeaveVehicleCallback = cb
+	}
+}
+
 func (cb *Callback) TriggerOnStart() {
 	if onStartCallback != nil {
 		onStartCallback()
