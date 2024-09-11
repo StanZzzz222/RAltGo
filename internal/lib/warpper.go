@@ -20,7 +20,10 @@ import (
    File: warpper.go
 */
 
+var dllPath string
 var dll *syscall.DLL
+var tasks = &sync.Map{}
+var snowflakeNode *snowflake.Node
 var freeProc *syscall.Proc
 var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
@@ -29,9 +32,6 @@ var spawnPlayerProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
 var createVehicleProc *syscall.Proc
-var dllPath string
-var tasks = &sync.Map{}
-var snowflakeNode *snowflake.Node
 
 type Warrper struct{}
 
@@ -49,8 +49,7 @@ func onTick() {
 
 func init() {
 	path, _ := os.Getwd()
-	//path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
-	path = fmt.Sprintf("%v/resources/rs-go-module/server/target/debug/server.dll", path)
+	path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
 	node, err := snowflake.NewNode(1)
 	if err != nil {
 		logger.LogErrorf("Snowflake NewNode err: %v", err)
