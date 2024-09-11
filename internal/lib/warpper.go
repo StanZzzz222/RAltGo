@@ -186,9 +186,9 @@ func (w *Warrper) GoStringMarshalPtr(s string) uintptr {
 
 func (w *Warrper) PtrMarshalGoString(ret uintptr) string {
 	cStr := (*C.char)(unsafe.Pointer(ret))
-	ptr := uintptr(unsafe.Pointer(&cStr))
-	if ptr != 0 {
-		defer w.Free(ptr)
-	}
+	//ptr := uintptr(unsafe.Pointer(&cStr))
+	//if ptr != 0 {
+	//	defer w.Free(ptr)
+	//}
 	return C.GoString(cStr)
 }
