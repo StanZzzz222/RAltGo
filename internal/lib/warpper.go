@@ -47,8 +47,7 @@ func onTick() {
 
 func init() {
 	path, _ := os.Getwd()
-	//path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
-	path = fmt.Sprintf("%v/resources/rs-go-module/server/target/debug/server.dll", path)
+	path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
 	_, err := os.Stat(path)
 	if os.IsNotExist(err) {
 		logger.LogErrorf(":: Please check if %v exists", path)
