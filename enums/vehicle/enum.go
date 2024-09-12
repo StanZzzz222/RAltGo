@@ -13,7 +13,7 @@ type ModelHash uint32
 type Seat uint8
 
 const (
-	Driver Seat = iota
+	Driver Seat = 1
 )
 
 const (
