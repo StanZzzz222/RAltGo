@@ -123,6 +123,10 @@ func (v *IVehicle) SetFrozen(frozen bool) {
 	w.SetVehicleData(v.id, enum.VehicleFrozen, int64(value))
 }
 
+func (v *IVehicle) SetDoorState(doorId uint8, state uint8) {
+	w.SetVehicleMetaData(v.id, enum.DoorState, int64(doorId), uint64(state), "", uint8(0), uint8(0), uint8(0), uint8(0))
+}
+
 func (v *IVehicle) SetEngineOn(engineOn bool) {
 	v.engineOn = engineOn
 	value := 0

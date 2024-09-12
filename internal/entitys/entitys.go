@@ -45,6 +45,15 @@ type CVehicle struct {
 	Rotation     *Vector3
 }
 
+type CBlip struct {
+	ID       uint32
+	BlipType uint32
+	SpriteId uint32
+	Color    uint32
+	Rot      float32
+	Position *Vector3
+}
+
 func ConvertCPlayer(cPtr uintptr) *CPlayer {
 	cPlayer := (*C.CPlayer)(unsafe.Pointer(atomic.LoadUintptr(&cPtr)))
 	if cPlayer == nil {
@@ -74,5 +83,20 @@ func ConvertCVehicle(cvPtr uintptr) *CVehicle {
 		SecondColor:  uint8(cVehicle.second_color),
 		Position:     (*Vector3)(unsafe.Pointer(cVehicle.position)),
 		Rotation:     (*Vector3)(unsafe.Pointer(cVehicle.position)),
+	}
+}
+
+func ConvertCBlip(cbPtr uintptr) *CBlip {
+	cBlip := (*C.CBlip)(unsafe.Pointer(atomic.LoadUintptr(&cbPtr)))
+	if cBlip == nil {
+		return nil
+	}
+	return &CBlip{
+		ID:       uint32(cBlip.id),
+		BlipType: uint32(cBlip.blip_type),
+		SpriteId: uint32(cBlip.sprite_id),
+		Color:    uint32(cBlip.color),
+		Rot:      float32(cBlip.rot),
+		Position: (*Vector3)(unsafe.Pointer(cBlip.position)),
 	}
 }

@@ -4,6 +4,7 @@ import "C"
 import (
 	"container/list"
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"math"
@@ -28,10 +29,13 @@ var freeProc *syscall.Proc
 var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
 var freeVehicleProc *syscall.Proc
+var freeBlipProc *syscall.Proc
 var spawnPlayerProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
+var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
 var createVehicleProc *syscall.Proc
+var createBlipProc *syscall.Proc
 
 type Warrper struct{}
 
@@ -61,10 +65,13 @@ func init() {
 	freeProc = dll.MustFindProc("free_c_str")
 	freePlayerProc = dll.MustFindProc("free_player")
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
+	freeBlipProc = dll.MustFindProc("free_blip")
 	spawnPlayerProc = dll.MustFindProc("spawn_player")
 	setPlayerDataProc = dll.MustFindProc("set_player_data")
 	setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
+	setBlipDataProc = dll.MustFindProc("set_blip_data")
 	createVehicleProc = dll.MustFindProc("create_vehicle")
+	createBlipProc = dll.MustFindProc("create_blip")
 }
 
 func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
@@ -84,6 +91,26 @@ func (w *Warrper) SpawnPlayer(id uint32, hash uint32, x, y, z float32) {
 	}
 }
 
+func (w *Warrper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data int64) {
+	_, _, err := setBlipDataProc.Call(uintptr(id), uintptr(blipDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set blip data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
+	var strPtr = uintptr(0)
+	if len(strData) > 0 {
+		strPtr = w.GoStringMarshalPtr(strData)
+	}
+	_, _, err := setBlipDataProc.Call(uintptr(id), uintptr(blipDataType), uintptr(data), uintptr(metaData), strPtr, uintptr(r), uintptr(g), uintptr(b), uintptr(a))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set blip data failed: %v", err.Error())
+		return
+	}
+}
+
 func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data int64) {
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
@@ -93,7 +120,11 @@ func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType
 }
 
 func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
-	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(metaData), w.GoStringMarshalPtr(strData), uintptr(l), uintptr(r), uintptr(t), uintptr(b))
+	var strPtr = uintptr(0)
+	if len(strData) > 0 {
+		strPtr = w.GoStringMarshalPtr(strData)
+	}
+	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(metaData), strPtr, uintptr(l), uintptr(r), uintptr(t), uintptr(b))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set vehicle data failed: %v", err.Error())
 		return
@@ -130,6 +161,20 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 	return ret
 }
 
+func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, posData, posMetaData uint64, width, height, radius float32) uintptr {
+	ret, _, err := createBlipProc.Call(uintptr(blipType), uintptr(spriteId), uintptr(color), uintptr(posData), uintptr(posMetaData), uintptr(width), uintptr(height), uintptr(radius))
+	defer func() {
+		if ret != 0 {
+			w.FreeBlip(ret)
+		}
+	}()
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create blip failed: %v", err.Error())
+		return 0
+	}
+	return ret
+}
+
 func (w *Warrper) PushTask(callback func()) {
 	mu.Lock()
 	defer mu.Unlock()
@@ -156,6 +201,14 @@ func (w *Warrper) FreeVehicle(ptr uintptr) {
 	_, _, err := freeVehicleProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free vehicle failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) FreeBlip(ptr uintptr) {
+	_, _, err := freeBlipProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free blip failed: %v", err.Error())
 		return
 	}
 }
