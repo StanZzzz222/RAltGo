@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
@@ -13,10 +14,6 @@ import (
    File: vehicle.go
 */
 
-type Rgba struct {
-	R, G, B, A uint8
-}
-
 type IVehicle struct {
 	id             uint32
 	model          uint32
@@ -28,25 +25,25 @@ type IVehicle struct {
 	lockState      uint8
 	lightState     uint8
 	headLightColor uint8
-	neonColor      *Rgba
+	neonColor      *utils.Rgba
 	*BaseObject
 }
 
-func (v *IVehicle) GetId() uint32            { return v.id }
-func (v *IVehicle) GetModel() uint32         { return v.model }
-func (v *IVehicle) GetPrimaryColor() uint8   { return v.primaryColor }
-func (v *IVehicle) GetSecondColor() uint8    { return v.secondColor }
-func (v *IVehicle) GetNumberplate() string   { return v.numberplate }
-func (v *IVehicle) GetEngineOn() bool        { return v.engineOn }
-func (v *IVehicle) GetNeonActive() bool      { return v.neonActive }
-func (v *IVehicle) GetLockState() uint8      { return v.lockState }
-func (v *IVehicle) GetLightState() uint8     { return v.lightState }
-func (v *IVehicle) GetHeadLightColor() uint8 { return v.headLightColor }
-func (v *IVehicle) GetNeonColor() *Rgba      { return v.neonColor }
-func (v *IVehicle) GetDimension() int32      { return v.dimension }
-func (v *IVehicle) GetFrozen() bool          { return v.frozen }
-func (v *IVehicle) GetVisible() bool         { return v.visible }
-func (v *IVehicle) GetCollision() bool       { return v.collision }
+func (v *IVehicle) GetId() uint32             { return v.id }
+func (v *IVehicle) GetModel() uint32          { return v.model }
+func (v *IVehicle) GetPrimaryColor() uint8    { return v.primaryColor }
+func (v *IVehicle) GetSecondColor() uint8     { return v.secondColor }
+func (v *IVehicle) GetNumberplate() string    { return v.numberplate }
+func (v *IVehicle) GetEngineOn() bool         { return v.engineOn }
+func (v *IVehicle) GetNeonActive() bool       { return v.neonActive }
+func (v *IVehicle) GetLockState() uint8       { return v.lockState }
+func (v *IVehicle) GetLightState() uint8      { return v.lightState }
+func (v *IVehicle) GetHeadLightColor() uint8  { return v.headLightColor }
+func (v *IVehicle) GetNeonColor() *utils.Rgba { return v.neonColor }
+func (v *IVehicle) GetDimension() int32       { return v.dimension }
+func (v *IVehicle) GetFrozen() bool           { return v.frozen }
+func (v *IVehicle) GetVisible() bool          { return v.visible }
+func (v *IVehicle) GetCollision() bool        { return v.collision }
 
 func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entitys.Vector3) *IVehicle {
 	return &IVehicle{
@@ -150,7 +147,7 @@ func (v *IVehicle) SetHeadLightColor(headLightColor uint8) {
 	w.SetVehicleData(v.id, enum.HeadLightColor, uint64(headLightColor))
 }
 
-func (v *IVehicle) SetNeonColor(neonColor *Rgba) {
+func (v *IVehicle) SetNeonColor(neonColor *utils.Rgba) {
 	v.neonColor = neonColor
 	w.SetVehicleMetaData(v.id, enum.NeonColor, uint64(0), uint64(0), "", neonColor.R, neonColor.G, neonColor.B, neonColor.A)
 }
