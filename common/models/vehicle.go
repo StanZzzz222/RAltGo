@@ -13,6 +13,10 @@ import (
    File: vehicle.go
 */
 
+type Rgba struct {
+	R, G, B, A uint8
+}
+
 type IVehicle struct {
 	id             uint32
 	model          uint32
