@@ -22,6 +22,23 @@ We know many people may be concerned about the performance of this module, so we
 
 ![](https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmSvxRdFriNN3MddHJvVc6A7E7sShdA4JoodbewPCxKZ3m)
 
+Some APIs that have been implemented:
+
+```
+Object:
+1. Blip - Create and setup section
+2. Player - Spawn and setup section
+3. Vehicle - Creation and setup section
+
+Events:
+1. onStart
+2. onServerStarted
+3. onStop
+4. onPlayerConnect
+5. onEnterVehicle
+6. onLeaveVehicle
+```
+
 
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>

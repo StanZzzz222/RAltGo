@@ -24,7 +24,30 @@
 
 
 
+目前已实现的部分API如下：
+
+```
+对象:
+1. Blip - 创建与部分属性值的设定
+2. Player - 出生与部分属性值的设定
+3. Vehicle - 创建与部分属性值的设定
+
+事件:
+1. onStart
+2. onServerStarted
+3. onStop
+4. onPlayerConnect
+5. onEnterVehicle
+6. onLeaveVehicle
+```
+
+
+
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>
+
+
+
+
 
 [我需要一个案例？]([GitHub - StanZzzz222/RAltGo-example-server: RAltGo example server](https://github.com/StanZzzz222/RAltGo-example-server))
 
