@@ -18,15 +18,11 @@
 
 **但是您可以尝试使用它，如果遇到问题可以提出相关 issue**
 
-*我们已对部分 ALTV API 性能进行测试，结果显示目前该Go模块在 ALTV API 调用方面的速度并不比 C# 和 JS 资源差，甚至比它们俩都快。以下我们仅展示分别用 C# 与 Go模块创建5000辆车，如果您有异议您依然可以尝试比对其他资源或者其他内容：*
+*我们知道很多人可能关心这个模块的性能，因此我们在示例资源中添加了基准测试。目前的代码和结果如下。如果您有任何疑问，可以尝试示例服务器。因为资源调度只会在onTick上进行，所以您的性能问题将会被服务端resourceManager提醒*
 
-C#:
+![](https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmSvxRdFriNN3MddHJvVc6A7E7sShdA4JoodbewPCxKZ3m)
 
-![](https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmcLCicAeuFBQ3XR7njaCUe4NpYGTznTtQxDWPmZJwBMcE/csharp.png)
-
-Go:
-
-![](https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmcLCicAeuFBQ3XR7njaCUe4NpYGTznTtQxDWPmZJwBMcE/golang.png)
+<img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmP7gc87FACw72gWhC1h65twVE7iiuNermsw7GksfBVvaV" alt="" width="659">
 
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>
 
