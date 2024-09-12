@@ -30,8 +30,11 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitys
 	rotMetadata := uint64(math.Float32bits(rotation.Z)) << 32
 	ret := w.CreateVehicle(utils.Hash(model), posData, posMetadata, rotData, rotMetadata, w.GoStringMarshalPtr(numberPlate), primaryColor, secondColor)
 	cVeh := entitys.ConvertCVehicle(ret)
-	veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
-	return veh
+	if cVeh != nil {
+		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
+		return veh
+	}
+	return nil
 }
 
 func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, rotation *entitys.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
@@ -44,6 +47,9 @@ func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, 
 	rotMetadata := uint64(math.Float32bits(rotation.Z)) << 32
 	ret := w.CreateVehicle(uint32(model), posData, posMetadata, rotData, rotMetadata, w.GoStringMarshalPtr(numberPlate), primaryColor, secondColor)
 	cVeh := entitys.ConvertCVehicle(ret)
-	veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
-	return veh
+	if cVeh != nil {
+		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
+		return veh
+	}
+	return nil
 }

@@ -47,6 +47,9 @@ type CVehicle struct {
 
 func ConvertCPlayer(cPtr uintptr) *CPlayer {
 	cPlayer := (*C.CPlayer)(unsafe.Pointer(atomic.LoadUintptr(&cPtr)))
+	if cPlayer == nil {
+		return nil
+	}
 	return &CPlayer{
 		ID:         uint32(cPlayer.id),
 		Name:       w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.name))),
@@ -61,6 +64,9 @@ func ConvertCPlayer(cPtr uintptr) *CPlayer {
 
 func ConvertCVehicle(cvPtr uintptr) *CVehicle {
 	cVehicle := (*C.CVehicle)(unsafe.Pointer(atomic.LoadUintptr(&cvPtr)))
+	if cVehicle == nil {
+		return nil
+	}
 	return &CVehicle{
 		ID:           uint32(cVehicle.id),
 		Model:        uint32(cVehicle.model),
