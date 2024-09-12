@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	"github.com/StanZzzz222/RAltGo/internal/timers"
+	"github.com/StanZzzz222/RAltGo/timers"
 	"sync"
 	"time"
 )
