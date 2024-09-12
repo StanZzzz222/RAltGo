@@ -8,6 +8,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/logger"
 	"math"
 	"os"
+	"sync"
 	"syscall"
 	"time"
 	"unsafe"
@@ -22,6 +23,7 @@ import (
 var dllPath string
 var dll *syscall.DLL
 var tasks = list.New()
+var mu = &sync.Mutex{}
 var freeProc *syscall.Proc
 var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
@@ -130,6 +132,8 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 }
 
 func (w *Warrper) PushTask(callback func()) {
+	mu.Lock()
+	defer mu.Unlock()
 	tasks.PushBack(callback)
 }
 
