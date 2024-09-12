@@ -18,13 +18,11 @@
 
 <strong>But you can try to use it and raise a related issue if you encounter problems</strong>
 
-
-
 We know many people may be concerned about the performance of this module, so we've added benchmarks to the examples resources. The current code and results are below. If you have any questions, you can try the sample server. Because resource scheduling will only be performed onTick, your performance issues will be alerted by the server-side resourceManager.
 
 ![](https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmSvxRdFriNN3MddHJvVc6A7E7sShdA4JoodbewPCxKZ3m)
 
-<img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmP7gc87FACw72gWhC1h65twVE7iiuNermsw7GksfBVvaV" alt="" width="659">
+
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>
 

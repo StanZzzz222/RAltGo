@@ -22,7 +22,7 @@
 
 ![](https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmSvxRdFriNN3MddHJvVc6A7E7sShdA4JoodbewPCxKZ3m)
 
-<img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmP7gc87FACw72gWhC1h65twVE7iiuNermsw7GksfBVvaV" alt="" width="659">
+
 
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>
 
