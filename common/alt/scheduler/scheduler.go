@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	"github.com/StanZzzz222/RAltGo/timers"
+	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"sync"
 	"time"
 )
@@ -14,26 +14,26 @@ import (
 
 type Scheduler struct {
 	tasks []func()
-	mu    *sync.Mutex
+	rw    sync.RWMutex
 }
 
 func NewScheduler() *Scheduler {
 	return &Scheduler{
 		tasks: []func(){},
-		mu:    &sync.Mutex{},
 	}
 }
 
 func (s *Scheduler) AddTask(task func()) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
+	s.rw.Lock()
+	defer s.rw.Unlock()
 	s.tasks = append(s.tasks, task)
 }
 
-func (s *Scheduler) RunWait() {
-	timers.SetTimeout(time.Microsecond*1, func() {
+func (s *Scheduler) Run() {
+	timers.SetTimeout(time.Microsecond*10, func() {
 		for _, task := range s.tasks {
 			task()
 		}
+		s.tasks = []func(){}
 	})
 }

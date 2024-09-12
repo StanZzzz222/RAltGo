@@ -1,17 +1,17 @@
 package utils
 
+import (
+	"github.com/StanZzzz222/RAltGo/internal/entities"
+)
+
 /*
    Create by zyx
    Date Time: 2024/9/12
-   File: rgba.go
+   File: basic.go
 */
 
-type Rgba struct {
-	R, G, B, A uint8
-}
-
-func NewRGBA(r, g, b, a uint8) *Rgba {
-	return &Rgba{
+func NewRGBA(r, g, b, a uint8) *entities.Rgba {
+	return &entities.Rgba{
 		R: r,
 		G: g,
 		B: b,

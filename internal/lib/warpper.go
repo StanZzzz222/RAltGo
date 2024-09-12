@@ -2,14 +2,12 @@ package lib
 
 import "C"
 import (
-	"container/list"
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"math"
 	"os"
-	"sync"
 	"syscall"
 	"time"
 	"unsafe"
@@ -23,8 +21,7 @@ import (
 
 var dllPath string
 var dll *syscall.DLL
-var tasks = list.New()
-var mu = &sync.Mutex{}
+var taskQueue = NewTaskQueue()
 var freeProc *syscall.Proc
 var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
@@ -41,10 +38,9 @@ type Warrper struct{}
 
 //export onTick
 func onTick() {
-	if tasks.Len() > 0 {
-		elem := tasks.Front()
-		task := elem.Value.(func())
-		tasks.Remove(elem)
+	flag := taskQueue.PopCheck()
+	if flag {
+		task := taskQueue.Pop()
 		task()
 	}
 }
@@ -147,38 +143,36 @@ func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 	}
 }
 
-func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) uintptr {
+func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
 	ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
-	defer func() {
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create vehicle failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
 		if ret != 0 {
 			w.FreeVehicle(ret)
 		}
-	}()
-	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
-		logger.LogErrorf("create vehicle failed: %v", err.Error())
-		return 0
 	}
-	return ret
+	return ret, freePtrFunc
 }
 
-func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, posData, posMetaData uint64, width, height, radius float32) uintptr {
+func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
 	ret, _, err := createBlipProc.Call(uintptr(blipType), uintptr(spriteId), uintptr(color), uintptr(posData), uintptr(posMetaData), uintptr(width), uintptr(height), uintptr(radius))
-	defer func() {
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create blip failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
 		if ret != 0 {
 			w.FreeBlip(ret)
 		}
-	}()
-	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
-		logger.LogErrorf("create blip failed: %v", err.Error())
-		return 0
 	}
-	return ret
+	return ret, freePtrFunc
 }
 
 func (w *Warrper) PushTask(callback func()) {
-	mu.Lock()
-	defer mu.Unlock()
-	tasks.PushBack(callback)
+	taskQueue.AddTask(callback)
 }
 
 func (w *Warrper) Free(ptr uintptr) {

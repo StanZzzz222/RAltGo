@@ -1,14 +1,14 @@
 package models
 
 import (
+	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/enums/ped"
 	"github.com/StanZzzz222/RAltGo/enums/weapon"
 	"github.com/StanZzzz222/RAltGo/enums/weather"
-	"github.com/StanZzzz222/RAltGo/internal/entitys"
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
-	"github.com/StanZzzz222/RAltGo/timers"
 	"math"
 	"net"
 	"strings"
@@ -40,7 +40,7 @@ type IPlayer struct {
 	*BaseObject
 }
 
-func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hwIdExHash uint64, position, rotation *entitys.Vector3) *IPlayer {
+func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hwIdExHash uint64, position, rotation *entities.Vector3) *IPlayer {
 	ipParse := net.ParseIP(ip)
 	return &IPlayer{
 		id:         id,
@@ -53,7 +53,7 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 	}
 }
 
-func (p *IPlayer) Spawn(model string, position *entitys.Vector3) {
+func (p *IPlayer) Spawn(model string, position *entities.Vector3) {
 	if position != nil {
 		p.model = utils.Hash(model)
 		p.position = position
@@ -93,7 +93,7 @@ func (p *IPlayer) SetHealth(health uint16) {
 	w.SetPlayerData(p.id, enum.Health, int64(health))
 }
 
-func (p *IPlayer) SetPosition(position *entitys.Vector3) {
+func (p *IPlayer) SetPosition(position *entities.Vector3) {
 	p.position = position
 	w.SetPlayerMetaData(p.id, enum.Position, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
 }
@@ -158,12 +158,12 @@ func (p *IPlayer) SetDimension(dimension int32) {
 	}
 }
 
-func (p *IPlayer) SetRotation(rotation *entitys.Vector3) {
+func (p *IPlayer) SetRotation(rotation *entities.Vector3) {
 	p.rotation = rotation
 	w.SetPlayerMetaData(p.id, enum.Rot, int64(math.Float32bits(rotation.X))|(int64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32)
 }
 
-func (p *IPlayer) SetPositionRotation(position, rotation *entitys.Vector3) {
+func (p *IPlayer) SetPositionRotation(position, rotation *entities.Vector3) {
 	p.position = position
 	p.rotation = rotation
 	w.SetPlayerMetaData(p.id, enum.Position, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)

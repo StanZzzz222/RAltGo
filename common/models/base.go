@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/StanZzzz222/RAltGo/internal/entitys"
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 )
 
@@ -14,15 +14,15 @@ import (
 var w = &lib.Warrper{}
 
 type BaseObject struct {
-	position  *entitys.Vector3
-	rotation  *entitys.Vector3
+	position  *entities.Vector3
+	rotation  *entities.Vector3
 	dimension int32
 	frozen    bool
 	collision bool
 	visible   bool
 }
 
-func NewBaseObject(position, rotation *entitys.Vector3, dimension int32, frozen, collision, visible bool) *BaseObject {
+func NewBaseObject(position, rotation *entities.Vector3, dimension int32, frozen, collision, visible bool) *BaseObject {
 	return &BaseObject{
 		position:  position,
 		rotation:  rotation,

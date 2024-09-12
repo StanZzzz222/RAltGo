@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/internal/entitys"
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"strconv"
 	"strings"
 )
@@ -13,15 +13,15 @@ import (
    File: vector3.go
 */
 
-func NewVector3(x, y, z float32) *entitys.Vector3 {
-	return &entitys.Vector3{X: x, Y: y, Z: z}
+func NewVector3(x, y, z float32) *entities.Vector3 {
+	return &entities.Vector3{X: x, Y: y, Z: z}
 }
 
-func NewVector3Round(x, y, z float32, round float32) *entitys.Vector3 {
-	return &entitys.Vector3{X: x, Y: y, Z: z}
+func NewVector3Round(x, y, z float32, round float32) *entities.Vector3 {
+	return &entities.Vector3{X: x, Y: y, Z: z}
 }
 
-func NewVector3FromStr(position string) (*entitys.Vector3, error) {
+func NewVector3FromStr(position string) (*entities.Vector3, error) {
 	position = strings.TrimSpace(position)
 	arr := strings.Split(position, ",")
 	if len(arr) != 3 {

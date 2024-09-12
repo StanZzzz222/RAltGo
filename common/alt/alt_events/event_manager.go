@@ -10,6 +10,13 @@ import "github.com/StanZzzz222/RAltGo/common/models"
 
 type Callback struct{}
 
+var onStartCallback OnStartCallback
+var onStopCallback OnStopCallback
+var onServerStartedCallback OnServerStartedCallback
+var onPlayerConnectCallback OnPlayerConnectCallback
+var onEnterVehicleCallback OnEnterVehicleCallback
+var onLeaveVehicleCallback OnLeaveVehicleCallback
+
 type OnStartCallback func()
 type OnStopCallback func()
 type OnServerStartedCallback func()
@@ -17,12 +24,36 @@ type OnPlayerConnectCallback func(player *models.IPlayer)
 type OnEnterVehicleCallback func(player *models.IPlayer, vehicle *models.IVehicle, seat uint8)
 type OnLeaveVehicleCallback func(player *models.IPlayer, vehicle *models.IVehicle, seat uint8)
 
-var onStartCallback OnStartCallback
-var onStopCallback OnStopCallback
-var onServerStartedCallback OnServerStartedCallback
-var onPlayerConnectCallback OnPlayerConnectCallback
-var onEnterVehicleCallback OnEnterVehicleCallback
-var onLeaveVehicleCallback OnLeaveVehicleCallback
+func (cb *Callback) TriggerOnStart() {
+	if onStartCallback != nil {
+		onStartCallback()
+	}
+}
+func (cb *Callback) TriggerOnStop() {
+	if onStopCallback != nil {
+		onStopCallback()
+	}
+}
+func (cb *Callback) TriggerOnServerStarted() {
+	if onServerStartedCallback != nil {
+		onServerStartedCallback()
+	}
+}
+func (cb *Callback) TriggerOnPlayerConnect(player *models.IPlayer) {
+	if onPlayerConnectCallback != nil {
+		onPlayerConnectCallback(player)
+	}
+}
+func (cb *Callback) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
+	if onEnterVehicleCallback != nil {
+		onEnterVehicleCallback(player, vehicle, seat)
+	}
+}
+func (cb *Callback) TriggerOnLeaveVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
+	if onLeaveVehicleCallback != nil {
+		onLeaveVehicleCallback(player, vehicle, seat)
+	}
+}
 
 func OnStart(cb OnStartCallback) {
 	if onStartCallback == nil {
@@ -57,36 +88,5 @@ func OnEnterVehicle(cb OnEnterVehicleCallback) {
 func OnLeaveVehicle(cb OnLeaveVehicleCallback) {
 	if onLeaveVehicleCallback == nil {
 		onLeaveVehicleCallback = cb
-	}
-}
-
-func (cb *Callback) TriggerOnStart() {
-	if onStartCallback != nil {
-		onStartCallback()
-	}
-}
-func (cb *Callback) TriggerOnStop() {
-	if onStopCallback != nil {
-		onStopCallback()
-	}
-}
-func (cb *Callback) TriggerOnServerStarted() {
-	if onServerStartedCallback != nil {
-		onServerStartedCallback()
-	}
-}
-func (cb *Callback) TriggerOnPlayerConnect(player *models.IPlayer) {
-	if onPlayerConnectCallback != nil {
-		onPlayerConnectCallback(player)
-	}
-}
-func (cb *Callback) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
-	if onEnterVehicleCallback != nil {
-		onEnterVehicleCallback(player, vehicle, seat)
-	}
-}
-func (cb *Callback) TriggerOnLeaveVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
-	if onLeaveVehicleCallback != nil {
-		onLeaveVehicleCallback(player, vehicle, seat)
 	}
 }

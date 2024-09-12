@@ -1,9 +1,8 @@
 package models
 
 import (
-	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
-	"github.com/StanZzzz222/RAltGo/internal/entitys"
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
 )
@@ -45,9 +44,9 @@ type IBlip struct {
 	flashesAlternate         bool
 	crewIndicatorVisible     bool
 	name                     string
-	routeColor               *utils.Rgba
-	rgbaColor                *utils.Rgba
-	position                 *entitys.Vector3
+	routeColor               *entities.Rgba
+	rgbaColor                *entities.Rgba
+	position                 *entities.Vector3
 }
 
 func (b *IBlip) GetId() uint32                     { return b.id }
@@ -80,11 +79,11 @@ func (b *IBlip) GetHiddenOnLegend() bool           { return b.hiddenOnLegend }
 func (b *IBlip) GetMinimalOnEdge() bool            { return b.minimalOnEdge }
 func (b *IBlip) GetFlashesAlternate() bool         { return b.flashesAlternate }
 func (b *IBlip) GetCrewIndicatorVisible() bool     { return b.crewIndicatorVisible }
-func (b *IBlip) GetRouteColor() *utils.Rgba        { return b.routeColor }
-func (b *IBlip) GetRgbaColor() *utils.Rgba         { return b.rgbaColor }
-func (b *IBlip) GetPosition() *entitys.Vector3     { return b.position }
+func (b *IBlip) GetRouteColor() *entities.Rgba     { return b.routeColor }
+func (b *IBlip) GetRgbaColor() *entities.Rgba      { return b.rgbaColor }
+func (b *IBlip) GetPosition() *entities.Vector3    { return b.position }
 
-func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, rot float32, position *entitys.Vector3) *IBlip {
+func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, rot float32, position *entities.Vector3) *IBlip {
 	return &IBlip{
 		id:       id,
 		blipType: blipType,
@@ -105,7 +104,7 @@ func (b *IBlip) SetBlipColor(color uint32) {
 	w.SetBlipData(b.id, enum.Color, int64(color))
 }
 
-func (b *IBlip) SetBlipRGBA(rgbaColor *utils.Rgba) {
+func (b *IBlip) SetBlipRGBA(rgbaColor *entities.Rgba) {
 	b.rgbaColor = rgbaColor
 	w.SetBlipMetaData(b.id, enum.RgbaColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
 }
@@ -315,7 +314,7 @@ func (b *IBlip) SetBlipUseHeightIndicatorOnEdge(useHeightIndicatorOnEdge bool) {
 	w.SetBlipData(b.id, enum.UseHeightIndicatorOnEdge, int64(value))
 }
 
-func (b *IBlip) SetBlipPosition(position *entitys.Vector3) {
+func (b *IBlip) SetBlipPosition(position *entities.Vector3) {
 	b.position = position
 	w.SetBlipMetaData(b.id, enum.BlipPosition, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32, "", 0, 0, 0, 0)
 }
@@ -325,7 +324,7 @@ func (b *IBlip) SetBlipName(name string) {
 	w.SetBlipMetaData(b.id, enum.Name, 0, 0, name, 0, 0, 0, 0)
 }
 
-func (b *IBlip) SetBlipRouteColor(rgbaColor *utils.Rgba) {
+func (b *IBlip) SetBlipRouteColor(rgbaColor *entities.Rgba) {
 	b.routeColor = rgbaColor
 	w.SetBlipMetaData(b.id, enum.RouteColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
 }

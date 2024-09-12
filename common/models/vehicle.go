@@ -1,9 +1,8 @@
 package models
 
 import (
-	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums"
-	"github.com/StanZzzz222/RAltGo/internal/entitys"
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
 )
@@ -32,29 +31,29 @@ type IVehicle struct {
 	engineHealth     int32
 	lightsMultiplier float32
 	wheelColor       uint8
-	neonColor        *utils.Rgba
+	neonColor        *entities.Rgba
 	*BaseObject
 }
 
-func (v *IVehicle) GetId() uint32             { return v.id }
-func (v *IVehicle) GetModel() uint32          { return v.model }
-func (v *IVehicle) GetPrimaryColor() uint8    { return v.primaryColor }
-func (v *IVehicle) GetSecondColor() uint8     { return v.secondColor }
-func (v *IVehicle) GetNumberplate() string    { return v.numberplate }
-func (v *IVehicle) GetEngineOn() bool         { return v.engineOn }
-func (v *IVehicle) GetNeonActive() bool       { return v.neonActive }
-func (v *IVehicle) GetLockState() uint8       { return v.lockState }
-func (v *IVehicle) GetLightState() uint8      { return v.lightState }
-func (v *IVehicle) GetHeadLightColor() uint8  { return v.headLightColor }
-func (v *IVehicle) GetNeonColor() *utils.Rgba { return v.neonColor }
-func (v *IVehicle) GetDimension() int32       { return v.dimension }
-func (v *IVehicle) GetFrozen() bool           { return v.frozen }
-func (v *IVehicle) GetVisible() bool          { return v.visible }
-func (v *IVehicle) GetCollision() bool        { return v.collision }
-func (v *IVehicle) GetDriftMode() bool        { return v.driftMode }
-func (v *IVehicle) GetDisableTowing() bool    { return v.disableTowing }
+func (v *IVehicle) GetId() uint32                { return v.id }
+func (v *IVehicle) GetModel() uint32             { return v.model }
+func (v *IVehicle) GetPrimaryColor() uint8       { return v.primaryColor }
+func (v *IVehicle) GetSecondColor() uint8        { return v.secondColor }
+func (v *IVehicle) GetNumberplate() string       { return v.numberplate }
+func (v *IVehicle) GetEngineOn() bool            { return v.engineOn }
+func (v *IVehicle) GetNeonActive() bool          { return v.neonActive }
+func (v *IVehicle) GetLockState() uint8          { return v.lockState }
+func (v *IVehicle) GetLightState() uint8         { return v.lightState }
+func (v *IVehicle) GetHeadLightColor() uint8     { return v.headLightColor }
+func (v *IVehicle) GetNeonColor() *entities.Rgba { return v.neonColor }
+func (v *IVehicle) GetDimension() int32          { return v.dimension }
+func (v *IVehicle) GetFrozen() bool              { return v.frozen }
+func (v *IVehicle) GetVisible() bool             { return v.visible }
+func (v *IVehicle) GetCollision() bool           { return v.collision }
+func (v *IVehicle) GetDriftMode() bool           { return v.driftMode }
+func (v *IVehicle) GetDisableTowing() bool       { return v.disableTowing }
 
-func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entitys.Vector3) *IVehicle {
+func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entities.Vector3) *IVehicle {
 	return &IVehicle{
 		id:           id,
 		model:        model,
@@ -74,17 +73,17 @@ func (v *IVehicle) SetSecondColor(secondColor uint8) {
 	w.SetVehicleData(v.id, enum.SecondColor, int64(secondColor))
 }
 
-func (v *IVehicle) SetPosition(position *entitys.Vector3) {
+func (v *IVehicle) SetPosition(position *entities.Vector3) {
 	v.position = position
 	w.SetVehicleMetaData(v.id, enum.VehiclePosition, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32, "", 0, 0, 0, 0)
 }
 
-func (v *IVehicle) SetRotation(rotation *entitys.Vector3) {
+func (v *IVehicle) SetRotation(rotation *entities.Vector3) {
 	v.rotation = rotation
 	w.SetVehicleMetaData(v.id, enum.VehicleRot, int64(math.Float32bits(rotation.X))|(int64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32, "", 0, 0, 0, 0)
 }
 
-func (v *IVehicle) SetPositionRotation(position, rotation *entitys.Vector3) {
+func (v *IVehicle) SetPositionRotation(position, rotation *entities.Vector3) {
 	v.position = position
 	v.rotation = rotation
 	w.SetVehicleMetaData(v.id, enum.VehiclePosition, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32, "", 0, 0, 0, 0)
@@ -211,7 +210,7 @@ func (v *IVehicle) SetRearWheels(variation uint8) {
 	w.SetVehicleData(v.id, enum.RearWheels, int64(variation))
 }
 
-func (v *IVehicle) SetNeonColor(neonColor *utils.Rgba) {
+func (v *IVehicle) SetNeonColor(neonColor *entities.Rgba) {
 	v.neonColor = neonColor
 	w.SetVehicleMetaData(v.id, enum.NeonColor, int64(0), uint64(0), "", neonColor.R, neonColor.G, neonColor.B, neonColor.A)
 }
