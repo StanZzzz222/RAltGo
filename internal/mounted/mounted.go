@@ -81,7 +81,7 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	var veh = &models.IVehicle{}
 	var cPlayer = entitys.ConvertCPlayer(cPtr)
 	var cVehicle = entitys.ConvertCVehicle(cvPtr)
-	if cPlayer == nil && cVehicle == nil {
+	if cPlayer != nil && cVehicle != nil {
 		defer w.FreePlayer(cPtr)
 		defer w.FreeVehicle(cvPtr)
 		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
