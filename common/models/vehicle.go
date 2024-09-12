@@ -158,7 +158,7 @@ func (v *IVehicle) SetNeonActive(neonActive bool) {
 	if neonActive {
 		value = 1
 	}
-	w.SetVehicleData(v.id, enum.NeonActive, uint64(value))
+	w.SetVehicleMetaData(v.id, enum.NeonActive, uint64(0), uint64(0), "", uint8(value), uint8(value), uint8(value), uint8(value))
 }
 
 func (v *IVehicle) SetNumberPlate(numberplate string) {
