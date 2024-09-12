@@ -5,6 +5,7 @@ package entitys
 	#include "c_vector3.h"
 	#include "c_player.h"
 	#include "c_vehicle.h"
+	#include "c_blip.h"
 */
 import "C"
 import (
