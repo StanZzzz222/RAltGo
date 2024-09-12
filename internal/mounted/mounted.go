@@ -13,7 +13,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
-	"time"
 	"unsafe"
 )
 
@@ -37,29 +36,17 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 
 //export onStart
 func onStart() {
-	defer func() {
-		time.AfterFunc(time.Millisecond*100, func() {
-			cb.TriggerOnStart()
-		})
-	}()
+	cb.TriggerOnStart()
 }
 
 //export onServerStarted
 func onServerStarted() {
-	defer func() {
-		time.AfterFunc(time.Millisecond*100, func() {
-			cb.TriggerOnServerStarted()
-		})
-	}()
+	cb.TriggerOnServerStarted()
 }
 
 //export onStop
 func onStop() {
-	defer func() {
-		time.AfterFunc(time.Millisecond*100, func() {
-			cb.TriggerOnStop()
-		})
-	}()
+	cb.TriggerOnStop()
 }
 
 //export onPlayerConnect

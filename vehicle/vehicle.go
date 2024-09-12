@@ -17,8 +17,8 @@ import (
    File: vehicle.go
 */
 
-var w = &lib.Warrper{}
 var rw = &sync.RWMutex{}
+var w = &lib.Warrper{}
 
 func CreateVehicle(model string, numberPlate string, position, rotation *entitys.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
 	rw.Lock()

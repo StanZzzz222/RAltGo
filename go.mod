@@ -3,7 +3,6 @@ module github.com/StanZzzz222/RAltGo
 go 1.22
 
 require (
-	github.com/bwmarrin/snowflake v0.3.0
 	github.com/gookit/color v1.5.4
 )
 
