@@ -84,7 +84,7 @@ func (w *Warrper) SpawnPlayer(id uint32, hash uint32, x, y, z float32) {
 	}
 }
 
-func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data uint64) {
+func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data int64) {
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set vehicle data failed: %v", err.Error())
@@ -92,7 +92,7 @@ func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType
 	}
 }
 
-func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data, metaData uint64, strData string, l, r, t, b uint8) {
+func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(metaData), w.GoStringMarshalPtr(strData), uintptr(l), uintptr(r), uintptr(t), uintptr(b))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set vehicle data failed: %v", err.Error())

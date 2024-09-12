@@ -8,6 +8,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/enums/weather"
 	"github.com/StanZzzz222/RAltGo/internal/entitys"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/timers"
 	"math"
 	"net"
 	"strings"
@@ -170,7 +171,9 @@ func (p *IPlayer) SetPositionRotation(position, rotation *entitys.Vector3) {
 }
 
 func (p *IPlayer) SetIntoVehicle(vehicle *IVehicle, seat uint8) {
-	w.SetPlayerMetaData(p.id, enum.InVehicle, int64(vehicle.id), uint64(seat))
+	timers.SetTimeout(time.Millisecond*30, func() {
+		w.SetPlayerMetaData(p.id, enum.InVehicle, int64(vehicle.id), uint64(seat))
+	})
 }
 
 func (p *IPlayer) SetArmour(armour uint16) {

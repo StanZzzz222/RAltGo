@@ -24,4 +24,14 @@ const (
 	VehicleDimension
 	VehiclePosition
 	VehicleRot
+	DriftMode
+	DoorState
+	DisableTowing
+	DirtLevel
+	BodyHealth
+	EngineHealth
+	LightsMultiplier
+	WheelColor
+	RearWheels
+	Mod
 )
