@@ -148,7 +148,7 @@ func (v *IVehicle) SetHeadLightColor(headLightColor uint8) {
 
 func (v *IVehicle) SetNeonColor(neonColor *Rgba) {
 	v.neonColor = neonColor
-	w.SetVehicleMetaData(v.id, enum.NeonColor, uint64(0), uint64(0), "", neonColor.r, neonColor.g, neonColor.b, neonColor.a)
+	w.SetVehicleMetaData(v.id, enum.NeonColor, uint64(0), uint64(0), "", neonColor.R, neonColor.G, neonColor.B, neonColor.A)
 }
 
 func (v *IVehicle) SetNeonActive(neonActive bool) {

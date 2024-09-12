@@ -7,9 +7,5 @@ package models
 */
 
 type Rgba struct {
-	r, g, b, a uint8
-}
-
-func NewRGBA(r, g, b, a uint8) *Rgba {
-	return &Rgba{r, g, b, a}
+	R, G, B, A uint8
 }
