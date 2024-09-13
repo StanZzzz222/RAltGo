@@ -14,9 +14,8 @@ Date Time: 2024/9/12
 File: blip.go
 */
 
-var w = &lib.Warrper{}
-
 func CreateBlipPoint(spriteId, color uint32, name string, position *entities.Vector3) *models.IBlip {
+	var w = &lib.Warrper{}
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
@@ -31,6 +30,7 @@ func CreateBlipPoint(spriteId, color uint32, name string, position *entities.Vec
 }
 
 func CreateBlipArea(spriteId, color uint32, name string, position *entities.Vector3, width, height float32) *models.IBlip {
+	var w = &lib.Warrper{}
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
@@ -45,6 +45,7 @@ func CreateBlipArea(spriteId, color uint32, name string, position *entities.Vect
 }
 
 func CreateBlipRadius(spriteId, color uint32, name string, position *entities.Vector3, radius float32) *models.IBlip {
+	var w = &lib.Warrper{}
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32

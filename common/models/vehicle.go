@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/StanZzzz222/RAltGo/enums"
+	"github.com/StanZzzz222/RAltGo/enums/vehicle"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
@@ -15,7 +16,7 @@ import (
 
 type IVehicle struct {
 	id               uint32
-	model            uint32
+	model            vehicle.ModelHash
 	primaryColor     uint8
 	secondColor      uint8
 	numberplate      string
@@ -36,7 +37,7 @@ type IVehicle struct {
 }
 
 func (v *IVehicle) GetId() uint32                { return v.id }
-func (v *IVehicle) GetModel() uint32             { return v.model }
+func (v *IVehicle) GetModel() vehicle.ModelHash  { return v.model }
 func (v *IVehicle) GetPrimaryColor() uint8       { return v.primaryColor }
 func (v *IVehicle) GetSecondColor() uint8        { return v.secondColor }
 func (v *IVehicle) GetNumberplate() string       { return v.numberplate }
@@ -56,7 +57,7 @@ func (v *IVehicle) GetDisableTowing() bool       { return v.disableTowing }
 func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entities.Vector3) *IVehicle {
 	return &IVehicle{
 		id:           id,
-		model:        model,
+		model:        vehicle.ModelHash(model),
 		primaryColor: primaryColor,
 		secondColor:  secondColor,
 		BaseObject:   NewBaseObject(position, rotation, enums.DefaultDimension, false, true, true),
@@ -204,6 +205,10 @@ func (v *IVehicle) SetWheelColor(wheelColor uint8) {
 
 func (v *IVehicle) SetMod(categray uint8, id uint8) {
 	w.SetVehicleMetaData(v.id, enum.Mod, int64(categray), uint64(id), "", uint8(0), uint8(0), uint8(0), uint8(0))
+}
+
+func (v *IVehicle) SetModKit(id uint8) {
+	w.SetVehicleData(v.id, enum.ModKit, int64(id))
 }
 
 func (v *IVehicle) SetRearWheels(variation uint8) {

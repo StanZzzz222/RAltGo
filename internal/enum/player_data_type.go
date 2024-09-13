@@ -28,4 +28,10 @@ const (
 	Visible
 	Rot
 	InVehicle
+	Despawn
+	ClearBloodDamage
+	EyeColor
+	HairColor
+	HairHighlightColor
+	Spawn
 )

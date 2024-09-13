@@ -15,13 +15,14 @@ import (
 
 type IBlip struct {
 	id                       uint32
-	blipType                 uint32
+	blipType                 blip_type.BlipType
 	color                    uint32
 	spriteId                 uint32
 	alpha                    uint32
 	category                 uint32
 	flashInterval            uint32
 	flashTimer               uint32
+	number                   int32
 	rot                      float32
 	visible                  bool
 	display                  bool
@@ -43,15 +44,20 @@ type IBlip struct {
 	minimalOnEdge            bool
 	flashesAlternate         bool
 	crewIndicatorVisible     bool
+	headingIndicatorVisible  bool
+	shortHeightThreshold     bool
 	name                     string
+	gxtName                  string
 	routeColor               *entities.Rgba
 	rgbaColor                *entities.Rgba
 	position                 *entities.Vector3
+	scale                    *entities.Vector3
 }
 
 func (b *IBlip) GetId() uint32                     { return b.id }
 func (b *IBlip) GetName() string                   { return b.name }
-func (b *IBlip) GetBlipType() blip_type.BlipType   { return blip_type.BlipType(b.blipType) }
+func (b *IBlip) GetGxtName() string                { return b.gxtName }
+func (b *IBlip) GetBlipType() blip_type.BlipType   { return b.blipType }
 func (b *IBlip) GetBlipColor() uint32              { return b.color }
 func (b *IBlip) GetSpriteId() uint32               { return b.spriteId }
 func (b *IBlip) GetAlpha() uint32                  { return b.alpha }
@@ -79,14 +85,18 @@ func (b *IBlip) GetHiddenOnLegend() bool           { return b.hiddenOnLegend }
 func (b *IBlip) GetMinimalOnEdge() bool            { return b.minimalOnEdge }
 func (b *IBlip) GetFlashesAlternate() bool         { return b.flashesAlternate }
 func (b *IBlip) GetCrewIndicatorVisible() bool     { return b.crewIndicatorVisible }
+func (b *IBlip) GetHeadingIndicatorVisible() bool  { return b.headingIndicatorVisible }
+func (b *IBlip) GetShortHeightThreshold() bool     { return b.shortHeightThreshold }
+func (b *IBlip) GetNumber() int32                  { return b.number }
 func (b *IBlip) GetRouteColor() *entities.Rgba     { return b.routeColor }
 func (b *IBlip) GetRgbaColor() *entities.Rgba      { return b.rgbaColor }
 func (b *IBlip) GetPosition() *entities.Vector3    { return b.position }
+func (b *IBlip) GetScale() *entities.Vector3       { return b.scale }
 
 func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot float32, position *entities.Vector3) *IBlip {
 	return &IBlip{
 		id:       id,
-		blipType: blipType,
+		blipType: blip_type.BlipType(blipType),
 		spriteId: spriteId,
 		name:     name,
 		color:    color,
@@ -328,4 +338,42 @@ func (b *IBlip) SetBlipName(name string) {
 func (b *IBlip) SetBlipRouteColor(rgbaColor *entities.Rgba) {
 	b.routeColor = rgbaColor
 	w.SetBlipMetaData(b.id, enum.RouteColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
+}
+
+func (b *IBlip) SetBlipHeadingIndicatorVisible(headingIndicatorVisible bool) {
+	b.headingIndicatorVisible = headingIndicatorVisible
+	value := 0
+	if headingIndicatorVisible {
+		value = 1
+	}
+	w.SetBlipData(b.id, enum.HeadingIndicatorVisible, int64(value))
+}
+
+func (b *IBlip) SetBlipShortHeightThreshold(shortHeightThreshold bool) {
+	b.shortHeightThreshold = shortHeightThreshold
+	value := 0
+	if shortHeightThreshold {
+		value = 1
+	}
+	w.SetBlipData(b.id, enum.ShortHeightThreshold, int64(value))
+}
+
+func (b *IBlip) SetBlipNumber(number int32) {
+	b.number = number
+	w.SetBlipData(b.id, enum.Number, int64(number))
+}
+
+func (b *IBlip) SetBlipType(blipType blip_type.BlipType) {
+	b.blipType = blipType
+	w.SetBlipData(b.id, enum.BlipType, int64(blipType))
+}
+
+func (b *IBlip) SetBlipGxtName(gxtName string) {
+	b.gxtName = gxtName
+	w.SetBlipMetaData(b.id, enum.GxtName, 0, 0, gxtName, 0, 0, 0, 0)
+}
+
+func (b *IBlip) SetBlipScale(scale *entities.Vector3) {
+	b.scale = scale
+	w.SetBlipMetaData(b.id, enum.Scale, int64(math.Float32bits(scale.X))|(int64(math.Float32bits(scale.Y))<<32), 0, "", 0, 0, 0, 0)
 }

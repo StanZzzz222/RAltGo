@@ -6,7 +6,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
-	"math"
 	"os"
 	"syscall"
 	"time"
@@ -27,12 +26,12 @@ var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
 var freeVehicleProc *syscall.Proc
 var freeBlipProc *syscall.Proc
-var spawnPlayerProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
 var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
+var createPedProc *syscall.Proc
 
 type Warrper struct{}
 
@@ -61,12 +60,12 @@ func init() {
 	freePlayerProc = dll.MustFindProc("free_player")
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
 	freeBlipProc = dll.MustFindProc("free_blip")
-	spawnPlayerProc = dll.MustFindProc("spawn_player")
 	setPlayerDataProc = dll.MustFindProc("set_player_data")
 	setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 	setBlipDataProc = dll.MustFindProc("set_blip_data")
 	createVehicleProc = dll.MustFindProc("create_vehicle")
 	createBlipProc = dll.MustFindProc("create_blip")
+	createPedProc = dll.MustFindProc("create_ped")
 }
 
 func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
@@ -78,10 +77,18 @@ func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, m
 	return ret != 0
 }
 
-func (w *Warrper) SpawnPlayer(id uint32, hash uint32, x, y, z float32) {
-	_, _, err := spawnPlayerProc.Call(uintptr(id), uintptr(hash), uintptr(math.Float32bits(x)), uintptr(math.Float32bits(y)), uintptr(math.Float32bits(z)))
+func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64) {
+	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("spawn player failed: %v", err.Error())
+		logger.LogErrorf("set player data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
+	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
 	}
 }
@@ -127,7 +134,15 @@ func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleData
 }
 
 func (w *Warrper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataType, data int64, metaData uint64) {
-	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(data), uintptr(metaData))
+	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set player data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDataType, model uint32, data int64, metaData uint64) {
+	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(model), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
@@ -135,7 +150,7 @@ func (w *Warrper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataTyp
 }
 
 func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, data int64) {
-	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(data), uintptr(0))
+	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
@@ -144,6 +159,20 @@ func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 
 func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
 	ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create vehicle failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeVehicle(ret)
+		}
+	}
+	return ret, freePtrFunc
+}
+
+func (w *Warrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMetaData uint64, streamingDistance uint32) (uintptr, func()) {
+	ret, _, err := createPedProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), uintptr(streamingDistance))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create vehicle failed: %v", err.Error())
 		return 0, func() {}

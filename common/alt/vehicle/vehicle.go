@@ -16,9 +16,8 @@ import (
    File: vehicle.go
 */
 
-var w = &lib.Warrper{}
-
 func CreateVehicle(model string, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
+	var w = &lib.Warrper{}
 	var veh = &models.IVehicle{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
@@ -35,6 +34,7 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 }
 
 func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
+	var w = &lib.Warrper{}
 	var veh = &models.IVehicle{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32

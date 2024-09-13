@@ -40,4 +40,10 @@ const (
 	BlipPosition
 	Name
 	RouteColor
+	HeadingIndicatorVisible
+	ShortHeightThreshold
+	Number
+	Scale
+	GxtName
+	BlipType
 )
