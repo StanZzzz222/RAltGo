@@ -30,6 +30,7 @@ var freePedProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
+var setPedDataProc *syscall.Proc
 var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
@@ -62,6 +63,7 @@ func init() {
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
 	freeBlipProc = dll.MustFindProc("free_blip")
 	freePedProc = dll.MustFindProc("free_ped")
+	setPedDataProc = dll.MustFindProc("set_ped_data")
 	setPlayerDataProc = dll.MustFindProc("set_player_data")
 	setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 	setBlipDataProc = dll.MustFindProc("set_blip_data")
@@ -80,7 +82,7 @@ func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, m
 }
 
 func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64) {
-	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
+	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
@@ -88,7 +90,7 @@ func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64
 }
 
 func (w *Warrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
-	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(metaData))
+	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
