@@ -26,6 +26,7 @@ var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
 var freeVehicleProc *syscall.Proc
 var freeBlipProc *syscall.Proc
+var freePedProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
@@ -60,6 +61,7 @@ func init() {
 	freePlayerProc = dll.MustFindProc("free_player")
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
 	freeBlipProc = dll.MustFindProc("free_blip")
+	freePedProc = dll.MustFindProc("free_ped")
 	setPlayerDataProc = dll.MustFindProc("set_player_data")
 	setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 	setBlipDataProc = dll.MustFindProc("set_blip_data")
@@ -179,7 +181,7 @@ func (w *Warrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMeta
 	}
 	freePtrFunc := func() {
 		if ret != 0 {
-			w.FreeVehicle(ret)
+			w.FreePed(ret)
 		}
 	}
 	return ret, freePtrFunc
@@ -235,6 +237,14 @@ func (w *Warrper) FreeBlip(ptr uintptr) {
 	_, _, err := freeBlipProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free blip failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) FreePed(ptr uintptr) {
+	_, _, err := freePedProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free ped failed: %v", err.Error())
 		return
 	}
 }
