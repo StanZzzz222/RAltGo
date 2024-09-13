@@ -1,4 +1,4 @@
-package main
+package mounted
 
 /*
 	#cgo CFLAGS: -I../headers
@@ -8,17 +8,11 @@ package main
 */
 import "C"
 import (
-	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
-	"github.com/StanZzzz222/RAltGo/common/alt/blip"
-	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
-	"github.com/StanZzzz222/RAltGo/common/alt/vehicle"
 	"github.com/StanZzzz222/RAltGo/common/models"
-	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
-	"time"
 	"unsafe"
 )
 
@@ -33,8 +27,6 @@ var cb = &alt_events.Callback{}
 
 func Mounted() {}
 
-func main() {}
-
 //export onModuleInit
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
 	logger.LogInfo(":: Go module Initialize mounting")
@@ -42,43 +34,9 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
 }
 
-func benchmark() {
-	s := scheduler.NewScheduler()
-	s.AddTask(func() {
-		start := time.Now()
-		for i := 0; i < 5000; i++ {
-			_ = blip.CreateBlipPoint(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0))
-			_ = blip.CreateBlipArea(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0), 10, 10)
-			_ = blip.CreateBlipRadius(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0), 10)
-			_ = blip.CreateBlipRadius(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0), 10)
-			_ = blip.CreateBlipRadius(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0), 10)
-			_ = blip.CreateBlipRadius(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0), 10)
-			_ = blip.CreateBlipRadius(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0), 10)
-			_ = blip.CreateBlipRadius(10, 1, fmt.Sprintf("test%v", i), utils.NewVector3(0, 0, 0), 10)
-		}
-		fmt.Printf("Create blip points: %v ms\n", time.Since(start).Milliseconds())
-	})
-	s.AddTask(func() {
-		start := time.Now()
-		vec := utils.NewVector3(0, 0, 0)
-		for i := 0; i < 50000; i++ {
-			_ = vehicle.CreateVehicle("t20", "test", vec, vec, 1, 1)
-		}
-		fmt.Printf("Create vehicles: %v ms\n", time.Since(start).Milliseconds())
-	})
-	s.Run()
-	s = scheduler.NewScheduler()
-	s.AddTask(func() {
-		fmt.Println("test")
-	})
-	s.Run()
-	fmt.Println("继续")
-}
-
 //export onStart
 func onStart() {
 	cb.TriggerOnStart()
-	benchmark()
 }
 
 //export onServerStarted
