@@ -38,8 +38,7 @@ type Warrper struct{}
 
 //export onTick
 func onTick() {
-	flag := taskQueue.PopCheck()
-	if flag {
+	if taskQueue.PopCheck() {
 		task := taskQueue.Pop()
 		task()
 	}
