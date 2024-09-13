@@ -20,12 +20,11 @@ func CreateBlipPoint(spriteId, color uint32, name string, position *entities.Vec
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Point, spriteId, color, posData, posMetadata, 0, 0, 0)
+	ret, freePtrFunc := w.CreateBlip(blip_type.Point, spriteId, color, name, posData, posMetadata, 0, 0, 0)
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Rot, cBlip.Position)
-		blip.SetBlipName(name)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
 		return blip
 	}
 	return nil
@@ -35,12 +34,11 @@ func CreateBlipArea(spriteId, color uint32, name string, position *entities.Vect
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Area, spriteId, color, posData, posMetadata, width, height, 0)
+	ret, freePtrFunc := w.CreateBlip(blip_type.Area, spriteId, color, name, posData, posMetadata, width, height, 0)
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Rot, cBlip.Position)
-		blip.SetBlipName(name)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
 		return blip
 	}
 	return nil
@@ -50,12 +48,11 @@ func CreateBlipRadius(spriteId, color uint32, name string, position *entities.Ve
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Radius, spriteId, color, posData, posMetadata, 0, 0, radius)
+	ret, freePtrFunc := w.CreateBlip(blip_type.Radius, spriteId, color, name, posData, posMetadata, 0, 0, radius)
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Rot, cBlip.Position)
-		blip.SetBlipName(name)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
 		return blip
 	}
 	return nil

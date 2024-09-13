@@ -7,6 +7,7 @@ package entities
 */
 import "C"
 import (
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"unsafe"
 )
 
@@ -22,10 +23,12 @@ type CBlip struct {
 	SpriteId uint32
 	Color    uint32
 	Rot      float32
+	Name     string
 	Position *Vector3
 }
 
 func ConvertCBlip(cbPtr uintptr) *CBlip {
+	var w = &lib.Warrper{}
 	cBlip := (*C.CBlip)(unsafe.Pointer(cbPtr))
 	if cBlip == nil {
 		return nil
@@ -36,6 +39,7 @@ func ConvertCBlip(cbPtr uintptr) *CBlip {
 		SpriteId: uint32(cBlip.sprite_id),
 		Color:    uint32(cBlip.color),
 		Rot:      float32(cBlip.rot),
+		Name:     w.PtrMarshalGoString(uintptr(unsafe.Pointer(cBlip.name))),
 		Position: (*Vector3)(unsafe.Pointer(cBlip.position)),
 	}
 }

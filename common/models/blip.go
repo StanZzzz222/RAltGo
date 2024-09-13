@@ -83,11 +83,12 @@ func (b *IBlip) GetRouteColor() *entities.Rgba     { return b.routeColor }
 func (b *IBlip) GetRgbaColor() *entities.Rgba      { return b.rgbaColor }
 func (b *IBlip) GetPosition() *entities.Vector3    { return b.position }
 
-func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, rot float32, position *entities.Vector3) *IBlip {
+func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot float32, position *entities.Vector3) *IBlip {
 	return &IBlip{
 		id:       id,
 		blipType: blipType,
 		spriteId: spriteId,
+		name:     name,
 		color:    color,
 		rot:      rot,
 		position: position,

@@ -157,8 +157,12 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 	return ret, freePtrFunc
 }
 
-func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
-	ret, _, err := createBlipProc.Call(uintptr(blipType), uintptr(spriteId), uintptr(color), uintptr(posData), uintptr(posMetaData), uintptr(width), uintptr(height), uintptr(radius))
+func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, strData string, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
+	var strPtr = uintptr(0)
+	if len(strData) > 0 {
+		strPtr = w.GoStringMarshalPtr(strData)
+	}
+	ret, _, err := createBlipProc.Call(uintptr(blipType), uintptr(spriteId), uintptr(color), strPtr, uintptr(posData), uintptr(posMetaData), uintptr(width), uintptr(height), uintptr(radius))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create blip failed: %v", err.Error())
 		return 0, func() {}

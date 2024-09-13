@@ -9,6 +9,7 @@ typedef struct {
     uint32_t blip_type;
     uint32_t sprite_id;
     uint32_t color;
+    const char *name;
     const Vector3 *position;
     float rot;
 } CBlip;
