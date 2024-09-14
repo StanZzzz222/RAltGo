@@ -48,11 +48,11 @@ func ConverCDataResult(cresPtr uintptr) *CDataResult {
 	}
 	return &CDataResult{
 		Tag:        Tag(uint8(cDataResult.tag)),
-		U8Val:      uint8(cDataResult.data.u8_val),
-		U16Val:     uint16(cDataResult.data.u16_val),
-		U32Val:     uint32(cDataResult.data.u32_val),
-		U64Val:     uint64(cDataResult.data.u64_val),
-		BoolVal:    cDataResult.data.bool_value != 0,
+		U8Val:      uint8(cDataResult.union_CDataResult_data.u8_val),
+		U16Val:     uint16(cDataResult.union_CDataResult_data.u16_val),
+		U32Val:     uint32(cDataResult.union_CDataResult_data.u32_val),
+		U64Val:     uint64(cDataResult.union_CDataResult_data.u64_val),
+		BoolVal:    cDataResult.union_CDataResult_data.bool_value != 0,
 		StringVal:  w.PtrMarshalGoString(uintptr(unsafe.Pointer(cDataResult.data.cstring_val))),
 		Vector3Val: (*Vector3)(unsafe.Pointer(cDataResult.data.vector3_val)),
 	}
