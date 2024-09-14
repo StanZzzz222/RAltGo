@@ -102,7 +102,7 @@ func (w *Warrper) GetData(id uint32, objectType enum.ObjectType, dataType uint8)
 	}
 	freeDataResultFunc := func() {
 		if ret != 0 {
-			w.FreeVehicle(ret)
+			w.FreeDataResult(ret)
 		}
 	}
 	return ret, freeDataResultFunc
