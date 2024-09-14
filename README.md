@@ -30,7 +30,7 @@ Some APIs that have been implemented:
 
 ```
 Object:
-1. Blip - Create and setup section
+1. Blip - Create and set/get section
 2. Player - Spawn and set/get section
 3. Vehicle - Creation and set/get section
 4. Ped - Creation and set/get section

@@ -1,6 +1,6 @@
 ## 
 
-<img src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmcLCicAeuFBQ3XR7njaCUe4NpYGTznTtQxDWPmZJwBMcE/altv.svg" title="" alt="" width="72">      <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmbPKVJ2pNK57AQSBN4BFNtM2ukf9Lx8MveCGsVYUKzoaS" alt="" width="50" data-align="inline">   <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmcLCicAeuFBQ3XR7njaCUe4NpYGTznTtQxDWPmZJwBMcE/rust.png" alt="" width="100" data-align="inline">    <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmWHwr5trLNo6YccKisvZ1GKpu17EJs4a2YCJ7zFXtXyYD" alt="" width="54">  <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmcLCicAeuFBQ3XR7njaCUe4NpYGTznTtQxDWPmZJwBMcE/go.png" alt="" width="97" data-align="inline">
+<img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/altv.svg" alt="" width="72">      <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/plus.png" alt="" width="50" data-align="inline">   <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/rust.png" alt="" width="100" data-align="inline">    <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/equal.png" alt="" width="54">  <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/go.png" alt="" width="97" data-align="inline">
 
 ## RAltGo
 
@@ -20,17 +20,20 @@
 
 *我们知道很多人可能关心这个模块的性能，因此我们在示例资源中添加了基准测试。目前的代码和结果如下。如果您有任何疑问，可以尝试示例服务器。因为资源调度只会在onTick上进行，所以您的性能问题将会被服务端resourceManager提醒*
 
-![](https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmSvxRdFriNN3MddHJvVc6A7E7sShdA4JoodbewPCxKZ3m)
+<img src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/code.png" title="" alt="" data-align="center">
 
+基准性能实测截图：
 
+<img src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/server.png" title="" alt="" data-align="left">
 
 目前已实现的部分API如下：
 
 ```
 对象:
-1. Blip - 创建与部分属性值的设定
-2. Player - 出生与部分属性值的设定
-3. Vehicle - 创建与部分属性值的设定
+1. Blip - 创建、设置、获取
+2. Player - 创建、设置、获取
+3. Vehicle - 创建、设置、获取
+4. Ped - 创建、设置、获取
 
 事件:
 1. onStart
@@ -41,13 +44,7 @@
 6. onLeaveVehicle
 ```
 
-
-
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>
-
-
-
-
 
 [我需要一个案例？]([GitHub - StanZzzz222/RAltGo-example-server: RAltGo example server](https://github.com/StanZzzz222/RAltGo-example-server))
 
