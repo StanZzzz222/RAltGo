@@ -141,6 +141,11 @@ func (p *IPlayer) SetHairHighlightColor(hairHighlightColor uint8) {
 }
 
 func (p *IPlayer) SetHealth(health uint16) {
+	if health > enums.MaxHealth {
+		p.health = health
+		w.SetPlayerData(p.id, enum.Health, int64(health))
+		return
+	}
 	p.health = health
 	w.SetPlayerData(p.id, enum.Health, int64(health))
 }
@@ -166,6 +171,11 @@ func (p *IPlayer) SetWeather(wather weather.WeatherType) {
 }
 
 func (p *IPlayer) SetMaxHealth(maxHealth uint16) {
+	if maxHealth > enums.MaxHealth {
+		p.maxHealth = maxHealth
+		w.SetPlayerData(p.id, enum.MaxHealth, int64(maxHealth))
+		return
+	}
 	p.maxHealth = maxHealth
 	w.SetPlayerData(p.id, enum.MaxHealth, int64(maxHealth))
 }

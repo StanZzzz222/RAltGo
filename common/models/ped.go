@@ -92,6 +92,11 @@ func (p *IPed) SetRotation(rotation *entities.Vector3) {
 }
 
 func (p *IPed) SetHealth(health uint16) {
+	if health > enums.MaxHealth {
+		p.health = health
+		w.SetPedData(p.id, enum.PedMaxHealth, int64(health))
+		return
+	}
 	p.health = health
 	w.SetPedData(p.id, enum.PedHealth, int64(health))
 }
@@ -148,6 +153,11 @@ func (p *IPed) SetStreamingDistance(streamingDistance uint32) {
 }
 
 func (p *IPed) SetMaxHealth(maxHealth uint16) {
+	if maxHealth > enums.MaxHealth {
+		p.maxHealth = maxHealth
+		w.SetPedData(p.id, enum.PedMaxHealth, int64(maxHealth))
+		return
+	}
 	p.maxHealth = maxHealth
 	w.SetPedData(p.id, enum.PedMaxHealth, int64(maxHealth))
 }
