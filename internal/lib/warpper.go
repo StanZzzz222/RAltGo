@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/queue"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"os"
 	"syscall"
@@ -20,13 +21,13 @@ import (
 
 var dllPath string
 var dll *syscall.DLL
-var taskQueue = NewTaskQueue()
 var freeProc *syscall.Proc
 var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
 var freeVehicleProc *syscall.Proc
 var freeBlipProc *syscall.Proc
 var freePedProc *syscall.Proc
+var freeDataResultProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
@@ -34,6 +35,8 @@ var setPedDataProc *syscall.Proc
 var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
+var getDataProc *syscall.Proc
+var taskQueue = queue.NewTaskQueue()
 
 type Warrper struct{}
 
@@ -63,6 +66,7 @@ func init() {
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
 	freeBlipProc = dll.MustFindProc("free_blip")
 	freePedProc = dll.MustFindProc("free_ped")
+	freeDataResultProc = dll.MustFindProc("free_data_result")
 	setPedDataProc = dll.MustFindProc("set_ped_data")
 	setPlayerDataProc = dll.MustFindProc("set_player_data")
 	setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
@@ -70,6 +74,7 @@ func init() {
 	createVehicleProc = dll.MustFindProc("create_vehicle")
 	createBlipProc = dll.MustFindProc("create_blip")
 	createPedProc = dll.MustFindProc("create_ped")
+	getDataProc = dll.MustFindProc("get_data")
 }
 
 func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
@@ -87,6 +92,20 @@ func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64
 		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
 	}
+}
+
+func (w *Warrper) GetData(id uint32, objectType enum.ObjectType, dataType uint8) (uintptr, func()) {
+	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeVehicle(ret)
+		}
+	}
+	return ret, freeDataResultFunc
 }
 
 func (w *Warrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
@@ -247,6 +266,14 @@ func (w *Warrper) FreePed(ptr uintptr) {
 	_, _, err := freePedProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free ped failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) FreeDataResult(ptr uintptr) {
+	_, _, err := freeDataResultProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free data result failed: %v", err.Error())
 		return
 	}
 }

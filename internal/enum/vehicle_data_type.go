@@ -35,4 +35,5 @@ const (
 	RearWheels
 	Mod
 	ModKit
+	Repair
 )

@@ -3,8 +3,11 @@ package utils
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
+	"math"
+	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
 
 /*
@@ -17,8 +20,14 @@ func NewVector3(x, y, z float32) *entities.Vector3 {
 	return &entities.Vector3{X: x, Y: y, Z: z}
 }
 
-func NewVector3Round(x, y, z float32, round float32) *entities.Vector3 {
-	return &entities.Vector3{X: x, Y: y, Z: z}
+func NewVector3ARound(x, y, z float32, rangeVal float32) *entities.Vector3 {
+	source := rand.NewSource(time.Now().UnixNano())
+	source.Seed(time.Now().UnixNano())
+	r := rand.New(source)
+	position := &entities.Vector3{X: x, Y: y, Z: 0}
+	position.X += r.Float32()*(rangeVal*2) - rangeVal
+	position.Y += r.Float32()*(rangeVal*2) - rangeVal
+	return position
 }
 
 func NewVector3FromStr(position string) (*entities.Vector3, error) {
@@ -37,4 +46,11 @@ func NewVector3FromStr(position string) (*entities.Vector3, error) {
 		coords[i] = float32(coord)
 	}
 	return NewVector3(coords[0], coords[1], coords[2]), nil
+}
+
+func GetVectoe3Distance(v1, v2 *entities.Vector3) float32 {
+	return float32(math.Sqrt(float64(
+		(v2.X-v1.X)*(v2.X-v1.X) +
+			(v2.Y-v1.Y)*(v2.Y-v1.Y) +
+			(v2.Z-v1.Z)*(v2.Z-v1.Z))))
 }

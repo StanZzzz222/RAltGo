@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums"
@@ -67,22 +68,48 @@ func (p *IPlayer) GetDimension() int32                { return p.dimension }
 func (p *IPlayer) GetFrozen() bool                    { return p.frozen }
 func (p *IPlayer) GetCollision() bool                 { return p.collision }
 func (p *IPlayer) GetInvincible() bool                { return p.invincible }
-
-// func (p *IPlayer) GetHealth() uint16            { return p.health }
-// func (p *IPlayer) GetCurrentWeapon() string     { return p.currentWeapon }
-// func (p *IPlayer) GetCurrentWeaponHash() uint32 { return utils.Hash(p.currentWeapon) }
-//func (p *IPlayer) GetPosition() *Vector3 { return p.position }
-//func (p *IPlayer) GetPositionString() string {
-//	return fmt.Sprintf("%v,%v,%v", p.position.X, p.position.Y, p.position.Z)
-//}
-//func (p *IPlayer) GetRotation() *Vector3 { return p.rotation }
-//func (p *IPlayer) GetRotationString() string {
-//	return fmt.Sprintf("%v,%v,%v", p.rotation.X, p.rotation.Y, p.rotation.Z)
-//}
-//func (p *IPlayer) GetPositionRotation() (*Vector3, *Vector3) { return p.rotation, p.rotation }
-//func (p *IPlayer) GetPositionRotationString() (string, string) {
-//	return fmt.Sprintf("%v,%v,%v", p.rotation.X, p.rotation.Y, p.rotation.Z), fmt.Sprintf("%v,%v,%v", p.rotation.X, p.rotation.Y, p.rotation.Z)
-//}
+func (p *IPlayer) GetHealth() uint16 {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Health))
+	defer freeDataResultFunc()
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.U16Val
+	}
+	return 0
+}
+func (p *IPlayer) GetPosition() *entities.Vector3 {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Position))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.Vector3Val
+	}
+	return nil
+}
+func (p *IPlayer) GetRotation() *entities.Vector3 {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Rot))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.Vector3Val
+	}
+	return nil
+}
+func (p *IPlayer) GetPositionString() string {
+	position := p.GetPosition()
+	return fmt.Sprintf("%v,%v,%v", position.X, position.Y, position.Z)
+}
+func (p *IPlayer) GetRotationString() string {
+	rotation := p.GetRotation()
+	return fmt.Sprintf("%v,%v,%v", rotation.X, rotation.Y, rotation.Z)
+}
+func (p *IPlayer) GetPositionRotation() (*entities.Vector3, *entities.Vector3) {
+	return p.GetPosition(), p.GetRotation()
+}
+func (p *IPlayer) GetPositionRotationString() (string, string) {
+	return p.GetPositionString(), p.GetRotationString()
+}
 
 func (p *IPlayer) Spawn(model ped.ModelHash, position *entities.Vector3) {
 	p.model = model

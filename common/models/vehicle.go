@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/enums/vehicle"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
@@ -29,7 +30,6 @@ type IVehicle struct {
 	headLightColor   uint8
 	dirtLevel        uint8
 	bodyHealth       uint32
-	engineHealth     int32
 	lightsMultiplier float32
 	wheelColor       uint8
 	neonColor        *entities.Rgba
@@ -53,6 +53,32 @@ func (v *IVehicle) GetVisible() bool             { return v.visible }
 func (v *IVehicle) GetCollision() bool           { return v.collision }
 func (v *IVehicle) GetDriftMode() bool           { return v.driftMode }
 func (v *IVehicle) GetDisableTowing() bool       { return v.disableTowing }
+func (v *IVehicle) GetPosition() *entities.Vector3 {
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.VehiclePosition))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.Vector3Val
+	}
+	return nil
+}
+func (v *IVehicle) GetRotation() *entities.Vector3 {
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.VehicleRot))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.Vector3Val
+	}
+	return nil
+}
+func (v *IVehicle) GetPositionString() string {
+	position := v.GetPosition()
+	return fmt.Sprintf("%v,%v,%v", position.X, position.Y, position.Z)
+}
+func (v *IVehicle) GetRotationString() string {
+	rotation := v.GetRotation()
+	return fmt.Sprintf("%v,%v,%v", rotation.X, rotation.Y, rotation.Z)
+}
 
 func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entities.Vector3) *IVehicle {
 	return &IVehicle{
@@ -189,7 +215,6 @@ func (v *IVehicle) SetBodyHealth(bodyHealth uint32) {
 }
 
 func (v *IVehicle) SetEngineHealth(engineHealth int32) {
-	v.engineHealth = engineHealth
 	w.SetVehicleData(v.id, enum.EngineHealth, int64(engineHealth))
 }
 
@@ -232,4 +257,8 @@ func (v *IVehicle) SetNeonActive(neonActive bool) {
 func (v *IVehicle) SetNumberPlate(numberplate string) {
 	v.numberplate = numberplate
 	w.SetVehicleMetaData(v.id, enum.NumberPlate, int64(0), uint64(0), numberplate, uint8(0), uint8(0), uint8(0), uint8(0))
+}
+
+func (v *IVehicle) Repair() {
+	w.SetVehicleData(v.id, enum.Repair, int64(0))
 }

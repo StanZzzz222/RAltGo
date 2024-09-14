@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
@@ -64,7 +65,6 @@ func (b *IBlip) GetAlpha() uint32                  { return b.alpha }
 func (b *IBlip) GetCategory() uint32               { return b.category }
 func (b *IBlip) GetFlashInterval() uint32          { return b.flashInterval }
 func (b *IBlip) GetFlashTimer() uint32             { return b.flashTimer }
-func (b *IBlip) GetRot() float32                   { return b.rot }
 func (b *IBlip) GetVisible() bool                  { return b.visible }
 func (b *IBlip) GetDisplay() bool                  { return b.display }
 func (b *IBlip) GetFriendly() bool                 { return b.friendly }
@@ -90,8 +90,20 @@ func (b *IBlip) GetShortHeightThreshold() bool     { return b.shortHeightThresho
 func (b *IBlip) GetNumber() int32                  { return b.number }
 func (b *IBlip) GetRouteColor() *entities.Rgba     { return b.routeColor }
 func (b *IBlip) GetRgbaColor() *entities.Rgba      { return b.rgbaColor }
-func (b *IBlip) GetPosition() *entities.Vector3    { return b.position }
 func (b *IBlip) GetScale() *entities.Vector3       { return b.scale }
+func (b *IBlip) GetPosition() *entities.Vector3 {
+	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.BlipPosition))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.Vector3Val
+	}
+	return nil
+}
+func (b *IBlip) GetPositionString() string {
+	position := b.GetPosition()
+	return fmt.Sprintf("%v,%v,%v", position.X, position.Y, position.Z)
+}
 
 func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot float32, position *entities.Vector3) *IBlip {
 	return &IBlip{

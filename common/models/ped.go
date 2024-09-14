@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/enums/ped"
@@ -38,6 +39,38 @@ func (p *IPed) GetDimension() int32                { return p.dimension }
 func (p *IPed) GetFrozen() bool                    { return p.frozen }
 func (p *IPed) GetCollision() bool                 { return p.collision }
 func (p *IPed) GetVisible() bool                   { return p.visible }
+func (p *IPed) GetPosition() *entities.Vector3 {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Ped, uint8(enum.PedPosition))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.Vector3Val
+	}
+	return nil
+}
+func (p *IPed) GetRotation() *entities.Vector3 {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Ped, uint8(enum.PedRotation))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.Vector3Val
+	}
+	return nil
+}
+func (p *IPed) GetPositionString() string {
+	position := p.GetPosition()
+	return fmt.Sprintf("%v,%v,%v", position.X, position.Y, position.Z)
+}
+func (p *IPed) GetRotationString() string {
+	rotation := p.GetRotation()
+	return fmt.Sprintf("%v,%v,%v", rotation.X, rotation.Y, rotation.Z)
+}
+func (p *IPed) GetPositionRotation() (*entities.Vector3, *entities.Vector3) {
+	return p.GetPosition(), p.GetRotation()
+}
+func (p *IPed) GetPositionRotationString() (string, string) {
+	return p.GetPositionString(), p.GetRotationString()
+}
 
 func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3) *IPed {
 	return &IPed{

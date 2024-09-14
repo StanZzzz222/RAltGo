@@ -1,11 +1,5 @@
 package mounted
 
-/*
-	#cgo CFLAGS: -I../headers
-	#include "c_vector3.h"
-	#include "c_player.h"
-	#include "c_vehicle.h"
-*/
 import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"

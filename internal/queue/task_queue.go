@@ -1,4 +1,4 @@
-package lib
+package queue
 
 import (
 	"container/list"
