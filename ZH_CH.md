@@ -18,6 +18,8 @@
 
 **但是您可以尝试使用它，如果遇到问题可以提出相关 issue**
 
+<font color="red">**注意：因作者现实也有其他事情，所以只能尽量花时间进行更新。但是您可以放心我会在空闲时间坚持保持更新**</font>
+
 *我们知道很多人可能关心这个模块的性能，因此我们在示例资源中添加了基准测试。目前的代码和结果如下。如果您有任何疑问，可以尝试示例服务器。因为资源调度只会在onTick上进行，所以您的性能问题将会被服务端resourceManager提醒*
 
 <img src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/code.png" title="" alt="" data-align="center">
