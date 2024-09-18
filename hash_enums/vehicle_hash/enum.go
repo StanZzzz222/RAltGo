@@ -1,4 +1,4 @@
-package vehicle
+package vehicle_hash
 
 /*
    Create by zyx

@@ -1,4 +1,4 @@
-package weapon
+package weapon_hash
 
 /*
    Create by zyx

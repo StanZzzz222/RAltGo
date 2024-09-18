@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
-	"github.com/StanZzzz222/RAltGo/hash_enums/ped"
-	"github.com/StanZzzz222/RAltGo/hash_enums/weapon"
+	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
@@ -14,31 +14,31 @@ import (
 /*
    Create by zyx
    Date Time: 2024/9/13
-   File: ped.go
+   File: ped_hash.go
 */
 
 type IPed struct {
 	id                uint32
-	model             ped.ModelHash
+	model             ped_hash.ModelHash
 	health            uint16
 	armour            uint16
 	maxHealth         uint16
-	currentWeapon     weapon.ModelHash
+	currentWeapon     weapon_hash.ModelHash
 	streamingDistance uint32
 	streamed          bool
 	*BaseObject
 }
 
-func (p *IPed) GetId() uint32                      { return p.id }
-func (p *IPed) GetModel() ped.ModelHash            { return p.model }
-func (p *IPed) GetCurrentWeapon() weapon.ModelHash { return p.currentWeapon }
-func (p *IPed) GetStreamingDistance() uint32       { return p.streamingDistance }
-func (p *IPed) GetStreamed() bool                  { return p.streamed }
-func (p *IPed) GetMaxHealth() uint16               { return p.maxHealth }
-func (p *IPed) GetDimension() int32                { return p.dimension }
-func (p *IPed) GetFrozen() bool                    { return p.frozen }
-func (p *IPed) GetCollision() bool                 { return p.collision }
-func (p *IPed) GetVisible() bool                   { return p.visible }
+func (p *IPed) GetId() uint32                           { return p.id }
+func (p *IPed) GetModel() ped_hash.ModelHash            { return p.model }
+func (p *IPed) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
+func (p *IPed) GetStreamingDistance() uint32            { return p.streamingDistance }
+func (p *IPed) GetStreamed() bool                       { return p.streamed }
+func (p *IPed) GetMaxHealth() uint16                    { return p.maxHealth }
+func (p *IPed) GetDimension() int32                     { return p.dimension }
+func (p *IPed) GetFrozen() bool                         { return p.frozen }
+func (p *IPed) GetCollision() bool                      { return p.collision }
+func (p *IPed) GetVisible() bool                        { return p.visible }
 func (p *IPed) GetPosition() *entities.Vector3 {
 	ret, freeDataResultFunc := w.GetData(p.id, enum.Ped, uint8(enum.PedPosition))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -75,8 +75,8 @@ func (p *IPed) GetPositionRotationString() (string, string) {
 func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3) *IPed {
 	return &IPed{
 		id:            id,
-		model:         ped.ModelHash(model),
-		currentWeapon: weapon.Fist,
+		model:         ped_hash.ModelHash(model),
+		currentWeapon: weapon_hash.Fist,
 		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
@@ -162,13 +162,13 @@ func (p *IPed) SetMaxHealth(maxHealth uint16) {
 	w.SetPedData(p.id, enum.PedMaxHealth, int64(maxHealth))
 }
 
-func (p *IPed) SetCurrentWeapon(currentWeapon weapon.ModelHash) {
+func (p *IPed) SetCurrentWeapon(currentWeapon weapon_hash.ModelHash) {
 	p.currentWeapon = currentWeapon
 	w.SetPedData(p.id, enum.PedCurrentWeapon, int64(currentWeapon))
 }
 
 func (p *IPed) SetCurrentWeaponByName(model string) {
-	modelHash := weapon.ModelHash(utils.Hash(model))
+	modelHash := weapon_hash.ModelHash(utils.Hash(model))
 	p.currentWeapon = modelHash
 	w.SetPedData(p.id, enum.PedCurrentWeapon, int64(modelHash))
 }

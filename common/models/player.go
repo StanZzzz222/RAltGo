@@ -5,9 +5,9 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
-	"github.com/StanZzzz222/RAltGo/hash_enums/ped"
-	"github.com/StanZzzz222/RAltGo/hash_enums/weapon"
-	"github.com/StanZzzz222/RAltGo/hash_enums/weather"
+	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weather_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -29,16 +29,16 @@ type IPlayer struct {
 	authToken          string
 	hwIdHash           uint64
 	hwIdExHash         uint64
-	model              ped.ModelHash
+	model              ped_hash.ModelHash
 	health             uint16
 	armour             uint16
-	weather            weather.WeatherType
+	weather            weather_hash.WeatherType
 	maxHealth          uint16
 	maxArmour          uint16
 	eyeColor           int16
 	hairColor          uint8
 	hairHighlightColor uint8
-	currentWeapon      weapon.ModelHash
+	currentWeapon      weapon_hash.ModelHash
 	invincible         bool
 	time               time.Time
 	*BaseObject
@@ -57,18 +57,18 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 	}
 }
 
-func (p *IPlayer) GetId() uint32                      { return p.id }
-func (p *IPlayer) GetName() string                    { return p.name }
-func (p *IPlayer) GetIP() *net.IP                     { return p.ip }
-func (p *IPlayer) GetModel() ped.ModelHash            { return p.model }
-func (p *IPlayer) GetCurrentWeapon() weapon.ModelHash { return p.currentWeapon }
-func (p *IPlayer) GetWeather() weather.WeatherType    { return weather.WeatherType(p.weather) }
-func (p *IPlayer) GetMaxHealth() uint16               { return p.maxHealth }
-func (p *IPlayer) GetMaxArmour() uint16               { return p.maxArmour }
-func (p *IPlayer) GetDimension() int32                { return p.dimension }
-func (p *IPlayer) GetFrozen() bool                    { return p.frozen }
-func (p *IPlayer) GetCollision() bool                 { return p.collision }
-func (p *IPlayer) GetInvincible() bool                { return p.invincible }
+func (p *IPlayer) GetId() uint32                           { return p.id }
+func (p *IPlayer) GetName() string                         { return p.name }
+func (p *IPlayer) GetIP() *net.IP                          { return p.ip }
+func (p *IPlayer) GetModel() ped_hash.ModelHash            { return p.model }
+func (p *IPlayer) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
+func (p *IPlayer) GetWeather() weather_hash.WeatherType    { return weather_hash.WeatherType(p.weather) }
+func (p *IPlayer) GetMaxHealth() uint16                    { return p.maxHealth }
+func (p *IPlayer) GetMaxArmour() uint16                    { return p.maxArmour }
+func (p *IPlayer) GetDimension() int32                     { return p.dimension }
+func (p *IPlayer) GetFrozen() bool                         { return p.frozen }
+func (p *IPlayer) GetCollision() bool                      { return p.collision }
+func (p *IPlayer) GetInvincible() bool                     { return p.invincible }
 func (p *IPlayer) GetHealth() uint16 {
 	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Health))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -211,7 +211,7 @@ func (p *IPlayer) GetPositionRotationString() (string, string) {
 	return p.GetPositionString(), p.GetRotationString()
 }
 
-func (p *IPlayer) Spawn(model ped.ModelHash, position *entities.Vector3) {
+func (p *IPlayer) Spawn(model ped_hash.ModelHash, position *entities.Vector3) {
 	p.model = model
 	p.position = position
 	w.SetPlayerMetaModelData(p.id, enum.Spawn, uint32(model), int64(uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32)), uint64(math.Float32bits(position.Z))<<32)
@@ -270,7 +270,7 @@ func (p *IPlayer) SetDateTimeUTC8(t time.Time) {
 	w.SetPlayerData(p.id, enum.DateTime, t.UTC().Add(time.Hour*8).Unix())
 }
 
-func (p *IPlayer) SetWeather(wather weather.WeatherType) {
+func (p *IPlayer) SetWeather(wather weather_hash.WeatherType) {
 	p.weather = wather
 	w.SetPlayerData(p.id, enum.Weather, int64(wather))
 }
@@ -298,20 +298,20 @@ func (p *IPlayer) SetMaxAmmo(weapon string, ammo uint16) {
 	w.SetPlayerMetaData(p.id, enum.MaxAmmo, int64(utils.Hash(weapon)), uint64(ammo))
 }
 
-func (p *IPlayer) SetCurrentWeapon(currentWeapon weapon.ModelHash) {
+func (p *IPlayer) SetCurrentWeapon(currentWeapon weapon_hash.ModelHash) {
 	p.currentWeapon = currentWeapon
 	w.SetPlayerData(p.id, enum.CurrentWeapon, int64(currentWeapon))
 }
 
 func (p *IPlayer) SetCurrentWeaponByName(model string) {
-	modelHash := weapon.ModelHash(utils.Hash(model))
+	modelHash := weapon_hash.ModelHash(utils.Hash(model))
 	if len(modelHash.String()) > 0 {
 		p.currentWeapon = modelHash
 		w.SetPlayerData(p.id, enum.CurrentWeapon, int64(modelHash))
 	}
 }
 
-func (p *IPlayer) SetWeaponAmmo(weapon weapon.ModelHash, ammo uint16) {
+func (p *IPlayer) SetWeaponAmmo(weapon weapon_hash.ModelHash, ammo uint16) {
 	w.SetPlayerMetaData(p.id, enum.WeaponAmmo, int64(weapon), uint64(ammo))
 }
 
@@ -351,13 +351,13 @@ func (p *IPlayer) SetArmour(armour uint16) {
 	w.SetPlayerData(p.id, enum.Armour, int64(armour))
 }
 
-func (p *IPlayer) SetPedModel(model ped.ModelHash) {
+func (p *IPlayer) SetPedModel(model ped_hash.ModelHash) {
 	p.model = model
 	w.SetPlayerData(p.id, enum.Model, int64(model))
 }
 
 func (p *IPlayer) SetPedModelByName(model string) {
-	modelHash := ped.ModelHash(utils.Hash(model))
+	modelHash := ped_hash.ModelHash(utils.Hash(model))
 	if len(modelHash.String()) > 0 {
 		p.model = modelHash
 		w.SetPlayerData(p.id, enum.Model, int64(modelHash))

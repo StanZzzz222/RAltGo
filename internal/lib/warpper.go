@@ -158,7 +158,7 @@ func (w *Warrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, dat
 func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data int64) {
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("set vehicle data failed: %v", err.Error())
+		logger.LogErrorf("set vehicle_hash data failed: %v", err.Error())
 		return
 	}
 }
@@ -172,7 +172,7 @@ func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleData
 	}
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(metaData), strPtr, uintptr(l), uintptr(r), uintptr(t), uintptr(b))
 	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("set vehicle data failed: %v", err.Error())
+		logger.LogErrorf("set vehicle_hash data failed: %v", err.Error())
 		return
 	}
 }
@@ -204,7 +204,7 @@ func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
 	ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
-		logger.LogErrorf("create vehicle failed: %v", err.Error())
+		logger.LogErrorf("create vehicle_hash failed: %v", err.Error())
 		return 0, func() {}
 	}
 	freePtrFunc := func() {
@@ -218,7 +218,7 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 func (w *Warrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMetaData uint64, streamingDistance uint32) (uintptr, func()) {
 	ret, _, err := createPedProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), uintptr(streamingDistance))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
-		logger.LogErrorf("create vehicle failed: %v", err.Error())
+		logger.LogErrorf("create vehicle_hash failed: %v", err.Error())
 		return 0, func() {}
 	}
 	freePtrFunc := func() {
@@ -272,7 +272,7 @@ func (w *Warrper) FreePlayer(ptr uintptr) {
 func (w *Warrper) FreeVehicle(ptr uintptr) {
 	_, _, err := freeVehicleProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("free vehicle failed: %v", err.Error())
+		logger.LogErrorf("free vehicle_hash failed: %v", err.Error())
 		return
 	}
 }
@@ -288,7 +288,7 @@ func (w *Warrper) FreeBlip(ptr uintptr) {
 func (w *Warrper) FreePed(ptr uintptr) {
 	_, _, err := freePedProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("free ped failed: %v", err.Error())
+		logger.LogErrorf("free ped_hash failed: %v", err.Error())
 		return
 	}
 }

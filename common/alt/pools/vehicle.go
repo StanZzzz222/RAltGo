@@ -5,7 +5,7 @@ import "github.com/StanZzzz222/RAltGo/common/models"
 /*
    Create by zyx
    Date Time: 2024/9/18
-   File: vehicle.go
+   File: vehicle_hash.go
 */
 
 func GetVehicle(id uint32) *models.IVehicle {

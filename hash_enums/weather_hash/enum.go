@@ -1,4 +1,4 @@
-package weather
+package weather_hash
 
 /*
    Create by zyx

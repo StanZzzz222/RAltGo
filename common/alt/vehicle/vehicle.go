@@ -4,7 +4,7 @@ import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/common/utils"
-	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"math"
@@ -13,7 +13,7 @@ import (
 /*
    Create by zyx
    Date Time: 2024/9/9
-   File: vehicle.go
+   File: vehicle_hash.go
 */
 
 func CreateVehicle(model string, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
@@ -37,7 +37,7 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 	return nil
 }
 
-func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
+func CreateVehicleByHash(model vehicle_hash.ModelHash, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
 	var w = &lib.Warrper{}
 	var veh = &models.IVehicle{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)

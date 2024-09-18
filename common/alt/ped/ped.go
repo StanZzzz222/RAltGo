@@ -3,7 +3,7 @@ package ped
 import (
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/common/utils"
-	"github.com/StanZzzz222/RAltGo/hash_enums/ped"
+	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"math"
@@ -12,7 +12,7 @@ import (
 /*
    Create by zyx
    Date Time: 2024/9/13
-   File: ped.go
+   File: ped_hash.go
 */
 
 func CreatePed(model string, position, rotation *entities.Vector3) *models.IPed {
@@ -49,7 +49,7 @@ func CreateStreamPed(model string, position, rotation *entities.Vector3, streami
 	return nil
 }
 
-func CreatePedByHash(model ped.ModelHash, position, rotation *entities.Vector3) *models.IPed {
+func CreatePedByHash(model ped_hash.ModelHash, position, rotation *entities.Vector3) *models.IPed {
 	var w = &lib.Warrper{}
 	var p = &models.IPed{}
 	var posData, posMetaData = int64(math.Float32bits(position.X)) | (int64(math.Float32bits(position.Y)) << 32), uint64(math.Float32bits(position.Z)) << 32
@@ -66,7 +66,7 @@ func CreatePedByHash(model ped.ModelHash, position, rotation *entities.Vector3) 
 	return nil
 }
 
-func CreateStreamPedByHash(model ped.ModelHash, position, rotation *entities.Vector3, streamingDistance uint32) *models.IPed {
+func CreateStreamPedByHash(model ped_hash.ModelHash, position, rotation *entities.Vector3, streamingDistance uint32) *models.IPed {
 	var w = &lib.Warrper{}
 	var p = &models.IPed{}
 	var posData, posMetaData = int64(math.Float32bits(position.X)) | (int64(math.Float32bits(position.Y)) << 32), uint64(math.Float32bits(position.Z)) << 32
