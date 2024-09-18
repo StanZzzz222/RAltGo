@@ -3,6 +3,7 @@ package vehicle
 import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/models"
+	"github.com/StanZzzz222/RAltGo/common/pools"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums/vehicle"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
@@ -30,6 +31,8 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 		freePtrFunc()
 		freeCStringFunc()
 		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
+		vehiclePools := pools.GetVehiclePools()
+		vehiclePools.Put(veh)
 		return veh
 	}
 	return nil
@@ -49,6 +52,8 @@ func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, 
 		freePtrFunc()
 		freeCStringFunc()
 		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
+		vehiclePools := pools.GetVehiclePools()
+		vehiclePools.Put(veh)
 		return veh
 	}
 	return nil

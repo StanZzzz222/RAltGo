@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/common/pools"
 	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/enums/vehicle"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
@@ -261,4 +262,10 @@ func (v *IVehicle) SetNumberPlate(numberplate string) {
 
 func (v *IVehicle) Repair() {
 	w.SetVehicleData(v.id, enum.Repair, int64(0))
+}
+
+func (v *IVehicle) Destroy() {
+	w.SetVehicleData(v.id, enum.VehicleDestroy, int64(0))
+	vehiclePools := pools.GetVehiclePools()
+	vehiclePools.Remove(v)
 }

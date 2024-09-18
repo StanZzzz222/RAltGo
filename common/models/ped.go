@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/common/pools"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums"
 	"github.com/StanZzzz222/RAltGo/enums/ped"
@@ -171,4 +172,10 @@ func (p *IPed) SetCurrentWeaponByName(model string) {
 	modelHash := weapon.ModelHash(utils.Hash(model))
 	p.currentWeapon = modelHash
 	w.SetPedData(p.id, enum.PedCurrentWeapon, int64(modelHash))
+}
+
+func (p *IPed) Destroy() {
+	w.SetPedData(p.id, enum.PedDestroy, int64(0))
+	pedPools := pools.GetPedPools()
+	pedPools.Remove(p)
 }

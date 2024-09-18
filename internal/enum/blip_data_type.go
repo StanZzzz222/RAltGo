@@ -46,4 +46,5 @@ const (
 	Scale
 	GxtName
 	BlipType
+	BlipDestroy
 )

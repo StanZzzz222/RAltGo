@@ -4,6 +4,7 @@ import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/models"
+	"github.com/StanZzzz222/RAltGo/common/pools"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -48,9 +49,30 @@ func onPlayerConnect(cPtr uintptr) {
 	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
-		defer w.FreePlayer(cPtr)
+		defer func() {
+			w.FreePlayer(cPtr)
+			playerPools := pools.GetPlayerPools()
+			playerPools.Put(player)
+		}()
 		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 		cb.TriggerOnPlayerConnect(player)
+	}
+}
+
+//export onPlayerDisconnect
+func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
+	var player = &models.IPlayer{}
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		defer func() {
+			w.Free(cReasonPtr)
+			w.FreePlayer(cPtr)
+			playerPools := pools.GetPlayerPools()
+			playerPools.Remove(player)
+		}()
+		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+		reason := w.PtrMarshalGoString(cReasonPtr)
+		cb.TriggerOnPlayerDisconnect(player, reason)
 	}
 }
 

@@ -14,6 +14,7 @@ var onStartCallback OnStartCallback
 var onStopCallback OnStopCallback
 var onServerStartedCallback OnServerStartedCallback
 var onPlayerConnectCallback OnPlayerConnectCallback
+var onPlayerDisconnectCallback OnPlayerDisconnectCallback
 var onEnterVehicleCallback OnEnterVehicleCallback
 var onLeaveVehicleCallback OnLeaveVehicleCallback
 
@@ -21,6 +22,7 @@ type OnStartCallback func()
 type OnStopCallback func()
 type OnServerStartedCallback func()
 type OnPlayerConnectCallback func(player *models.IPlayer)
+type OnPlayerDisconnectCallback func(player *models.IPlayer, reason string)
 type OnEnterVehicleCallback func(player *models.IPlayer, vehicle *models.IVehicle, seat uint8)
 type OnLeaveVehicleCallback func(player *models.IPlayer, vehicle *models.IVehicle, seat uint8)
 
@@ -42,6 +44,11 @@ func (cb *Callback) TriggerOnServerStarted() {
 func (cb *Callback) TriggerOnPlayerConnect(player *models.IPlayer) {
 	if onPlayerConnectCallback != nil {
 		onPlayerConnectCallback(player)
+	}
+}
+func (cb *Callback) TriggerOnPlayerDisconnect(player *models.IPlayer, reason string) {
+	if onPlayerDisconnectCallback != nil {
+		onPlayerDisconnectCallback(player, reason)
 	}
 }
 func (cb *Callback) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
@@ -76,6 +83,12 @@ func OnServerStarted(cb OnServerStartedCallback) {
 func OnPlayerConnect(cb OnPlayerConnectCallback) {
 	if onPlayerConnectCallback == nil {
 		onPlayerConnectCallback = cb
+	}
+}
+
+func OnPlayerDisconnect(cb OnPlayerDisconnectCallback) {
+	if onPlayerDisconnectCallback == nil {
+		onPlayerDisconnectCallback = cb
 	}
 }
 

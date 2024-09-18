@@ -36,4 +36,5 @@ const (
 	Mod
 	ModKit
 	Repair
+	VehicleDestroy
 )

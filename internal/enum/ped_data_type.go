@@ -21,4 +21,5 @@ const (
 	PedStreamingDistance
 	PedMaxHealth
 	PedCurrentWeapon
+	PedDestroy
 )
