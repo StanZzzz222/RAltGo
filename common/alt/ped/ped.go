@@ -2,7 +2,6 @@ package ped
 
 import (
 	"github.com/StanZzzz222/RAltGo/common/models"
-	"github.com/StanZzzz222/RAltGo/common/pools"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/enums/ped"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
@@ -26,8 +25,8 @@ func CreatePed(model string, position, rotation *entities.Vector3) *models.IPed 
 	if cPed != nil {
 		freePtrFunc()
 		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
-		pedPools := pools.GetPedPools()
-		pedPools.Put(p)
+		pools := models.GetPools()
+		pools.PutPed(p)
 		return p
 	}
 	return nil
@@ -43,8 +42,8 @@ func CreateStreamPed(model string, position, rotation *entities.Vector3, streami
 	if cPed != nil {
 		freePtrFunc()
 		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
-		pedPools := pools.GetPedPools()
-		pedPools.Put(p)
+		pools := models.GetPools()
+		pools.PutPed(p)
 		return p
 	}
 	return nil
@@ -60,8 +59,8 @@ func CreatePedByHash(model ped.ModelHash, position, rotation *entities.Vector3) 
 	if cPed != nil {
 		freePtrFunc()
 		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
-		pedPools := pools.GetPedPools()
-		pedPools.Put(p)
+		pools := models.GetPools()
+		pools.PutPed(p)
 		return p
 	}
 	return nil
@@ -77,8 +76,8 @@ func CreateStreamPedByHash(model ped.ModelHash, position, rotation *entities.Vec
 	if cPed != nil {
 		freePtrFunc()
 		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
-		pedPools := pools.GetPedPools()
-		pedPools.Put(p)
+		pools := models.GetPools()
+		pools.PutPed(p)
 		return p
 	}
 	return nil

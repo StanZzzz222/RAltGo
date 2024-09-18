@@ -263,9 +263,7 @@ func (v *IVehicle) Repair() {
 	w.SetVehicleData(v.id, enum.Repair, int64(0))
 }
 
-//
-//func (v *IVehicle) Destroy() {
-//	w.SetVehicleData(v.id, enum.VehicleDestroy, int64(0))
-//	vehiclePools := pools.GetVehiclePools()
-//	vehiclePools.Remove(v)
-//}
+func (v *IVehicle) Destroy() {
+	w.SetVehicleData(v.id, enum.VehicleDestroy, int64(0))
+	pools.DestroyVehicle(v)
+}

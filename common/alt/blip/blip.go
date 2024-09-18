@@ -2,7 +2,6 @@ package blip
 
 import (
 	"github.com/StanZzzz222/RAltGo/common/models"
-	"github.com/StanZzzz222/RAltGo/common/pools"
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
@@ -25,8 +24,8 @@ func CreateBlipPoint(spriteId, color uint32, name string, position *entities.Vec
 	if cBlip != nil {
 		freePtrFunc()
 		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		blipPools := pools.GetBlipPools()
-		blipPools.Put(blip)
+		pools := models.GetPools()
+		pools.PutBlip(blip)
 		return blip
 	}
 	return nil
@@ -42,8 +41,8 @@ func CreateBlipArea(spriteId, color uint32, name string, position *entities.Vect
 	if cBlip != nil {
 		freePtrFunc()
 		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		blipPools := pools.GetBlipPools()
-		blipPools.Put(blip)
+		pools := models.GetPools()
+		pools.PutBlip(blip)
 		return blip
 	}
 	return nil
@@ -59,8 +58,8 @@ func CreateBlipRadius(spriteId, color uint32, name string, position *entities.Ve
 	if cBlip != nil {
 		freePtrFunc()
 		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		blipPools := pools.GetBlipPools()
-		blipPools.Put(blip)
+		pools := models.GetPools()
+		pools.PutBlip(blip)
 		return blip
 	}
 	return nil
