@@ -35,7 +35,7 @@ func (p *VehiclePool) Remove(vehicle *models.IVehicle) {
 	}
 }
 
-func GetVehicle(id int) *models.IVehicle {
+func GetVehicle(id uint32) *models.IVehicle {
 	vehicle, ok := vehiclePools.vehicles.Load(id)
 	if ok {
 		return vehicle.(*models.IVehicle)

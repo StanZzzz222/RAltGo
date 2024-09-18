@@ -35,7 +35,7 @@ func (p *PlayerPool) Remove(player *models.IPlayer) {
 	}
 }
 
-func GetPlayer(id int) *models.IPlayer {
+func GetPlayer(id uint32) *models.IPlayer {
 	player, ok := playerPools.players.Load(id)
 	if ok {
 		return player.(*models.IPlayer)

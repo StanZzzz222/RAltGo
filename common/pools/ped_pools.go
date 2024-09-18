@@ -35,7 +35,7 @@ func (p *PedPool) Remove(ped *models.IPed) {
 	}
 }
 
-func GetPed(id int) *models.IPed {
+func GetPed(id uint32) *models.IPed {
 	ped, ok := pedPools.peds.Load(id)
 	if ok {
 		return ped.(*models.IPed)

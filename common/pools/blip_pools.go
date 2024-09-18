@@ -35,7 +35,7 @@ func (p *BlipPool) Remove(blip *models.IBlip) {
 	}
 }
 
-func GetBlip(id int) *models.IBlip {
+func GetBlip(id uint32) *models.IBlip {
 	blip, ok := blipPools.blips.Load(id)
 	if ok {
 		return blip.(*models.IBlip)
