@@ -10,7 +10,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/weather_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
-	"github.com/StanZzzz222/RAltGo/logger"
 	"math"
 	"net"
 	"time"
@@ -173,8 +172,7 @@ func (p *IPlayer) Vehicle() *IVehicle {
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
-		//id := cDataResult.U32Val
-		logger.LogInfof("TODO: Vehicle pools")
+		return pools.GetVehicle(cDataResult.U32Val)
 	}
 	return nil
 }
