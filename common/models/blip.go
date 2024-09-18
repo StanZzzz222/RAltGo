@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/common/pools"
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
@@ -391,8 +390,9 @@ func (b *IBlip) SetBlipScale(scale *entities.Vector3) {
 	w.SetBlipMetaData(b.id, enum.Scale, int64(math.Float32bits(scale.X))|(int64(math.Float32bits(scale.Y))<<32), 0, "", 0, 0, 0, 0)
 }
 
-func (b *IBlip) Destroy() {
-	w.SetBlipData(b.id, enum.BlipDestroy, int64(0))
-	blipPools := pools.GetBlipPools()
-	blipPools.Remove(b)
-}
+//
+//func (b *IBlip) Destroy() {
+//	w.SetBlipData(b.id, enum.BlipDestroy, int64(0))
+//	blipPools := pools.GetBlipPools()
+//	blipPools.Remove(b)
+//}
