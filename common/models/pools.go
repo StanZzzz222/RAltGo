@@ -74,6 +74,50 @@ func (p *Pools) DestroyPed(ped *IPed) {
 	}
 }
 
+func (p *Pools) GetPed(id uint32) *IPed {
+	if value, ok := p.peds.Load(id); ok {
+		return value.(*IPed)
+	}
+	return nil
+}
+
+func (p *Pools) GetBlip(id uint32) *IBlip {
+	if value, ok := p.blips.Load(id); ok {
+		return value.(*IBlip)
+	}
+	return nil
+}
+
+func (p *Pools) GetVehicle(id uint32) *IVehicle {
+	if value, ok := p.vehicles.Load(id); ok {
+		return value.(*IVehicle)
+	}
+	return nil
+}
+
+func (p *Pools) GetPlayer(id uint32) *IPlayer {
+	if value, ok := p.players.Load(id); ok {
+		return value.(*IPlayer)
+	}
+	return nil
+}
+
+func (p *Pools) GetVehiclePools() *sync.Map {
+	return p.vehicles
+}
+
+func (p *Pools) GetPedPools() *sync.Map {
+	return p.peds
+}
+
+func (p *Pools) GetBlipPools() *sync.Map {
+	return p.blips
+}
+
+func (p *Pools) GetPlayerPools() *sync.Map {
+	return p.players
+}
+
 func GetPools() *Pools {
 	return pools
 }
