@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/common/utils"
-	"github.com/StanZzzz222/RAltGo/enums"
-	"github.com/StanZzzz222/RAltGo/enums/ped"
-	"github.com/StanZzzz222/RAltGo/enums/weapon"
-	"github.com/StanZzzz222/RAltGo/enums/weather"
+	"github.com/StanZzzz222/RAltGo/hash_enums"
+	"github.com/StanZzzz222/RAltGo/hash_enums/ped"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weapon"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weather"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -53,7 +53,7 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 		authToken:  authToken,
 		hwIdHash:   hwIdHash,
 		hwIdExHash: hwIdExHash,
-		BaseObject: NewBaseObject(position, rotation, enums.DefaultDimension, false, true, true),
+		BaseObject: NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
 
@@ -246,7 +246,7 @@ func (p *IPlayer) SetHairHighlightColor(hairHighlightColor uint8) {
 }
 
 func (p *IPlayer) SetHealth(health uint16) {
-	if health > enums.MaxHealth {
+	if health > hash_enums.MaxHealth {
 		p.health = health
 		w.SetPlayerData(p.id, enum.Health, int64(health))
 		return
@@ -276,7 +276,7 @@ func (p *IPlayer) SetWeather(wather weather.WeatherType) {
 }
 
 func (p *IPlayer) SetMaxHealth(maxHealth uint16) {
-	if maxHealth > enums.MaxHealth {
+	if maxHealth > hash_enums.MaxHealth {
 		p.maxHealth = maxHealth
 		w.SetPlayerData(p.id, enum.MaxHealth, int64(maxHealth))
 		return

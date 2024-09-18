@@ -1,4 +1,4 @@
-package enums
+package hash_enums
 
 import "math"
 

@@ -3,9 +3,9 @@ package models
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/utils"
-	"github.com/StanZzzz222/RAltGo/enums"
-	"github.com/StanZzzz222/RAltGo/enums/ped"
-	"github.com/StanZzzz222/RAltGo/enums/weapon"
+	"github.com/StanZzzz222/RAltGo/hash_enums"
+	"github.com/StanZzzz222/RAltGo/hash_enums/ped"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weapon"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
@@ -77,7 +77,7 @@ func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vec
 		id:            id,
 		model:         ped.ModelHash(model),
 		currentWeapon: weapon.Fist,
-		BaseObject:    NewBaseObject(position, rotation, enums.DefaultDimension, false, true, true),
+		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
 
@@ -92,7 +92,7 @@ func (p *IPed) SetRotation(rotation *entities.Vector3) {
 }
 
 func (p *IPed) SetHealth(health uint16) {
-	if health > enums.MaxHealth {
+	if health > hash_enums.MaxHealth {
 		p.health = health
 		w.SetPedData(p.id, enum.PedMaxHealth, int64(health))
 		return
@@ -153,7 +153,7 @@ func (p *IPed) SetStreamingDistance(streamingDistance uint32) {
 }
 
 func (p *IPed) SetMaxHealth(maxHealth uint16) {
-	if maxHealth > enums.MaxHealth {
+	if maxHealth > hash_enums.MaxHealth {
 		p.maxHealth = maxHealth
 		w.SetPedData(p.id, enum.PedMaxHealth, int64(maxHealth))
 		return

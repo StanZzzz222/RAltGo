@@ -4,7 +4,7 @@ package lib
 import "C"
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/enums/blip_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/internal/utils"
 	"github.com/StanZzzz222/RAltGo/logger"

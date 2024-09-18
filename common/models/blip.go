@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/enums/blip_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"

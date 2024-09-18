@@ -2,8 +2,8 @@ package models
 
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/enums"
-	"github.com/StanZzzz222/RAltGo/enums/vehicle"
+	"github.com/StanZzzz222/RAltGo/hash_enums"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
@@ -86,7 +86,7 @@ func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8
 		model:        vehicle.ModelHash(model),
 		primaryColor: primaryColor,
 		secondColor:  secondColor,
-		BaseObject:   NewBaseObject(position, rotation, enums.DefaultDimension, false, true, true),
+		BaseObject:   NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
 
