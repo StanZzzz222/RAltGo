@@ -23,10 +23,12 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
 	rotData := uint64(math.Float32bits(rotation.X)) | (uint64(math.Float32bits(rotation.Y)) << 32)
 	rotMetadata := uint64(math.Float32bits(rotation.Z)) << 32
-	ret, freePtrFunc := w.CreateVehicle(utils.Hash(model), posData, posMetadata, rotData, rotMetadata, w.GoStringMarshalPtr(numberPlate), primaryColor, secondColor)
+	numplate, freeCStringFunc := w.GoStringMarshalPtr(numberPlate)
+	ret, freePtrFunc := w.CreateVehicle(utils.Hash(model), posData, posMetadata, rotData, rotMetadata, numplate, primaryColor, secondColor)
 	cVeh := entities.ConvertCVehicle(ret)
 	if cVeh != nil {
 		freePtrFunc()
+		freeCStringFunc()
 		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
 		return veh
 	}
@@ -40,10 +42,12 @@ func CreateVehicleByHash(model vehicle.ModelHash, numberPlate string, position, 
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
 	rotData := uint64(math.Float32bits(rotation.X)) | (uint64(math.Float32bits(rotation.Y)) << 32)
 	rotMetadata := uint64(math.Float32bits(rotation.Z)) << 32
-	ret, freePtrFunc := w.CreateVehicle(uint32(model), posData, posMetadata, rotData, rotMetadata, w.GoStringMarshalPtr(numberPlate), primaryColor, secondColor)
+	numplate, freeCStringFunc := w.GoStringMarshalPtr(numberPlate)
+	ret, freePtrFunc := w.CreateVehicle(uint32(model), posData, posMetadata, rotData, rotMetadata, numplate, primaryColor, secondColor)
 	cVeh := entities.ConvertCVehicle(ret)
 	if cVeh != nil {
 		freePtrFunc()
+		freeCStringFunc()
 		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
 		return veh
 	}

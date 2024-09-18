@@ -34,4 +34,15 @@ const (
 	HairColor
 	HairHighlightColor
 	Spawn
+	IsEnteringVehicle
+	IsDead
+	IsInVehicle
+	IsAiming
+	IsInCover
+	IsInRagdoll
+	IsShooting
+	IsJumping
+	IsLeavingVehicle
+	IsInMelle
+	PlayerVehicle
 )

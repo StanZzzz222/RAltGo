@@ -1,11 +1,12 @@
 package lib
 
+// #include <stdlib.h>
 import "C"
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
-	"github.com/StanZzzz222/RAltGo/internal/queue"
+	"github.com/StanZzzz222/RAltGo/internal/utils"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"os"
 	"syscall"
@@ -36,7 +37,8 @@ var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
 var getDataProc *syscall.Proc
-var taskQueue = queue.NewTaskQueue()
+var emitProc *syscall.Proc
+var taskQueue = utils.NewTaskQueue()
 
 type Warrper struct{}
 
@@ -75,6 +77,7 @@ func init() {
 	createBlipProc = dll.MustFindProc("create_blip")
 	createPedProc = dll.MustFindProc("create_ped")
 	getDataProc = dll.MustFindProc("get_data")
+	emitProc = dll.MustFindProc("emit")
 }
 
 func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
@@ -90,6 +93,20 @@ func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) Emit(id uint32, eventName string, compressData string) {
+	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
+	compressDataPtr, freecompressDataCStringFunc := w.GoStringMarshalPtr(compressData)
+	defer func() {
+		freeEventNameCStringFunc()
+		freecompressDataCStringFunc()
+	}()
+	_, _, err := emitProc.Call(uintptr(id), eventNamePtr, compressDataPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("emit failed: %v", err.Error())
 		return
 	}
 }
@@ -125,9 +142,11 @@ func (w *Warrper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data in
 }
 
 func (w *Warrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
+	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
-		strPtr = w.GoStringMarshalPtr(strData)
+		strPtr, freeCStringFunc = w.GoStringMarshalPtr(strData)
+		defer freeCStringFunc()
 	}
 	_, _, err := setBlipDataProc.Call(uintptr(id), uintptr(blipDataType), uintptr(data), uintptr(metaData), strPtr, uintptr(r), uintptr(g), uintptr(b), uintptr(a))
 	if err != nil && err.Error() != "The operation completed successfully." {
@@ -145,9 +164,11 @@ func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType
 }
 
 func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
+	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
-		strPtr = w.GoStringMarshalPtr(strData)
+		strPtr, freeCStringFunc = w.GoStringMarshalPtr(strData)
+		defer freeCStringFunc()
 	}
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(metaData), strPtr, uintptr(l), uintptr(r), uintptr(t), uintptr(b))
 	if err != nil && err.Error() != "The operation completed successfully." {
@@ -209,9 +230,11 @@ func (w *Warrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMeta
 }
 
 func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, strData string, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
+	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
-		strPtr = w.GoStringMarshalPtr(strData)
+		strPtr, freeCStringFunc = w.GoStringMarshalPtr(strData)
+		defer freeCStringFunc()
 	}
 	ret, _, err := createBlipProc.Call(uintptr(blipType), uintptr(spriteId), uintptr(color), strPtr, uintptr(posData), uintptr(posMetaData), uintptr(width), uintptr(height), uintptr(radius))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
@@ -278,9 +301,9 @@ func (w *Warrper) FreeDataResult(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) GoStringMarshalPtr(s string) uintptr {
+func (w *Warrper) GoStringMarshalPtr(s string) (uintptr, func()) {
 	cStr := C.CString(s)
-	return uintptr(unsafe.Pointer(cStr))
+	return uintptr(unsafe.Pointer(cStr)), func() { C.free(unsafe.Pointer(cStr)) }
 }
 
 func (w *Warrper) PtrMarshalGoString(ret uintptr) string {

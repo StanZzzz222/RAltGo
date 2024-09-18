@@ -10,6 +10,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/enums/weather"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/logger"
 	"math"
 	"net"
 	"time"
@@ -31,7 +32,7 @@ type IPlayer struct {
 	model              ped.ModelHash
 	health             uint16
 	armour             uint16
-	weather            uint16
+	weather            weather.WeatherType
 	maxHealth          uint16
 	maxArmour          uint16
 	eyeColor           int16
@@ -70,13 +71,112 @@ func (p *IPlayer) GetCollision() bool                 { return p.collision }
 func (p *IPlayer) GetInvincible() bool                { return p.invincible }
 func (p *IPlayer) GetHealth() uint16 {
 	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Health))
-	defer freeDataResultFunc()
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
 		return cDataResult.U16Val
 	}
 	return 0
+}
+func (p *IPlayer) IsEnteringVehicle() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsEnteringVehicle))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsDead() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsDead))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsInVehicle() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsInVehicle))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsAiming() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsAiming))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsInCover() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsInCover))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsInRagdoll() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsInRagdoll))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsShooting() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsShooting))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsJumping() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsJumping))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsLeavingVehicle() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsLeavingVehicle))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) IsInMelle() bool {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.IsInMelle))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (p *IPlayer) Vehicle() *IVehicle {
+	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.PlayerVehicle))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		//id := cDataResult.U32Val
+		logger.LogInfof("TODO: Vehicle pools")
+	}
+	return nil
 }
 func (p *IPlayer) GetPosition() *entities.Vector3 {
 	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Position))
@@ -115,6 +215,11 @@ func (p *IPlayer) Spawn(model ped.ModelHash, position *entities.Vector3) {
 	p.model = model
 	p.position = position
 	w.SetPlayerMetaModelData(p.id, enum.Spawn, uint32(model), int64(uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32)), uint64(math.Float32bits(position.Z))<<32)
+}
+
+func (p *IPlayer) Emit(eventName string, args ...any) {
+	var mvalues = NewMValues(args...)
+	w.Emit(p.id, eventName, string(mvalues.Dump()))
 }
 
 func (p *IPlayer) Despawn() {
@@ -166,7 +271,7 @@ func (p *IPlayer) SetDateTimeUTC8(t time.Time) {
 }
 
 func (p *IPlayer) SetWeather(wather weather.WeatherType) {
-	p.weather = uint16(wather)
+	p.weather = wather
 	w.SetPlayerData(p.id, enum.Weather, int64(wather))
 }
 
