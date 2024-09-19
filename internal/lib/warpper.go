@@ -9,6 +9,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/internal/utils"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"math"
 	"os"
 	"syscall"
 	"time"
@@ -251,7 +252,7 @@ func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32
 		strPtr, freeCStringFunc = w.GoStringMarshalPtr(strData)
 		defer freeCStringFunc()
 	}
-	ret, _, err := createBlipProc.Call(uintptr(blipType), uintptr(spriteId), uintptr(color), strPtr, uintptr(posData), uintptr(posMetaData), uintptr(width), uintptr(height), uintptr(radius))
+	ret, _, err := createBlipProc.Call(uintptr(blipType), uintptr(spriteId), uintptr(color), strPtr, uintptr(posData), uintptr(posMetaData), uintptr(width), uintptr(math.Float32bits(height)), uintptr(math.Float32bits(radius)))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create blip failed: %v", err.Error())
 		return 0, func() {}
@@ -265,7 +266,7 @@ func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32
 }
 
 func (w *Warrper) CreateColshape(colshapeType colshape_type.ColshapeType, posData, posMetaData, secondPosData, secondPosMetaData uint64, radius, height float32) (uintptr, func()) {
-	ret, _, err := createColshapeProc.Call(uintptr(colshapeType), uintptr(posData), uintptr(posMetaData), uintptr(secondPosData), uintptr(secondPosMetaData), uintptr(radius), uintptr(height))
+	ret, _, err := createColshapeProc.Call(uintptr(colshapeType), uintptr(posData), uintptr(posMetaData), uintptr(secondPosData), uintptr(secondPosMetaData), uintptr(math.Float32bits(radius)), uintptr(math.Float32bits(height)))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create colshape failed: %v", err.Error())
 		return 0, func() {}
