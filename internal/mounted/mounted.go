@@ -137,28 +137,46 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	var cColshape = entities.ConvertCColshape(ccPtr)
-	if cPlayer != nil && cVehicle != nil && cColshape != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
-		v := models.GetPools().GetVehicle(cVehicle.ID)
-		c := models.GetPools().GetColshape(cColshape.ID)
-		defer func() {
+	defer func() {
+		if cPtr != 0 {
 			w.FreePlayer(cPtr)
+		}
+		if cvPtr != 0 {
 			w.FreeVehicle(cvPtr)
-			w.FreeColshape(ccPtr)
-		}()
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
 		}
-		if v == nil {
-			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			models.GetPools().PutVehicle(veh)
+		w.FreeColshape(ccPtr)
+	}()
+	switch colshapeEntityType {
+	case colshape_entity_type.Player:
+		if cPlayer != nil && cColshape != nil {
+			p := models.GetPools().GetPlayer(cPlayer.ID)
+			c := models.GetPools().GetColshape(cColshape.ID)
+			if p == nil {
+				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+				models.GetPools().PutPlayer(p)
+			}
+			if c == nil {
+				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+				models.GetPools().PutColshape(c)
+			}
+			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, p, nil, c)
 		}
-		if c == nil {
-			c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-			models.GetPools().PutColshape(c)
+		break
+	case colshape_entity_type.Vehicle:
+		if cVehicle != nil && cColshape != nil {
+			v := models.GetPools().GetVehicle(cVehicle.ID)
+			c := models.GetPools().GetColshape(cColshape.ID)
+			if v == nil {
+				v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+				models.GetPools().PutVehicle(veh)
+			}
+			if c == nil {
+				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+				models.GetPools().PutColshape(c)
+			}
+			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, nil, v, c)
 		}
-		alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, p, v, c)
+		break
 	}
 }
 
@@ -171,27 +189,45 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	var cColshape = entities.ConvertCColshape(ccPtr)
-	if cPlayer != nil && cVehicle != nil && cColshape != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
-		v := models.GetPools().GetVehicle(cVehicle.ID)
-		c := models.GetPools().GetColshape(cColshape.ID)
-		defer func() {
+	defer func() {
+		if cPtr != 0 {
 			w.FreePlayer(cPtr)
+		}
+		if cvPtr != 0 {
 			w.FreeVehicle(cvPtr)
-			w.FreeColshape(ccPtr)
-		}()
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
 		}
-		if v == nil {
-			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			models.GetPools().PutVehicle(veh)
+		w.FreeColshape(ccPtr)
+	}()
+	switch colshapeEntityType {
+	case colshape_entity_type.Player:
+		if cPlayer != nil && cColshape != nil {
+			p := models.GetPools().GetPlayer(cPlayer.ID)
+			c := models.GetPools().GetColshape(cColshape.ID)
+			if p == nil {
+				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+				models.GetPools().PutPlayer(p)
+			}
+			if c == nil {
+				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+				models.GetPools().PutColshape(c)
+			}
+			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, p, nil, c)
 		}
-		if c == nil {
-			c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-			models.GetPools().PutColshape(c)
+		break
+	case colshape_entity_type.Vehicle:
+		if cVehicle != nil && cColshape != nil {
+			v := models.GetPools().GetVehicle(cVehicle.ID)
+			c := models.GetPools().GetColshape(cColshape.ID)
+			if v == nil {
+				v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+				models.GetPools().PutVehicle(veh)
+			}
+			if c == nil {
+				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+				models.GetPools().PutColshape(c)
+			}
+			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, nil, v, c)
 		}
-		alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, p, v, c)
+		break
 	}
 }
