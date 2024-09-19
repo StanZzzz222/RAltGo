@@ -438,7 +438,7 @@ func (p *IPlayer) GetData(key string) any {
 func (p *IPlayer) GetDatas() []any {
 	var datas []any
 	p.datas.Range(func(key, value any) bool {
-		datas = append(datas, value)
+		datas = append(datas, key)
 		return true
 	})
 	return datas

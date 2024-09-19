@@ -308,7 +308,7 @@ func (v *IVehicle) GetData(key string) any {
 func (v *IVehicle) GetDatas() []any {
 	var datas []any
 	v.datas.Range(func(key, value any) bool {
-		datas = append(datas, value)
+		datas = append(datas, key)
 		return true
 	})
 	return datas

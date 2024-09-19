@@ -435,7 +435,7 @@ func (b *IBlip) GetData(key string) any {
 func (b *IBlip) GetDatas() []any {
 	var datas []any
 	b.datas.Range(func(key, value any) bool {
-		datas = append(datas, value)
+		datas = append(datas, key)
 		return true
 	})
 	return datas
