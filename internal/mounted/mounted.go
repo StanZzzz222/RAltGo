@@ -63,14 +63,19 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		reason := w.PtrMarshalGoString(cReasonPtr)
 		defer func() {
 			w.Free(cReasonPtr)
 			w.FreePlayer(cPtr)
 			pools := models.GetPools()
 			pools.DestroyPlayer(player)
 		}()
-		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		reason := w.PtrMarshalGoString(cReasonPtr)
+		if p == nil {
+			player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			cb.TriggerOnPlayerDisconnect(player, reason)
+			return
+		}
 		cb.TriggerOnPlayerDisconnect(player, reason)
 	}
 }
@@ -82,11 +87,19 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
-		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-		cb.TriggerOnEnterVehicle(player, veh, seat)
-		w.FreePlayer(cPtr)
-		w.FreeVehicle(cvPtr)
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		v := models.GetPools().GetVehicle(cVehicle.ID)
+		defer func() {
+			w.FreePlayer(cPtr)
+			w.FreeVehicle(cvPtr)
+		}()
+		if p == nil && v == nil {
+			player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			cb.TriggerOnEnterVehicle(player, veh, seat)
+			return
+		}
+		cb.TriggerOnEnterVehicle(p, v, seat)
 	}
 }
 
@@ -97,10 +110,18 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
-		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-		cb.TriggerOnLeaveVehicle(player, veh, seat)
-		w.FreePlayer(cPtr)
-		w.FreeVehicle(cvPtr)
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		v := models.GetPools().GetVehicle(cVehicle.ID)
+		defer func() {
+			w.FreePlayer(cPtr)
+			w.FreeVehicle(cvPtr)
+		}()
+		if p == nil && v == nil {
+			player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			cb.TriggerOnLeaveVehicle(player, veh, seat)
+			return
+		}
+		cb.TriggerOnLeaveVehicle(p, v, seat)
 	}
 }
