@@ -7,6 +7,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
+	"sync"
 )
 
 /*
@@ -33,6 +34,7 @@ type IVehicle struct {
 	lightsMultiplier float32
 	wheelColor       uint8
 	neonColor        *entities.Rgba
+	datas            *sync.Map
 	*BaseObject
 }
 
@@ -86,6 +88,7 @@ func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8
 		model:        vehicle_hash.ModelHash(model),
 		primaryColor: primaryColor,
 		secondColor:  secondColor,
+		datas:        &sync.Map{},
 		BaseObject:   NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
@@ -266,4 +269,47 @@ func (v *IVehicle) Repair() {
 func (v *IVehicle) Destroy() {
 	w.SetVehicleData(v.id, enum.VehicleDestroy, int64(0))
 	pools.DestroyVehicle(v)
+}
+
+func (v *IVehicle) SetData(key string, value any) {
+	v.datas.Store(key, value)
+}
+
+func (v *IVehicle) DelData(key string) {
+	_, ok := v.datas.Load(key)
+	if ok {
+		v.datas.Delete(key)
+	}
+}
+
+func (v *IVehicle) DelAllData() {
+	v.datas.Range(func(key, value any) bool {
+		v.datas.Delete(key)
+		return true
+	})
+}
+
+func (v *IVehicle) HasData(key string) bool {
+	_, ok := v.datas.Load(key)
+	if ok {
+		return true
+	}
+	return false
+}
+
+func (v *IVehicle) GetData(key string) any {
+	value, ok := v.datas.Load(key)
+	if ok {
+		return value
+	}
+	return value
+}
+
+func (v *IVehicle) GetDatas() []any {
+	var datas []any
+	v.datas.Range(func(key, value any) bool {
+		datas = append(datas, value)
+		return true
+	})
+	return datas
 }

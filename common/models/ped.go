@@ -9,6 +9,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
+	"sync"
 )
 
 /*
@@ -26,6 +27,7 @@ type IPed struct {
 	currentWeapon     weapon_hash.ModelHash
 	streamingDistance uint32
 	streamed          bool
+	datas             *sync.Map
 	*BaseObject
 }
 
@@ -77,6 +79,7 @@ func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vec
 		id:            id,
 		model:         ped_hash.ModelHash(model),
 		currentWeapon: weapon_hash.Fist,
+		datas:         &sync.Map{},
 		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
@@ -176,4 +179,47 @@ func (p *IPed) SetCurrentWeaponByName(model string) {
 func (p *IPed) Destroy() {
 	w.SetPedData(p.id, enum.PedDestroy, int64(0))
 	pools.DestroyPed(p)
+}
+
+func (p *IPed) SetData(key string, value any) {
+	p.datas.Store(key, value)
+}
+
+func (p *IPed) DelData(key string) {
+	_, ok := p.datas.Load(key)
+	if ok {
+		p.datas.Delete(key)
+	}
+}
+
+func (p *IPed) DelAllData() {
+	p.datas.Range(func(key, value any) bool {
+		p.datas.Delete(key)
+		return true
+	})
+}
+
+func (p *IPed) HasData(key string) bool {
+	_, ok := p.datas.Load(key)
+	if ok {
+		return true
+	}
+	return false
+}
+
+func (p *IPed) GetData(key string) any {
+	value, ok := p.datas.Load(key)
+	if ok {
+		return value
+	}
+	return value
+}
+
+func (p *IPed) GetDatas() []any {
+	var datas []any
+	p.datas.Range(func(key, value any) bool {
+		datas = append(datas, value)
+		return true
+	})
+	return datas
 }

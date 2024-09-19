@@ -6,6 +6,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
+	"sync"
 )
 
 /*
@@ -53,6 +54,7 @@ type IBlip struct {
 	rgbaColor                *entities.Rgba
 	position                 *entities.Vector3
 	scale                    *entities.Vector3
+	datas                    *sync.Map
 }
 
 func (b *IBlip) GetId() uint32                     { return b.id }
@@ -114,25 +116,26 @@ func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot 
 		color:    color,
 		rot:      rot,
 		position: position,
+		datas:    &sync.Map{},
 	}
 }
 
-func (b *IBlip) SetBlipSprite(spriteId uint32) {
+func (b *IBlip) SetSprite(spriteId uint32) {
 	b.spriteId = spriteId
 	w.SetBlipData(b.id, enum.Sprite, int64(spriteId))
 }
 
-func (b *IBlip) SetBlipColor(color uint32) {
+func (b *IBlip) SetColor(color uint32) {
 	b.color = color
 	w.SetBlipData(b.id, enum.Color, int64(color))
 }
 
-func (b *IBlip) SetBlipRGBA(rgbaColor *entities.Rgba) {
+func (b *IBlip) SetRGBAColor(rgbaColor *entities.Rgba) {
 	b.rgbaColor = rgbaColor
 	w.SetBlipMetaData(b.id, enum.RgbaColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
 }
 
-func (b *IBlip) SetBlipVisible(visible bool) {
+func (b *IBlip) SetVisible(visible bool) {
 	b.visible = visible
 	value := 0
 	if visible {
@@ -141,7 +144,7 @@ func (b *IBlip) SetBlipVisible(visible bool) {
 	w.SetBlipData(b.id, enum.BlipVisible, int64(value))
 }
 
-func (b *IBlip) SetBlipDisplay(display bool) {
+func (b *IBlip) SetDisplay(display bool) {
 	b.display = display
 	value := 0
 	if display {
@@ -150,12 +153,12 @@ func (b *IBlip) SetBlipDisplay(display bool) {
 	w.SetBlipData(b.id, enum.Display, int64(value))
 }
 
-func (b *IBlip) SetBlipAlpha(alpha uint32) {
+func (b *IBlip) SetAlpha(alpha uint32) {
 	b.alpha = alpha
 	w.SetBlipData(b.id, enum.Alpha, int64(alpha))
 }
 
-func (b *IBlip) SetBlipFriendly(friendly bool) {
+func (b *IBlip) SetFriendly(friendly bool) {
 	b.friendly = friendly
 	value := 0
 	if friendly {
@@ -164,7 +167,7 @@ func (b *IBlip) SetBlipFriendly(friendly bool) {
 	w.SetBlipData(b.id, enum.Friendly, int64(value))
 }
 
-func (b *IBlip) SetBlipHighDetail(highDetail bool) {
+func (b *IBlip) SetHighDetail(highDetail bool) {
 	b.highDetail = highDetail
 	value := 0
 	if highDetail {
@@ -173,7 +176,7 @@ func (b *IBlip) SetBlipHighDetail(highDetail bool) {
 	w.SetBlipData(b.id, enum.HighDetail, int64(value))
 }
 
-func (b *IBlip) SetBlipMissionCreator(missionCreator bool) {
+func (b *IBlip) SetMissionCreator(missionCreator bool) {
 	b.missionCreator = missionCreator
 	value := 0
 	if missionCreator {
@@ -182,7 +185,7 @@ func (b *IBlip) SetBlipMissionCreator(missionCreator bool) {
 	w.SetBlipData(b.id, enum.MissionCreator, int64(value))
 }
 
-func (b *IBlip) SetBlipShortRange(shortRange bool) {
+func (b *IBlip) SetShortRange(shortRange bool) {
 	b.shortRange = shortRange
 	value := 0
 	if shortRange {
@@ -191,7 +194,7 @@ func (b *IBlip) SetBlipShortRange(shortRange bool) {
 	w.SetBlipData(b.id, enum.ShortRange, int64(value))
 }
 
-func (b *IBlip) SetBlipBright(bright bool) {
+func (b *IBlip) SetBright(bright bool) {
 	b.bright = bright
 	value := 0
 	if bright {
@@ -200,7 +203,7 @@ func (b *IBlip) SetBlipBright(bright bool) {
 	w.SetBlipData(b.id, enum.Bright, int64(value))
 }
 
-func (b *IBlip) SetBlipCrewIndicatorVisible(crewIndicatorVisible bool) {
+func (b *IBlip) SetCrewIndicatorVisible(crewIndicatorVisible bool) {
 	b.crewIndicatorVisible = crewIndicatorVisible
 	value := 0
 	if crewIndicatorVisible {
@@ -209,22 +212,22 @@ func (b *IBlip) SetBlipCrewIndicatorVisible(crewIndicatorVisible bool) {
 	w.SetBlipData(b.id, enum.CrewIndicatorVisible, int64(value))
 }
 
-func (b *IBlip) SetBlipCategory(category uint32) {
+func (b *IBlip) SetCategory(category uint32) {
 	b.category = category
 	w.SetBlipData(b.id, enum.Category, int64(category))
 }
 
-func (b *IBlip) SetBlipFlashInterval(flashInterval uint32) {
+func (b *IBlip) SetFlashInterval(flashInterval uint32) {
 	b.flashInterval = flashInterval
 	w.SetBlipData(b.id, enum.FlashInterval, int64(flashInterval))
 }
 
-func (b *IBlip) SetBlipFlashTimer(flashTimer uint32) {
+func (b *IBlip) SetFlashTimer(flashTimer uint32) {
 	b.flashTimer = flashTimer
 	w.SetBlipData(b.id, enum.FlashTimer, int64(flashTimer))
 }
 
-func (b *IBlip) SetBlipFlashes(flashes bool) {
+func (b *IBlip) SetFlashes(flashes bool) {
 	b.flashes = flashes
 	value := 0
 	if flashes {
@@ -233,7 +236,7 @@ func (b *IBlip) SetBlipFlashes(flashes bool) {
 	w.SetBlipData(b.id, enum.Flashes, int64(value))
 }
 
-func (b *IBlip) SetBlipFlashesAlternate(flashesAlternate bool) {
+func (b *IBlip) SetFlashesAlternate(flashesAlternate bool) {
 	b.flashesAlternate = flashesAlternate
 	value := 0
 	if flashesAlternate {
@@ -242,7 +245,7 @@ func (b *IBlip) SetBlipFlashesAlternate(flashesAlternate bool) {
 	w.SetBlipData(b.id, enum.FlashesAlternate, int64(value))
 }
 
-func (b *IBlip) SetBlipGlobal(global bool) {
+func (b *IBlip) SetGlobal(global bool) {
 	b.global = global
 	value := 0
 	if global {
@@ -251,7 +254,7 @@ func (b *IBlip) SetBlipGlobal(global bool) {
 	w.SetBlipData(b.id, enum.Global, int64(value))
 }
 
-func (b *IBlip) SetBlipMinimalOnEdge(minimalOnEdge bool) {
+func (b *IBlip) SetMinimalOnEdge(minimalOnEdge bool) {
 	b.minimalOnEdge = minimalOnEdge
 	value := 0
 	if minimalOnEdge {
@@ -260,7 +263,7 @@ func (b *IBlip) SetBlipMinimalOnEdge(minimalOnEdge bool) {
 	w.SetBlipData(b.id, enum.MinimalOnEdge, int64(value))
 }
 
-func (b *IBlip) SetBlipRoute(route bool) {
+func (b *IBlip) SetRoute(route bool) {
 	b.route = route
 	value := 0
 	if route {
@@ -269,7 +272,7 @@ func (b *IBlip) SetBlipRoute(route bool) {
 	w.SetBlipData(b.id, enum.Route, int64(value))
 }
 
-func (b *IBlip) SetBlipPulse(pulse bool) {
+func (b *IBlip) SetPulse(pulse bool) {
 	b.pulse = pulse
 	value := 0
 	if pulse {
@@ -278,7 +281,7 @@ func (b *IBlip) SetBlipPulse(pulse bool) {
 	w.SetBlipData(b.id, enum.Pulse, int64(value))
 }
 
-func (b *IBlip) SetBlipHiddenOnLegend(hiddenOnLegend bool) {
+func (b *IBlip) SetHiddenOnLegend(hiddenOnLegend bool) {
 	b.hiddenOnLegend = hiddenOnLegend
 	value := 0
 	if hiddenOnLegend {
@@ -287,7 +290,7 @@ func (b *IBlip) SetBlipHiddenOnLegend(hiddenOnLegend bool) {
 	w.SetBlipData(b.id, enum.HiddenOnLegend, int64(value))
 }
 
-func (b *IBlip) SetBlipOutlineIndicatorVisible(outlineIndicatorVisible bool) {
+func (b *IBlip) SetOutlineIndicatorVisible(outlineIndicatorVisible bool) {
 	b.outlineIndicatorVisible = outlineIndicatorVisible
 	value := 0
 	if outlineIndicatorVisible {
@@ -296,12 +299,12 @@ func (b *IBlip) SetBlipOutlineIndicatorVisible(outlineIndicatorVisible bool) {
 	w.SetBlipData(b.id, enum.OutlineIndicatorVisible, int64(value))
 }
 
-func (b *IBlip) SetBlipRot(rot float32) {
+func (b *IBlip) SetRot(rot float32) {
 	b.rot = rot
 	w.SetBlipData(b.id, enum.BlipRot, int64(math.Float64bits(float64(rot))))
 }
 
-func (b *IBlip) SetBlipShrinked(shrinked bool) {
+func (b *IBlip) SetShrinked(shrinked bool) {
 	b.shrinked = shrinked
 	value := 0
 	if shrinked {
@@ -310,7 +313,7 @@ func (b *IBlip) SetBlipShrinked(shrinked bool) {
 	w.SetBlipData(b.id, enum.Shrinked, int64(value))
 }
 
-func (b *IBlip) SetBlipShowCone(showCone bool) {
+func (b *IBlip) SetShowCone(showCone bool) {
 	b.showCone = showCone
 	value := 0
 	if showCone {
@@ -319,7 +322,7 @@ func (b *IBlip) SetBlipShowCone(showCone bool) {
 	w.SetBlipData(b.id, enum.ShowCone, int64(value))
 }
 
-func (b *IBlip) SetBlipTickVisible(tickVisible bool) {
+func (b *IBlip) SetTickVisible(tickVisible bool) {
 	b.tickVisible = tickVisible
 	value := 0
 	if tickVisible {
@@ -328,7 +331,7 @@ func (b *IBlip) SetBlipTickVisible(tickVisible bool) {
 	w.SetBlipData(b.id, enum.TickVisible, int64(value))
 }
 
-func (b *IBlip) SetBlipUseHeightIndicatorOnEdge(useHeightIndicatorOnEdge bool) {
+func (b *IBlip) SetUseHeightIndicatorOnEdge(useHeightIndicatorOnEdge bool) {
 	b.useHeightIndicatorOnEdge = useHeightIndicatorOnEdge
 	value := 0
 	if useHeightIndicatorOnEdge {
@@ -337,22 +340,22 @@ func (b *IBlip) SetBlipUseHeightIndicatorOnEdge(useHeightIndicatorOnEdge bool) {
 	w.SetBlipData(b.id, enum.UseHeightIndicatorOnEdge, int64(value))
 }
 
-func (b *IBlip) SetBlipPosition(position *entities.Vector3) {
+func (b *IBlip) SetPosition(position *entities.Vector3) {
 	b.position = position
 	w.SetBlipMetaData(b.id, enum.BlipPosition, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32, "", 0, 0, 0, 0)
 }
 
-func (b *IBlip) SetBlipName(name string) {
+func (b *IBlip) SetName(name string) {
 	b.name = name
 	w.SetBlipMetaData(b.id, enum.Name, 0, 0, name, 0, 0, 0, 0)
 }
 
-func (b *IBlip) SetBlipRouteColor(rgbaColor *entities.Rgba) {
+func (b *IBlip) SetRouteColor(rgbaColor *entities.Rgba) {
 	b.routeColor = rgbaColor
 	w.SetBlipMetaData(b.id, enum.RouteColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
 }
 
-func (b *IBlip) SetBlipHeadingIndicatorVisible(headingIndicatorVisible bool) {
+func (b *IBlip) SetHeadingIndicatorVisible(headingIndicatorVisible bool) {
 	b.headingIndicatorVisible = headingIndicatorVisible
 	value := 0
 	if headingIndicatorVisible {
@@ -361,7 +364,7 @@ func (b *IBlip) SetBlipHeadingIndicatorVisible(headingIndicatorVisible bool) {
 	w.SetBlipData(b.id, enum.HeadingIndicatorVisible, int64(value))
 }
 
-func (b *IBlip) SetBlipShortHeightThreshold(shortHeightThreshold bool) {
+func (b *IBlip) SetShortHeightThreshold(shortHeightThreshold bool) {
 	b.shortHeightThreshold = shortHeightThreshold
 	value := 0
 	if shortHeightThreshold {
@@ -370,22 +373,22 @@ func (b *IBlip) SetBlipShortHeightThreshold(shortHeightThreshold bool) {
 	w.SetBlipData(b.id, enum.ShortHeightThreshold, int64(value))
 }
 
-func (b *IBlip) SetBlipNumber(number int32) {
+func (b *IBlip) SetNumber(number int32) {
 	b.number = number
 	w.SetBlipData(b.id, enum.Number, int64(number))
 }
 
-func (b *IBlip) SetBlipType(blipType blip_type.BlipType) {
+func (b *IBlip) SetType(blipType blip_type.BlipType) {
 	b.blipType = blipType
 	w.SetBlipData(b.id, enum.BlipType, int64(blipType))
 }
 
-func (b *IBlip) SetBlipGxtName(gxtName string) {
+func (b *IBlip) SetGxtName(gxtName string) {
 	b.gxtName = gxtName
 	w.SetBlipMetaData(b.id, enum.GxtName, 0, 0, gxtName, 0, 0, 0, 0)
 }
 
-func (b *IBlip) SetBlipScale(scale *entities.Vector3) {
+func (b *IBlip) SetScale(scale *entities.Vector3) {
 	b.scale = scale
 	w.SetBlipMetaData(b.id, enum.Scale, int64(math.Float32bits(scale.X))|(int64(math.Float32bits(scale.Y))<<32), 0, "", 0, 0, 0, 0)
 }
@@ -393,4 +396,47 @@ func (b *IBlip) SetBlipScale(scale *entities.Vector3) {
 func (b *IBlip) Destroy() {
 	w.SetBlipData(b.id, enum.BlipDestroy, int64(0))
 	pools.DestroyBlip(b)
+}
+
+func (b *IBlip) SetData(key string, value any) {
+	b.datas.Store(key, value)
+}
+
+func (b *IBlip) DelData(key string) {
+	_, ok := b.datas.Load(key)
+	if ok {
+		b.datas.Delete(key)
+	}
+}
+
+func (b *IBlip) DelAllData() {
+	b.datas.Range(func(key, value any) bool {
+		b.datas.Delete(key)
+		return true
+	})
+}
+
+func (b *IBlip) HasData(key string) bool {
+	_, ok := b.datas.Load(key)
+	if ok {
+		return true
+	}
+	return false
+}
+
+func (b *IBlip) GetData(key string) any {
+	value, ok := b.datas.Load(key)
+	if ok {
+		return value
+	}
+	return value
+}
+
+func (b *IBlip) GetDatas() []any {
+	var datas []any
+	b.datas.Range(func(key, value any) bool {
+		datas = append(datas, value)
+		return true
+	})
+	return datas
 }
