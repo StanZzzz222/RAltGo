@@ -72,11 +72,9 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 			pools.DestroyPlayer(player)
 		}()
 		if p == nil {
-			player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			cb.TriggerOnPlayerDisconnect(player, reason)
-			return
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 		}
-		cb.TriggerOnPlayerDisconnect(player, reason)
+		cb.TriggerOnPlayerDisconnect(p, reason)
 	}
 }
 
@@ -93,11 +91,13 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			w.FreePlayer(cPtr)
 			w.FreeVehicle(cvPtr)
 		}()
-		if p == nil && v == nil {
-			player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			cb.TriggerOnEnterVehicle(player, veh, seat)
-			return
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		if v == nil {
+			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			models.GetPools().PutVehicle(veh)
 		}
 		cb.TriggerOnEnterVehicle(p, v, seat)
 	}
@@ -116,11 +116,13 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			w.FreePlayer(cPtr)
 			w.FreeVehicle(cvPtr)
 		}()
-		if p == nil && v == nil {
-			player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			veh = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			cb.TriggerOnLeaveVehicle(player, veh, seat)
-			return
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		if v == nil {
+			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			models.GetPools().PutVehicle(veh)
 		}
 		cb.TriggerOnLeaveVehicle(p, v, seat)
 	}
