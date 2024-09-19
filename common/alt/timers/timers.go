@@ -13,7 +13,7 @@ import (
 
 var w = &lib.Warrper{}
 
-func SetInterval(duration time.Duration, callback func()) {
+func SetInterval(duration time.Duration, callback func()) *time.Ticker {
 	ticker := time.NewTicker(duration)
 	go func() {
 		for {
@@ -23,6 +23,7 @@ func SetInterval(duration time.Duration, callback func()) {
 			}
 		}
 	}()
+	return ticker
 }
 
 func SetTimeout(duration time.Duration, callback func()) {
