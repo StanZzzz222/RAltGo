@@ -31,12 +31,12 @@ func CreateBlipPoint(spriteId, color uint32, name string, position *entities.Vec
 	return nil
 }
 
-func CreateBlipArea(spriteId, color uint32, name string, position *entities.Vector3, width, height float32) *models.IBlip {
+func CreateBlipArea(color uint32, name string, position *entities.Vector3, width, height float32) *models.IBlip {
 	var w = &lib.Warrper{}
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Area, spriteId, color, name, posData, posMetadata, width, height, 0)
+	ret, freePtrFunc := w.CreateBlip(blip_type.Area, 5, color, name, posData, posMetadata, width, height, 0)
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
@@ -48,12 +48,16 @@ func CreateBlipArea(spriteId, color uint32, name string, position *entities.Vect
 	return nil
 }
 
-func CreateBlipRadius(spriteId, color uint32, name string, position *entities.Vector3, radius float32) *models.IBlip {
+func CreateBlipRadius(color uint32, name string, position *entities.Vector3, radius float32, outline bool) *models.IBlip {
 	var w = &lib.Warrper{}
 	var blip = &models.IBlip{}
+	var spriteId = 9
+	if outline {
+		spriteId = 10
+	}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Radius, spriteId, color, name, posData, posMetadata, 0, 0, radius)
+	ret, freePtrFunc := w.CreateBlip(blip_type.Radius, uint32(spriteId), color, name, posData, posMetadata, 0, 0, radius)
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
