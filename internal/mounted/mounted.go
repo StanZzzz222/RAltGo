@@ -4,6 +4,7 @@ import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/models"
+	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -17,7 +18,6 @@ import (
 */
 
 var w = &lib.Warrper{}
-var cb = &alt_events.Callback{}
 
 func Mounted() {}
 
@@ -30,17 +30,17 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 
 //export onStart
 func onStart() {
-	cb.TriggerOnStart()
+	alt_events.Triggers().TriggerOnStart()
 }
 
 //export onServerStarted
 func onServerStarted() {
-	cb.TriggerOnServerStarted()
+	alt_events.Triggers().TriggerOnServerStarted()
 }
 
 //export onStop
 func onStop() {
-	cb.TriggerOnStop()
+	alt_events.Triggers().TriggerOnStop()
 }
 
 //export onPlayerConnect
@@ -54,7 +54,7 @@ func onPlayerConnect(cPtr uintptr) {
 			pools.PutPlayer(player)
 		}()
 		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		cb.TriggerOnPlayerConnect(player)
+		alt_events.Triggers().TriggerOnPlayerConnect(player)
 	}
 }
 
@@ -74,7 +74,7 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 		if p == nil {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 		}
-		cb.TriggerOnPlayerDisconnect(p, reason)
+		alt_events.Triggers().TriggerOnPlayerDisconnect(p, reason)
 	}
 }
 
@@ -99,7 +99,7 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 			models.GetPools().PutVehicle(veh)
 		}
-		cb.TriggerOnEnterVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnEnterVehicle(p, v, seat)
 	}
 }
 
@@ -124,6 +124,74 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 			models.GetPools().PutVehicle(veh)
 		}
-		cb.TriggerOnLeaveVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnLeaveVehicle(p, v, seat)
+	}
+}
+
+//export onEnterColshape
+func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
+	var player = &models.IPlayer{}
+	var veh = &models.IVehicle{}
+	var colshape = &models.IColshape{}
+	var colshapeEntityType = colshape_entity_type.ColshapeEntityType(cType)
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	var cColshape = entities.ConvertCColshape(ccPtr)
+	if cPlayer != nil && cVehicle != nil && cColshape != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		v := models.GetPools().GetVehicle(cVehicle.ID)
+		c := models.GetPools().GetColshape(cColshape.ID)
+		defer func() {
+			w.FreePlayer(cPtr)
+			w.FreeVehicle(cvPtr)
+			w.FreeColshape(ccPtr)
+		}()
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		if v == nil {
+			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			models.GetPools().PutVehicle(veh)
+		}
+		if c == nil {
+			c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+			models.GetPools().PutColshape(c)
+		}
+		alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, p, v, c)
+	}
+}
+
+//export onLeaveColshape
+func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
+	var player = &models.IPlayer{}
+	var veh = &models.IVehicle{}
+	var colshape = &models.IColshape{}
+	var colshapeEntityType = colshape_entity_type.ColshapeEntityType(cType)
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	var cColshape = entities.ConvertCColshape(ccPtr)
+	if cPlayer != nil && cVehicle != nil && cColshape != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		v := models.GetPools().GetVehicle(cVehicle.ID)
+		c := models.GetPools().GetColshape(cColshape.ID)
+		defer func() {
+			w.FreePlayer(cPtr)
+			w.FreeVehicle(cvPtr)
+			w.FreeColshape(ccPtr)
+		}()
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		if v == nil {
+			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			models.GetPools().PutVehicle(veh)
+		}
+		if c == nil {
+			c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+			models.GetPools().PutColshape(c)
+		}
+		alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, p, v, c)
 	}
 }

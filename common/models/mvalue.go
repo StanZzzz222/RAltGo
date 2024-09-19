@@ -71,6 +71,17 @@ func (mv *MValues) Dump() []byte {
 					"type":  enum.Vehicle,
 				})
 				continue
+			case reflect.TypeOf((*IColshape)(nil)).Elem():
+				param, ok := arg.(*IColshape)
+				if !ok {
+					logger.LogErrorf("Invalid type for Colshape: %v", param.GetId())
+					continue
+				}
+				obj = append(obj, map[string]any{
+					"value": param.GetId(),
+					"type":  enum.Colshape,
+				})
+				continue
 			}
 		case reflect.Invalid, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Map, reflect.Array:
 			obj = append(obj, map[string]any{

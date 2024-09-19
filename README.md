@@ -46,6 +46,8 @@ Events:
 5. onPlayerDisconnect
 6. onEnterVehicle
 7. onLeaveVehicle
+8. onEnterColshape
+9. onLeaveColshape
 ```
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>
