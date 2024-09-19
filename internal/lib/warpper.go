@@ -5,6 +5,7 @@ import "C"
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/internal/utils"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -28,7 +29,9 @@ var freePlayerProc *syscall.Proc
 var freeVehicleProc *syscall.Proc
 var freeBlipProc *syscall.Proc
 var freePedProc *syscall.Proc
+var freeColshapeProc *syscall.Proc
 var freeDataResultProc *syscall.Proc
+var setColshapeData *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
@@ -36,6 +39,7 @@ var setPedDataProc *syscall.Proc
 var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
+var createColshapeProc *syscall.Proc
 var getDataProc *syscall.Proc
 var emitProc *syscall.Proc
 var taskQueue = utils.NewTaskQueue()
@@ -68,14 +72,17 @@ func init() {
 	freeVehicleProc = dll.MustFindProc("free_vehicle")
 	freeBlipProc = dll.MustFindProc("free_blip")
 	freePedProc = dll.MustFindProc("free_ped")
+	freeColshapeProc = dll.MustFindProc("free_colshape")
 	freeDataResultProc = dll.MustFindProc("free_data_result")
 	setPedDataProc = dll.MustFindProc("set_ped_data")
 	setPlayerDataProc = dll.MustFindProc("set_player_data")
 	setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 	setBlipDataProc = dll.MustFindProc("set_blip_data")
+	setColshapeData = dll.MustFindProc("set_colshape_data")
 	createVehicleProc = dll.MustFindProc("create_vehicle")
 	createBlipProc = dll.MustFindProc("create_blip")
 	createPedProc = dll.MustFindProc("create_ped")
+	createColshapeProc = dll.MustFindProc("create_colshape")
 	getDataProc = dll.MustFindProc("get_data")
 	emitProc = dll.MustFindProc("emit")
 }
@@ -91,6 +98,14 @@ func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, m
 
 func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set player data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
+	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
@@ -249,6 +264,20 @@ func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32
 	return ret, freePtrFunc
 }
 
+func (w *Warrper) CreateColshape(colshapeType colshape_type.ColshapeType, posData, posMetaData, secondPosData, secondPosMetaData uint64, radius, height float32) (uintptr, func()) {
+	ret, _, err := createColshapeProc.Call(uintptr(colshapeType), uintptr(posData), uintptr(posMetaData), uintptr(secondPosData), uintptr(secondPosMetaData), uintptr(radius), uintptr(height))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create colshape failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeColshape(ret)
+		}
+	}
+	return ret, freePtrFunc
+}
+
 func (w *Warrper) PushTask(callback func()) {
 	taskQueue.AddTask(callback)
 }
@@ -288,7 +317,15 @@ func (w *Warrper) FreeBlip(ptr uintptr) {
 func (w *Warrper) FreePed(ptr uintptr) {
 	_, _, err := freePedProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("free ped_hash failed: %v", err.Error())
+		logger.LogErrorf("free ped failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) FreeColshape(ptr uintptr) {
+	_, _, err := freeColshapeProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free colshape failed: %v", err.Error())
 		return
 	}
 }

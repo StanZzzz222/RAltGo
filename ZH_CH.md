@@ -36,14 +36,16 @@
 2. Player - 创建、设置、获取
 3. Vehicle - 创建、设置、获取
 4. Ped - 创建、设置、获取
+5. Colshape - 创建、设置、获取
 
 事件:
 1. onStart
 2. onServerStarted
 3. onStop
 4. onPlayerConnect
-5. onEnterVehicle
-6. onLeaveVehicle
+5. onPlayerDisconnect
+6. onEnterVehicle
+7. onLeaveVehicle
 ```
 
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>

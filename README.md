@@ -36,14 +36,16 @@ Object:
 2. Player - Spawn and set/get section
 3. Vehicle - Creation and set/get section
 4. Ped - Creation and set/get section
+5. Colshape - Creation and set/get section
 
 Events:
 1. onStart
 2. onServerStarted
 3. onStop
 4. onPlayerConnect
-5. onEnterVehicle
-6. onLeaveVehicle
+5. onPlayerDisconnect
+6. onEnterVehicle
+7. onLeaveVehicle
 ```
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>

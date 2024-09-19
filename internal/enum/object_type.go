@@ -13,4 +13,5 @@ const (
 	Vehicle
 	Ped
 	Blip
+	Colshape
 )
