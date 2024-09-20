@@ -231,3 +231,14 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 		break
 	}
 }
+
+//export onClientEvent
+func onClientEvent(cEventNamePtr, cEventArgsPtr uintptr) {
+	eventName := w.PtrMarshalGoString(cEventNamePtr)
+	eventArgs := w.PtrMarshalGoString(cEventArgsPtr)
+	defer func() {
+		w.Free(cEventNamePtr)
+		w.Free(cEventArgsPtr)
+	}()
+	alt_events.Triggers().TriggerOnClientEvent(eventName, eventArgs)
+}

@@ -1,8 +1,10 @@
 package alt_events
 
 import (
+	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
+	"github.com/StanZzzz222/RAltGo/logger"
 )
 
 /*
@@ -70,5 +72,12 @@ func (t *EventBusTrigger) TriggerOnEnterColshape(colshapeEntityType colshape_ent
 func (t *EventBusTrigger) TriggerOnLeaveColshape(colshapeEntityType colshape_entity_type.ColshapeEntityType, player *models.IPlayer, vehicle *models.IVehicle, colshape *models.IColshape) {
 	if eventBus.onLeaveColshape != nil {
 		eventBus.onLeaveColshape(colshapeEntityType, player, vehicle, colshape)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnClientEvent(eventName, eventArgs string) {
+	if callback, ok := eventBus.onClientEvents.Load(eventName); ok {
+		fmt.Println(callback)
+		logger.LogInfof("TODO Caller:  EventName: %v, EventArgs: %v", eventName, eventArgs)
 	}
 }
