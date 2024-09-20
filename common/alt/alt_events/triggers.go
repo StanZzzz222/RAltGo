@@ -1,7 +1,6 @@
 package alt_events
 
 import (
-	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -76,8 +75,7 @@ func (t *EventBusTrigger) TriggerOnLeaveColshape(colshapeEntityType colshape_ent
 }
 
 func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName, eventArgs string) {
-	if callback, ok := eventBus.onClientEvents.Load(eventName); ok {
-		fmt.Println("Callback: ", callback)
+	if _, ok := eventBus.onClientEvents.Load(eventName); ok {
 		logger.LogInfof("TODO Caller:  Player: %v EventName: %v, EventArgs: %v", player.GetName(), eventName, eventArgs)
 	}
 }
