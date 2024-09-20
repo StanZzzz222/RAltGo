@@ -2,6 +2,7 @@ package alt_events
 
 import (
 	"encoding/json"
+	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -84,9 +85,13 @@ func (bus *EventBus) OnClientEvent(eventName string, callback any) {
 			logger.LogError("OnClientEvent: The first parameter should be *models.IPlayer")
 			return
 		}
-		data := dumpEventArgs(callback)
 		bus.onClientEvents.Store(eventName, callback)
-		w.OnClientEvent(eventName, string(data))
+		s := scheduler.NewScheduler()
+		s.AddTask(func() {
+			data := dumpEventArgs(callback)
+			w.OnClientEvent(eventName, string(data))
+		})
+		s.Run()
 		return
 	}
 	logger.LogErrorf("OnClientEvent: unknown callback type: %v", t.Name())
