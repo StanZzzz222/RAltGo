@@ -75,9 +75,9 @@ func (t *EventBusTrigger) TriggerOnLeaveColshape(colshapeEntityType colshape_ent
 	}
 }
 
-func (t *EventBusTrigger) TriggerOnClientEvent(eventName, eventArgs string) {
+func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName, eventArgs string) {
 	if callback, ok := eventBus.onClientEvents.Load(eventName); ok {
-		fmt.Println(callback)
-		logger.LogInfof("TODO Caller:  EventName: %v, EventArgs: %v", eventName, eventArgs)
+		fmt.Println("Callback: ", callback)
+		logger.LogInfof("TODO Caller:  Player: %v EventName: %v, EventArgs: %v", player.GetName(), eventName, eventArgs)
 	}
 }

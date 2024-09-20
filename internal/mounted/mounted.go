@@ -233,12 +233,13 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 }
 
 //export onClientEvent
-func onClientEvent(cEventNamePtr, cEventArgsPtr uintptr) {
+func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
+	p := models.GetPools().GetPlayer(cPlayerId)
 	eventName := w.PtrMarshalGoString(cEventNamePtr)
 	eventArgs := w.PtrMarshalGoString(cEventArgsPtr)
 	defer func() {
 		w.Free(cEventNamePtr)
 		w.Free(cEventArgsPtr)
 	}()
-	alt_events.Triggers().TriggerOnClientEvent(eventName, eventArgs)
+	alt_events.Triggers().TriggerOnClientEvent(p, eventName, eventArgs)
 }
