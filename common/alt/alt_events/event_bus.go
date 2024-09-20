@@ -80,12 +80,22 @@ func (bus *EventBus) OnClientEvent(eventName string, callback any) {
 			logger.LogError("OnClientEvent: The first parameter should be *models.IPlayer")
 			return
 		}
+		if checkZeroEventArgs(callback) {
+			logger.LogError("OnClientEvent: should not be zero parameters")
+			return
+		}
 		data := dumpEventArgs(callback)
 		bus.onClientEvents.Store(eventName, callback)
 		w.OnClientEvent(eventName, string(data))
 		return
 	}
 	logger.LogErrorf("OnClientEvent: unknown callback type: %v", t.Name())
+}
+
+func checkZeroEventArgs(callback any) bool {
+	var callbackType = reflect.TypeOf(callback)
+	var count = callbackType.NumIn()
+	return count == 0
 }
 
 func checkFirstEventArgs(callback any) bool {
