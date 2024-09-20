@@ -76,12 +76,12 @@ func (bus *EventBus) OnClientEvent(eventName string, callback any) {
 	var w = &lib.Warrper{}
 	t := reflect.TypeOf(callback)
 	if t.Kind() == reflect.Func {
-		if checkFirstEventArgs(callback) {
-			logger.LogError("OnClientEvent: The first parameter should be *models.IPlayer")
-			return
-		}
 		if checkZeroEventArgs(callback) {
 			logger.LogError("OnClientEvent: should not be zero parameters")
+			return
+		}
+		if checkFirstEventArgs(callback) {
+			logger.LogError("OnClientEvent: The first parameter should be *models.IPlayer")
 			return
 		}
 		data := dumpEventArgs(callback)
