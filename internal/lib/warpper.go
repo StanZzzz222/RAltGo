@@ -43,6 +43,8 @@ var createPedProc *syscall.Proc
 var createColshapeProc *syscall.Proc
 var getDataProc *syscall.Proc
 var emitProc *syscall.Proc
+var emitAllPlayerProc *syscall.Proc
+var onClientEventProc *syscall.Proc
 var taskQueue = utils.NewTaskQueue()
 
 type Warrper struct{}
@@ -86,6 +88,8 @@ func init() {
 	createColshapeProc = dll.MustFindProc("create_colshape")
 	getDataProc = dll.MustFindProc("get_data")
 	emitProc = dll.MustFindProc("emit")
+	emitAllPlayerProc = dll.MustFindProc("emit_all")
+	onClientEventProc = dll.MustFindProc("on_client_event")
 }
 
 func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
@@ -106,23 +110,51 @@ func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64
 }
 
 func (w *Warrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
-	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
+	_, _, err := setColshapeData.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("set player data failed: %v", err.Error())
+		logger.LogErrorf("set colshape data failed: %v", err.Error())
 		return
 	}
 }
 
 func (w *Warrper) Emit(id uint32, eventName string, compressData string) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
-	compressDataPtr, freecompressDataCStringFunc := w.GoStringMarshalPtr(compressData)
+	compressDataPtr, freeCompressDataCStringFunc := w.GoStringMarshalPtr(compressData)
 	defer func() {
 		freeEventNameCStringFunc()
-		freecompressDataCStringFunc()
+		freeCompressDataCStringFunc()
 	}()
 	_, _, err := emitProc.Call(uintptr(id), eventNamePtr, compressDataPtr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("emit failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) EmitAllPlayer(eventName string, compressData string) {
+	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
+	compressDataPtr, freeCompressDataCStringFunc := w.GoStringMarshalPtr(compressData)
+	defer func() {
+		freeEventNameCStringFunc()
+		freeCompressDataCStringFunc()
+	}()
+	_, _, err := emitAllPlayerProc.Call(eventNamePtr, compressDataPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("emit all failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *Warrper) OnClientEvent(eventName string, eventArgsDump string) {
+	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
+	argsDumpDataPtr, freeArgsDumpDataCStringFunc := w.GoStringMarshalPtr(eventArgsDump)
+	defer func() {
+		freeEventNameCStringFunc()
+		freeArgsDumpDataCStringFunc()
+	}()
+	_, _, err := onClientEventProc.Call(eventNamePtr, argsDumpDataPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("on client event failed: %v", err.Error())
 		return
 	}
 }
