@@ -66,7 +66,6 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 		p := models.GetPools().GetPlayer(cPlayer.ID)
 		reason := w.PtrMarshalGoString(cReasonPtr)
 		defer func() {
-			w.Free(cReasonPtr)
 			w.FreePlayer(cPtr)
 			pools := models.GetPools()
 			pools.DestroyPlayer(player)
@@ -238,6 +237,4 @@ func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
 	eventName := w.PtrMarshalGoString(cEventNamePtr)
 	eventArgs := w.PtrMarshalGoString(cEventArgsPtr)
 	alt_events.Triggers().TriggerOnClientEvent(p, eventName, eventArgs)
-	w.Free(cEventNamePtr)
-	w.Free(cEventArgsPtr)
 }
