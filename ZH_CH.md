@@ -33,10 +33,11 @@
 ```
 对象:
 1. Blip - 创建、设置、获取
-2. Player - 创建、设置、获取
+2. Player - 创建、设置、获取、Emit
 3. Vehicle - 创建、设置、获取
 4. Ped - 创建、设置、获取
 5. Colshape - 创建、设置、获取
+6. Pools - 对象池
 
 事件:
 1. onStart
@@ -46,7 +47,7 @@
 5. onPlayerDisconnect
 6. onEnterVehicle
 7. onLeaveVehicle
-
+8. onClientEvent
 ```
 
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>

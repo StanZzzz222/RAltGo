@@ -33,7 +33,7 @@ Some APIs that have been implemented:
 ```
 Object:
 1. Blip - Create and set/get section
-2. Player - Spawn and set/get section
+2. Player - Spawn/Emit and set/get section
 3. Vehicle - Creation and set/get section
 4. Ped - Creation and set/get section
 5. Colshape - Creation and set/get section
@@ -48,6 +48,7 @@ Events:
 7. onLeaveVehicle
 8. onEnterColshape
 9. onLeaveColshape
+10. onClientEvent
 ```
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>
