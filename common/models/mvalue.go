@@ -1,7 +1,6 @@
 package models
 
 import (
-	"encoding/json"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"os"

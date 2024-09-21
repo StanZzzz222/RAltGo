@@ -65,7 +65,7 @@ func (p *IPlayer) GetName() string                         { return p.name }
 func (p *IPlayer) GetIP() *net.IP                          { return p.ip }
 func (p *IPlayer) GetModel() ped_hash.ModelHash            { return p.model }
 func (p *IPlayer) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
-func (p *IPlayer) GetWeather() weather_hash.WeatherType    { return weather_hash.WeatherType(p.weather) }
+func (p *IPlayer) GetWeather() weather_hash.WeatherType    { return p.weather }
 func (p *IPlayer) GetMaxHealth() uint16                    { return p.maxHealth }
 func (p *IPlayer) GetMaxArmour() uint16                    { return p.maxArmour }
 func (p *IPlayer) GetDimension() int32                     { return p.dimension }

@@ -3,6 +3,7 @@ module github.com/StanZzzz222/RAltGo
 go 1.22
 
 require (
+	github.com/goccy/go-json v0.10.3
 	github.com/gookit/color v1.5.4
 )
 
