@@ -33,6 +33,7 @@ func init() {
 			windows: &windows_warpper.WindowsWarrper{},
 			syscall: nil,
 		}
+		return
 	}
 	warpper = &Warpper{
 		windows: nil,
