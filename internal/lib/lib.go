@@ -27,6 +27,14 @@ type Warpper struct {
 	syscall *syscall_warpper.SyscallWarrper
 }
 
+//export onTick
+func onTick() {
+	if taskQueue.PopCheck() {
+		task := taskQueue.Pop()
+		task()
+	}
+}
+
 func init() {
 	if runtime.GOOS == "windows" {
 		warpper = &Warpper{
@@ -38,14 +46,6 @@ func init() {
 	warpper = &Warpper{
 		windows: nil,
 		syscall: &syscall_warpper.SyscallWarrper{},
-	}
-}
-
-//export onTick
-func onTick() {
-	if taskQueue.PopCheck() {
-		task := taskQueue.Pop()
-		task()
 	}
 }
 

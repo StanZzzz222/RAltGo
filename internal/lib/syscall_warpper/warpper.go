@@ -10,6 +10,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/logger"
 	"math"
 	"os"
+	"runtime"
 	"syscall"
 	"time"
 	"unsafe"
@@ -48,38 +49,40 @@ var onClientEventProc *syscall.Proc
 type SyscallWarrper struct{}
 
 func init() {
-	path, _ := os.Getwd()
-	path = fmt.Sprintf("%v/modules/rs-go-module.so", path)
-	_, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		logger.LogErrorf(":: Please check if %v exists", path)
-		time.Sleep(time.Second * 3)
-		os.Exit(-1)
-		return
+	if runtime.GOOS != "windows" {
+		path, _ := os.Getwd()
+		path = fmt.Sprintf("%v/modules/rs-go-module.so", path)
+		_, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			logger.LogErrorf(":: Please check if %v exists", path)
+			time.Sleep(time.Second * 3)
+			os.Exit(-1)
+			return
+		}
+		dllPath = path
+		dll = syscall.MustLoadDLL(dllPath)
+		mainProc = dll.MustFindProc("main")
+		freeProc = dll.MustFindProc("free_c_str")
+		freePlayerProc = dll.MustFindProc("free_player")
+		freeVehicleProc = dll.MustFindProc("free_vehicle")
+		freeBlipProc = dll.MustFindProc("free_blip")
+		freePedProc = dll.MustFindProc("free_ped")
+		freeColshapeProc = dll.MustFindProc("free_colshape")
+		freeDataResultProc = dll.MustFindProc("free_data_result")
+		setPedDataProc = dll.MustFindProc("set_ped_data")
+		setPlayerDataProc = dll.MustFindProc("set_player_data")
+		setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
+		setBlipDataProc = dll.MustFindProc("set_blip_data")
+		setColshapeData = dll.MustFindProc("set_colshape_data")
+		createVehicleProc = dll.MustFindProc("create_vehicle")
+		createBlipProc = dll.MustFindProc("create_blip")
+		createPedProc = dll.MustFindProc("create_ped")
+		createColshapeProc = dll.MustFindProc("create_colshape")
+		getDataProc = dll.MustFindProc("get_data")
+		emitProc = dll.MustFindProc("emit")
+		emitAllPlayerProc = dll.MustFindProc("emit_all")
+		onClientEventProc = dll.MustFindProc("on_client_event")
 	}
-	dllPath = path
-	dll = syscall.MustLoadDLL(dllPath)
-	mainProc = dll.MustFindProc("main")
-	freeProc = dll.MustFindProc("free_c_str")
-	freePlayerProc = dll.MustFindProc("free_player")
-	freeVehicleProc = dll.MustFindProc("free_vehicle")
-	freeBlipProc = dll.MustFindProc("free_blip")
-	freePedProc = dll.MustFindProc("free_ped")
-	freeColshapeProc = dll.MustFindProc("free_colshape")
-	freeDataResultProc = dll.MustFindProc("free_data_result")
-	setPedDataProc = dll.MustFindProc("set_ped_data")
-	setPlayerDataProc = dll.MustFindProc("set_player_data")
-	setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
-	setBlipDataProc = dll.MustFindProc("set_blip_data")
-	setColshapeData = dll.MustFindProc("set_colshape_data")
-	createVehicleProc = dll.MustFindProc("create_vehicle")
-	createBlipProc = dll.MustFindProc("create_blip")
-	createPedProc = dll.MustFindProc("create_ped")
-	createColshapeProc = dll.MustFindProc("create_colshape")
-	getDataProc = dll.MustFindProc("get_data")
-	emitProc = dll.MustFindProc("emit")
-	emitAllPlayerProc = dll.MustFindProc("emit_all")
-	onClientEventProc = dll.MustFindProc("on_client_event")
 }
 
 func (w *SyscallWarrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
