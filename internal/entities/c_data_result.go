@@ -41,7 +41,7 @@ type CDataResult struct {
 }
 
 func ConverCDataResult(cresPtr uintptr) *CDataResult {
-	var w = &lib.Warrper{}
+	var w = lib.GetWarpper()
 	cDataResult := (*C.CDataResult)(unsafe.Pointer(cresPtr))
 	if cDataResult == nil {
 		return nil

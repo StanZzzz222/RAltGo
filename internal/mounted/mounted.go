@@ -17,12 +17,11 @@ import (
    File: mounted.go
 */
 
-var w = &lib.Warrper{}
-
 func Mounted() {}
 
 //export onModuleInit
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
+	var w = lib.GetWarpper()
 	logger.LogInfo(":: Go module Initialize mounting")
 	defer logger.LogSuccess(":: Go module Initialize mounting done")
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
@@ -45,6 +44,7 @@ func onStop() {
 
 //export onPlayerConnect
 func onPlayerConnect(cPtr uintptr) {
+	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
@@ -60,6 +60,7 @@ func onPlayerConnect(cPtr uintptr) {
 
 //export onPlayerDisconnect
 func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
+	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
@@ -79,6 +80,7 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 
 //export onEnterVehicle
 func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
+	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
@@ -104,6 +106,7 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 
 //export onLeaveVehicle
 func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
+	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
@@ -129,6 +132,7 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 
 //export onEnterColshape
 func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
+	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
 	var colshape = &models.IColshape{}
@@ -181,6 +185,7 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 
 //export onLeaveColshape
 func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
+	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
 	var colshape = &models.IColshape{}
@@ -233,6 +238,7 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 
 //export onClientEvent
 func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
+	var w = lib.GetWarpper()
 	p := models.GetPools().GetPlayer(cPlayerId)
 	eventName := w.PtrMarshalGoString(cEventNamePtr)
 	eventArgs := w.PtrMarshalGoString(cEventArgsPtr)

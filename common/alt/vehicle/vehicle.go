@@ -17,7 +17,7 @@ import (
 */
 
 func CreateVehicle(model string, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
-	var w = &lib.Warrper{}
+	var w = lib.GetWarpper()
 	var veh = &models.IVehicle{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	rotData, rotMetaData := uint64(math.Float32bits(rotation.X))|(uint64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32
@@ -36,7 +36,7 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 }
 
 func CreateVehicleByHash(model vehicle_hash.ModelHash, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
-	var w = &lib.Warrper{}
+	var w = lib.GetWarpper()
 	var veh = &models.IVehicle{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	rotData, rotMetaData := uint64(math.Float32bits(rotation.X))|(uint64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32

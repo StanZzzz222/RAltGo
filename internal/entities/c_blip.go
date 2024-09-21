@@ -28,7 +28,7 @@ type CBlip struct {
 }
 
 func ConvertCBlip(cbPtr uintptr) *CBlip {
-	var w = &lib.Warrper{}
+	var w = lib.GetWarpper()
 	cBlip := (*C.CBlip)(unsafe.Pointer(cbPtr))
 	if cBlip == nil {
 		return nil

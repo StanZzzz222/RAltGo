@@ -74,7 +74,7 @@ func (bus *EventBus) OnLeaveColshape(callback OnLeaveColshapeCallback) {
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {
-	var w = &lib.Warrper{}
+	var w = lib.GetWarpper()
 	t := reflect.TypeOf(callback)
 	if t.Kind() == reflect.Func {
 		if !checkZeroEventArgs(callback) {

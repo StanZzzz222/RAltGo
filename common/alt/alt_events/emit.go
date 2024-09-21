@@ -13,9 +13,9 @@ import (
 */
 
 func EmitAllPlayer(eventName string, args ...any) {
+	var w = lib.GetWarpper()
 	s := scheduler.NewScheduler()
 	s.AddTask(func() {
-		var w = &lib.Warrper{}
 		var mvalues = models.NewMValues(args...)
 		w.EmitAllPlayer(eventName, mvalues.Dump())
 	})

@@ -11,7 +11,7 @@ import (
    File: base.go
 */
 
-var w = &lib.Warrper{}
+var w = lib.GetWarpper()
 
 type BaseObject struct {
 	position  *entities.Vector3

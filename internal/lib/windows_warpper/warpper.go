@@ -1,4 +1,4 @@
-package lib
+package windows_warpper
 
 // #include <stdlib.h>
 import "C"
@@ -7,11 +7,10 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
-	"github.com/StanZzzz222/RAltGo/internal/utils"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"golang.org/x/sys/windows"
 	"math"
 	"os"
-	"syscall"
 	"time"
 	"unsafe"
 )
@@ -23,39 +22,30 @@ import (
 */
 
 var dllPath string
-var dll *syscall.DLL
-var freeProc *syscall.Proc
-var mainProc *syscall.Proc
-var freePlayerProc *syscall.Proc
-var freeVehicleProc *syscall.Proc
-var freeBlipProc *syscall.Proc
-var freePedProc *syscall.Proc
-var freeColshapeProc *syscall.Proc
-var freeDataResultProc *syscall.Proc
-var setColshapeData *syscall.Proc
-var setVehicleDataProc *syscall.Proc
-var setBlipDataProc *syscall.Proc
-var setPlayerDataProc *syscall.Proc
-var setPedDataProc *syscall.Proc
-var createVehicleProc *syscall.Proc
-var createBlipProc *syscall.Proc
-var createPedProc *syscall.Proc
-var createColshapeProc *syscall.Proc
-var getDataProc *syscall.Proc
-var emitProc *syscall.Proc
-var emitAllPlayerProc *syscall.Proc
-var onClientEventProc *syscall.Proc
-var taskQueue = utils.NewTaskQueue()
+var dll *windows.DLL
+var freeProc *windows.Proc
+var mainProc *windows.Proc
+var freePlayerProc *windows.Proc
+var freeVehicleProc *windows.Proc
+var freeBlipProc *windows.Proc
+var freePedProc *windows.Proc
+var freeColshapeProc *windows.Proc
+var freeDataResultProc *windows.Proc
+var setColshapeData *windows.Proc
+var setVehicleDataProc *windows.Proc
+var setBlipDataProc *windows.Proc
+var setPlayerDataProc *windows.Proc
+var setPedDataProc *windows.Proc
+var createVehicleProc *windows.Proc
+var createBlipProc *windows.Proc
+var createPedProc *windows.Proc
+var createColshapeProc *windows.Proc
+var getDataProc *windows.Proc
+var emitProc *windows.Proc
+var emitAllPlayerProc *windows.Proc
+var onClientEventProc *windows.Proc
 
-type Warrper struct{}
-
-//export onTick
-func onTick() {
-	if taskQueue.PopCheck() {
-		task := taskQueue.Pop()
-		task()
-	}
-}
+type WindowsWarrper struct{}
 
 func init() {
 	path, _ := os.Getwd()
@@ -68,7 +58,7 @@ func init() {
 		return
 	}
 	dllPath = path
-	dll = syscall.MustLoadDLL(dllPath)
+	dll = windows.MustLoadDLL(dllPath)
 	mainProc = dll.MustFindProc("main")
 	freeProc = dll.MustFindProc("free_c_str")
 	freePlayerProc = dll.MustFindProc("free_player")
@@ -92,7 +82,7 @@ func init() {
 	onClientEventProc = dll.MustFindProc("on_client_event")
 }
 
-func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
+func (w *WindowsWarrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
 	ret, _, err := mainProc.Call(altVersion, core, resourceName, resourceHandlers, moduleHandlers)
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("load mounted failed: %v", err.Error())
@@ -101,7 +91,7 @@ func (w *Warrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, m
 	return ret != 0
 }
 
-func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64) {
+func (w *WindowsWarrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -109,7 +99,7 @@ func (w *Warrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64
 	}
 }
 
-func (w *Warrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
 	_, _, err := setColshapeData.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set colshape data failed: %v", err.Error())
@@ -117,7 +107,7 @@ func (w *Warrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataT
 	}
 }
 
-func (w *Warrper) Emit(id uint32, eventName, data string) {
+func (w *WindowsWarrper) Emit(id uint32, eventName, data string) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
 	dataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(data)
 	defer func() {
@@ -131,7 +121,7 @@ func (w *Warrper) Emit(id uint32, eventName, data string) {
 	}
 }
 
-func (w *Warrper) EmitAllPlayer(eventName, data string) {
+func (w *WindowsWarrper) EmitAllPlayer(eventName, data string) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
 	dataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(data)
 	defer func() {
@@ -145,7 +135,7 @@ func (w *Warrper) EmitAllPlayer(eventName, data string) {
 	}
 }
 
-func (w *Warrper) OnClientEvent(eventName string, eventArgsDump string) {
+func (w *WindowsWarrper) OnClientEvent(eventName string, eventArgsDump string) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
 	argsDumpDataPtr, freeArgsDumpDataCStringFunc := w.GoStringMarshalPtr(eventArgsDump)
 	defer func() {
@@ -159,7 +149,7 @@ func (w *Warrper) OnClientEvent(eventName string, eventArgsDump string) {
 	}
 }
 
-func (w *Warrper) GetData(id uint32, objectType enum.ObjectType, dataType uint8) (uintptr, func()) {
+func (w *WindowsWarrper) GetData(id uint32, objectType enum.ObjectType, dataType uint8) (uintptr, func()) {
 	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("get data failed: %v", err.Error())
@@ -173,7 +163,7 @@ func (w *Warrper) GetData(id uint32, objectType enum.ObjectType, dataType uint8)
 	return ret, freeDataResultFunc
 }
 
-func (w *Warrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -181,7 +171,7 @@ func (w *Warrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data i
 	}
 }
 
-func (w *Warrper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data int64) {
+func (w *WindowsWarrper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data int64) {
 	_, _, err := setBlipDataProc.Call(uintptr(id), uintptr(blipDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set blip data failed: %v", err.Error())
@@ -189,7 +179,7 @@ func (w *Warrper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data in
 	}
 }
 
-func (w *Warrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
+func (w *WindowsWarrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -203,7 +193,7 @@ func (w *Warrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, dat
 	}
 }
 
-func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data int64) {
+func (w *WindowsWarrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data int64) {
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set vehicle_hash data failed: %v", err.Error())
@@ -211,7 +201,7 @@ func (w *Warrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType
 	}
 }
 
-func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
+func (w *WindowsWarrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -225,7 +215,7 @@ func (w *Warrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleData
 	}
 }
 
-func (w *Warrper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataType, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataType, data int64, metaData uint64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -233,7 +223,7 @@ func (w *Warrper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataTyp
 	}
 }
 
-func (w *Warrper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDataType, model uint32, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDataType, model uint32, data int64, metaData uint64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(model), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -241,7 +231,7 @@ func (w *Warrper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDa
 	}
 }
 
-func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, data int64) {
+func (w *WindowsWarrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, data int64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -249,7 +239,7 @@ func (w *Warrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 	}
 }
 
-func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
+func (w *WindowsWarrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
 	ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create vehicle_hash failed: %v", err.Error())
@@ -263,7 +253,7 @@ func (w *Warrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rot
 	return ret, freePtrFunc
 }
 
-func (w *Warrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMetaData uint64, streamingDistance uint32) (uintptr, func()) {
+func (w *WindowsWarrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMetaData uint64, streamingDistance uint32) (uintptr, func()) {
 	ret, _, err := createPedProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), uintptr(streamingDistance))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create vehicle_hash failed: %v", err.Error())
@@ -277,7 +267,7 @@ func (w *Warrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMeta
 	return ret, freePtrFunc
 }
 
-func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, strData string, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
+func (w *WindowsWarrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, strData string, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -297,7 +287,7 @@ func (w *Warrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32
 	return ret, freePtrFunc
 }
 
-func (w *Warrper) CreateColshape(colshapeType colshape_type.ColshapeType, posData, posMetaData, secondPosData, secondPosMetaData uint64, radius, height float32) (uintptr, func()) {
+func (w *WindowsWarrper) CreateColshape(colshapeType colshape_type.ColshapeType, posData, posMetaData, secondPosData, secondPosMetaData uint64, radius, height float32) (uintptr, func()) {
 	ret, _, err := createColshapeProc.Call(uintptr(colshapeType), uintptr(posData), uintptr(posMetaData), uintptr(secondPosData), uintptr(secondPosMetaData), uintptr(math.Float32bits(radius)), uintptr(math.Float32bits(height)))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create colshape failed: %v", err.Error())
@@ -311,11 +301,7 @@ func (w *Warrper) CreateColshape(colshapeType colshape_type.ColshapeType, posDat
 	return ret, freePtrFunc
 }
 
-func (w *Warrper) PushTask(callback func()) {
-	taskQueue.AddTask(callback)
-}
-
-func (w *Warrper) Free(ptr uintptr) {
+func (w *WindowsWarrper) Free(ptr uintptr) {
 	_, _, err := freeProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free failed: %v", err.Error())
@@ -323,7 +309,7 @@ func (w *Warrper) Free(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) FreePlayer(ptr uintptr) {
+func (w *WindowsWarrper) FreePlayer(ptr uintptr) {
 	_, _, err := freePlayerProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free player failed: %v", err.Error())
@@ -331,7 +317,7 @@ func (w *Warrper) FreePlayer(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) FreeVehicle(ptr uintptr) {
+func (w *WindowsWarrper) FreeVehicle(ptr uintptr) {
 	_, _, err := freeVehicleProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free vehicle_hash failed: %v", err.Error())
@@ -339,7 +325,7 @@ func (w *Warrper) FreeVehicle(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) FreeBlip(ptr uintptr) {
+func (w *WindowsWarrper) FreeBlip(ptr uintptr) {
 	_, _, err := freeBlipProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free blip failed: %v", err.Error())
@@ -347,7 +333,7 @@ func (w *Warrper) FreeBlip(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) FreePed(ptr uintptr) {
+func (w *WindowsWarrper) FreePed(ptr uintptr) {
 	_, _, err := freePedProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free ped failed: %v", err.Error())
@@ -355,7 +341,7 @@ func (w *Warrper) FreePed(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) FreeColshape(ptr uintptr) {
+func (w *WindowsWarrper) FreeColshape(ptr uintptr) {
 	_, _, err := freeColshapeProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free colshape failed: %v", err.Error())
@@ -363,7 +349,7 @@ func (w *Warrper) FreeColshape(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) FreeDataResult(ptr uintptr) {
+func (w *WindowsWarrper) FreeDataResult(ptr uintptr) {
 	_, _, err := freeDataResultProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free data result failed: %v", err.Error())
@@ -371,12 +357,12 @@ func (w *Warrper) FreeDataResult(ptr uintptr) {
 	}
 }
 
-func (w *Warrper) GoStringMarshalPtr(s string) (uintptr, func()) {
+func (w *WindowsWarrper) GoStringMarshalPtr(s string) (uintptr, func()) {
 	cStr := C.CString(s)
 	return uintptr(unsafe.Pointer(cStr)), func() { C.free(unsafe.Pointer(cStr)) }
 }
 
-func (w *Warrper) PtrMarshalGoString(ret uintptr) string {
+func (w *WindowsWarrper) PtrMarshalGoString(ret uintptr) string {
 	cStr := (*C.char)(unsafe.Pointer(ret))
 	defer w.Free(ret)
 	return C.GoString(cStr)

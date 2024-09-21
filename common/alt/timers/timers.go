@@ -11,9 +11,8 @@ import (
    File: timers.go
 */
 
-var w = &lib.Warrper{}
-
 func SetInterval(duration time.Duration, callback func()) *time.Ticker {
+	var w = lib.GetWarpper()
 	ticker := time.NewTicker(duration)
 	go func() {
 		for {
@@ -27,6 +26,7 @@ func SetInterval(duration time.Duration, callback func()) *time.Ticker {
 }
 
 func SetTimeout(duration time.Duration, callback func()) {
+	var w = lib.GetWarpper()
 	ticker := time.NewTicker(duration)
 	go func() {
 		for {
