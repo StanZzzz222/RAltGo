@@ -53,7 +53,7 @@ func GetWarpper() *Warpper {
 }
 
 func (w *Warpper) IsWindows() bool {
-	return w.windows != nil
+	return w.windows == nil
 }
 
 func (w *Warpper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
