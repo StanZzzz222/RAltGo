@@ -23,8 +23,10 @@ func CreateColshapeCircle(position *entities.Vector3, radius float32) *models.IC
 	if cColshape != nil {
 		freePtrFunc()
 		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-		pools := models.GetPools()
-		pools.PutColshape(c)
+		go func() {
+			pools := models.GetPools()
+			pools.PutColshape(c)
+		}()
 		return c
 	}
 	return nil
@@ -39,8 +41,10 @@ func CreateColshapeSphere(position *entities.Vector3, radius float32) *models.IC
 	if cColshape != nil {
 		freePtrFunc()
 		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-		pools := models.GetPools()
-		pools.PutColshape(c)
+		go func() {
+			pools := models.GetPools()
+			pools.PutColshape(c)
+		}()
 		return c
 	}
 	return nil
@@ -56,8 +60,10 @@ func CreateColshapeRectangle(pointPosition *entities.Vector3, secondPointPositio
 	if cColshape != nil {
 		freePtrFunc()
 		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-		pools := models.GetPools()
-		pools.PutColshape(c)
+		go func() {
+			pools := models.GetPools()
+			pools.PutColshape(c)
+		}()
 		return c
 	}
 	return nil
@@ -73,8 +79,10 @@ func CreateColshapeCuboid(pointPosition *entities.Vector3, secondPointPosition *
 	if cColshape != nil {
 		freePtrFunc()
 		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-		pools := models.GetPools()
-		pools.PutColshape(c)
+		go func() {
+			pools := models.GetPools()
+			pools.PutColshape(c)
+		}()
 		return c
 	}
 	return nil
@@ -89,8 +97,10 @@ func CreateColshapeCylinder(pointPosition *entities.Vector3, radius, height floa
 	if cColshape != nil {
 		freePtrFunc()
 		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-		pools := models.GetPools()
-		pools.PutColshape(c)
+		go func() {
+			pools := models.GetPools()
+			pools.PutColshape(c)
+		}()
 		return c
 	}
 	return nil

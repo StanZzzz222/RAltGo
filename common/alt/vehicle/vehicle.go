@@ -28,8 +28,10 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 		freePtrFunc()
 		freeCStringFunc()
 		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
-		pools := models.GetPools()
-		pools.PutVehicle(veh)
+		go func() {
+			pools := models.GetPools()
+			pools.PutVehicle(veh)
+		}()
 		return veh
 	}
 	return nil
@@ -47,8 +49,10 @@ func CreateVehicleByHash(model vehicle_hash.ModelHash, numberPlate string, posit
 		freePtrFunc()
 		freeCStringFunc()
 		veh = veh.NewIVehicle(cVeh.ID, cVeh.Model, cVeh.PrimaryColor, cVeh.SecondColor, cVeh.Position, cVeh.Rotation)
-		pools := models.GetPools()
-		pools.PutVehicle(veh)
+		go func() {
+			pools := models.GetPools()
+			pools.PutVehicle(veh)
+		}()
 		return veh
 	}
 	return nil

@@ -42,8 +42,10 @@ func CreateStreamPed(model string, position, rotation *entities.Vector3, streami
 	if cPed != nil {
 		freePtrFunc()
 		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
-		pools := models.GetPools()
-		pools.PutPed(p)
+		go func() {
+			pools := models.GetPools()
+			pools.PutPed(p)
+		}()
 		return p
 	}
 	return nil

@@ -41,8 +41,10 @@ func CreateBlipArea(color uint32, name string, position *entities.Vector3, width
 	if cBlip != nil {
 		freePtrFunc()
 		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		pools := models.GetPools()
-		pools.PutBlip(blip)
+		go func() {
+			pools := models.GetPools()
+			pools.PutBlip(blip)
+		}()
 		return blip
 	}
 	return nil
@@ -62,8 +64,10 @@ func CreateBlipRadius(color uint32, name string, position *entities.Vector3, rad
 	if cBlip != nil {
 		freePtrFunc()
 		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		pools := models.GetPools()
-		pools.PutBlip(blip)
+		go func() {
+			pools := models.GetPools()
+			pools.PutBlip(blip)
+		}()
 		return blip
 	}
 	return nil
