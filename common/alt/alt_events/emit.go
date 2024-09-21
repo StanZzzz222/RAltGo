@@ -14,17 +14,15 @@ import (
 func EmitAllPlayer(eventName string, args ...any) {
 	var w = &lib.Warrper{}
 	var mvalues = models.NewMValues(args...)
-	w.EmitAllPlayer(eventName, string(mvalues.Dump()))
+	w.EmitAllPlayer(eventName, mvalues.Dump())
 }
 
 func EmitSomePlayers(players []*models.IPlayer, eventName string, args ...any) {
-	var mvalues = models.NewMValues(args...)
 	for _, player := range players {
-		player.Emit(eventName, string(mvalues.Dump()))
+		player.Emit(eventName, args...)
 	}
 }
 
 func Emit(player *models.IPlayer, eventName string, args ...any) {
-	var mvalues = models.NewMValues(args...)
-	player.Emit(eventName, string(mvalues.Dump()))
+	player.Emit(eventName, args...)
 }
