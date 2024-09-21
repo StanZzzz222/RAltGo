@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"os"
 	"reflect"
 )
 
@@ -20,7 +21,7 @@ func NewMValues(args ...any) *MValues {
 	return &mvalues
 }
 
-func (mv *MValues) Dump() []byte {
+func (mv *MValues) Dump() string {
 	var obj []any
 	for _, arg := range *mv {
 		t := reflect.TypeOf(arg)
@@ -83,29 +84,33 @@ func (mv *MValues) Dump() []byte {
 				})
 				continue
 			}
-		case reflect.Invalid, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Map, reflect.Array:
+		case reflect.Invalid, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 			obj = append(obj, map[string]any{
 				"value": arg,
 				"type":  t.Kind().String(),
 			})
 			continue
-		case reflect.String, reflect.Bool, reflect.Float32, reflect.Float64, reflect.Slice:
+		case reflect.Bool, reflect.Float32, reflect.Float64:
+			obj = append(obj, map[string]any{
+				"value": arg,
+				"type":  t.Kind().String(),
+			})
+			continue
+		case reflect.String, reflect.Map, reflect.Struct, reflect.Array, reflect.Slice:
 			obj = append(obj, map[string]any{
 				"value": arg,
 				"type":  t.Kind().String(),
 			})
 			continue
 		default:
-			obj = append(obj, map[string]any{
-				"value": arg,
-				"type":  reflect.String.String(),
-			})
+			logger.LogErrorf("Unknow MValue type: %v", t.Kind().String())
+			os.Exit(1)
 		}
 	}
 	dumpBytes, err := json.Marshal(&obj)
 	if err != nil {
 		logger.LogErrorf("Dump mvalues falied, %v", err.Error())
-		return []byte("")
+		return ""
 	}
-	return dumpBytes
+	return string(dumpBytes)
 }

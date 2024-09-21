@@ -1,6 +1,7 @@
 package alt_events
 
 import (
+	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 )
@@ -12,15 +13,23 @@ import (
 */
 
 func EmitAllPlayer(eventName string, args ...any) {
-	var w = &lib.Warrper{}
-	var mvalues = models.NewMValues(args...)
-	w.EmitAllPlayer(eventName, mvalues.Dump())
+	s := scheduler.NewScheduler()
+	s.AddTask(func() {
+		var w = &lib.Warrper{}
+		var mvalues = models.NewMValues(args...)
+		w.EmitAllPlayer(eventName, mvalues.Dump())
+	})
+	s.Run()
 }
 
 func EmitSomePlayers(players []*models.IPlayer, eventName string, args ...any) {
+	s := scheduler.NewScheduler()
 	for _, player := range players {
-		player.Emit(eventName, args...)
+		s.AddTask(func() {
+			player.Emit(eventName, args...)
+		})
 	}
+	s.Run()
 }
 
 func Emit(player *models.IPlayer, eventName string, args ...any) {

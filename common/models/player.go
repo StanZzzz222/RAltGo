@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
@@ -219,8 +220,12 @@ func (p *IPlayer) Spawn(model ped_hash.ModelHash, position *entities.Vector3) {
 }
 
 func (p *IPlayer) Emit(eventName string, args ...any) {
-	var mvalues = NewMValues(args...)
-	w.Emit(p.id, eventName, mvalues.Dump())
+	s := scheduler.NewScheduler()
+	s.AddTask(func() {
+		mvalues := NewMValues(args...)
+		w.Emit(p.id, eventName, mvalues.Dump())
+	})
+	s.Run()
 }
 
 func (p *IPlayer) Despawn() {
