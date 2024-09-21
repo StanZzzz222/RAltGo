@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"github.com/goccy/go-json"
 	"os"
 	"reflect"
 )
