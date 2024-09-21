@@ -117,28 +117,22 @@ func (w *Warrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataT
 	}
 }
 
-func (w *Warrper) Emit(id uint32, eventName string, compressData string) {
+func (w *Warrper) Emit(id uint32, eventName string, data []byte) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
-	compressDataPtr, freeCompressDataCStringFunc := w.GoStringMarshalPtr(compressData)
-	defer func() {
-		freeEventNameCStringFunc()
-		freeCompressDataCStringFunc()
-	}()
-	_, _, err := emitProc.Call(uintptr(id), eventNamePtr, compressDataPtr)
+	dataPtr := uintptr(unsafe.Pointer(&data[0]))
+	defer freeEventNameCStringFunc()
+	_, _, err := emitProc.Call(uintptr(id), eventNamePtr, dataPtr, uintptr(len(data)))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("emit failed: %v", err.Error())
 		return
 	}
 }
 
-func (w *Warrper) EmitAllPlayer(eventName string, compressData string) {
+func (w *Warrper) EmitAllPlayer(eventName string, data []byte) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
-	compressDataPtr, freeCompressDataCStringFunc := w.GoStringMarshalPtr(compressData)
-	defer func() {
-		freeEventNameCStringFunc()
-		freeCompressDataCStringFunc()
-	}()
-	_, _, err := emitAllPlayerProc.Call(eventNamePtr, compressDataPtr)
+	dataPtr := uintptr(unsafe.Pointer(&data[0]))
+	defer freeEventNameCStringFunc()
+	_, _, err := emitAllPlayerProc.Call(eventNamePtr, dataPtr, uintptr(len(data)))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("emit all failed: %v", err.Error())
 		return

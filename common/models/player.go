@@ -220,7 +220,7 @@ func (p *IPlayer) Spawn(model ped_hash.ModelHash, position *entities.Vector3) {
 
 func (p *IPlayer) Emit(eventName string, args ...any) {
 	var mvalues = NewMValues(args...)
-	w.Emit(p.id, eventName, string(mvalues.Dump()))
+	w.Emit(p.id, eventName, mvalues.Dump())
 }
 
 func (p *IPlayer) Despawn() {
