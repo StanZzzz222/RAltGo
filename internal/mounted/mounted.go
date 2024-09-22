@@ -2,7 +2,6 @@ package mounted
 
 import "C"
 import (
-	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/alt/command"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
@@ -60,7 +59,6 @@ func onStart() {
 							}
 							callParams = append(callParams, param)
 						}
-						fmt.Println("Trigger command: ", args[0])
 						group.TriggerCommand(args[0], player, callParams...)
 					})
 				}

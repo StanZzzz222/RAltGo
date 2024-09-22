@@ -75,28 +75,30 @@ func (g *Group) OnCommand(name string, callback any, greedy bool) {
 }
 
 func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any) {
-	var flag bool
-	if len(g.middlewares) > 0 {
-		for _, callback := range g.middlewares {
-			flag = callback(player, name, args)
-			if !flag {
-				break
+	var commandName string
+	if name[0] == '/' {
+		commandName = name
+	} else {
+		commandName = fmt.Sprintf("/%v", name)
+	}
+	if command, ok := g.getCommand(commandName); ok {
+		var res = false
+		if len(g.middlewares) > 0 {
+			for _, callback := range g.middlewares {
+				res = callback(player, commandName, args)
+				if !res {
+					break
+				}
 			}
 		}
-	}
-	if flag {
-		g.commands.Range(func(key, value any) bool {
-			command := value.(*Command)
-			if command.name == name {
+		if res {
+			if command.name == commandName {
 				if command.greedy {
 					triggerGreedyCommand(command, player, args...)
-					return false
 				}
 				triggerCommand(command, player, args...)
-				return false
 			}
-			return true
-		})
+		}
 	}
 }
 
@@ -114,6 +116,21 @@ func GetCommandGroupByName(name string) *Group {
 		return value.(*Group)
 	}
 	return nil
+}
+
+func (g *Group) getCommand(name string) (*Command, bool) {
+	var res = false
+	var resCommand *Command
+	g.commands.Range(func(key, value any) bool {
+		command := value.(*Command)
+		if command.name == name {
+			res = true
+			resCommand = command
+			return false
+		}
+		return true
+	})
+	return resCommand, res
 }
 
 func triggerCommand(command *Command, player *models.IPlayer, args ...any) {

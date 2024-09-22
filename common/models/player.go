@@ -26,6 +26,7 @@ import (
 type IPlayer struct {
 	id                 uint32
 	name               string
+	chatName           string
 	ip                 *net.IP
 	authToken          string
 	hwIdHash           uint64
@@ -62,6 +63,7 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 
 func (p *IPlayer) GetId() uint32                           { return p.id }
 func (p *IPlayer) GetName() string                         { return p.name }
+func (p *IPlayer) GetChatName() string                     { return p.chatName }
 func (p *IPlayer) GetIP() *net.IP                          { return p.ip }
 func (p *IPlayer) GetModel() ped_hash.ModelHash            { return p.model }
 func (p *IPlayer) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
@@ -234,6 +236,10 @@ func (p *IPlayer) Despawn() {
 
 func (p *IPlayer) ClearBloodDamage() {
 	w.SetPlayerData(p.id, enum.ClearBloodDamage, int64(0))
+}
+
+func (p *IPlayer) SetChatName(name string) {
+	p.chatName = name
 }
 
 func (p *IPlayer) SetEyeColor(eyeColor int16) {
