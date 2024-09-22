@@ -85,6 +85,12 @@ func (t *EventBusTrigger) TriggerOnLeaveColshape(colshapeEntityType colshape_ent
 	}
 }
 
+func (t *EventBusTrigger) TriggerOnCommandError(player *models.IPlayer, commandName, desc string) {
+	if eventBus.onCommandError != nil {
+		eventBus.onCommandError(player, commandName, desc)
+	}
+}
+
 func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName, eventArgs string) {
 	if callback, ok := eventBus.onClientEvents.Load(eventName); ok {
 		callbackValue := reflect.ValueOf(callback)

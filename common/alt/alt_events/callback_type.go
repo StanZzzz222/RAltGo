@@ -22,4 +22,5 @@ type (
 	OnEnterColshapeCallback    func(colshapeEntityType colshape_entity_type.ColshapeEntityType, player *models.IPlayer, vehicle *models.IVehicle, colshape *models.IColshape)
 	OnLeaveColshapeCallback    func(colshapeEntityType colshape_entity_type.ColshapeEntityType, player *models.IPlayer, vehicle *models.IVehicle, colshape *models.IColshape)
 	OnChatMessageCallback      func(player *models.IPlayer, message string)
+	OnCommandErrorCallback     func(player *models.IPlayer, commandName, desc string)
 )

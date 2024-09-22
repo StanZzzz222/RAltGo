@@ -32,6 +32,7 @@ type EventBus struct {
 	onEnterColshape    OnEnterColshapeCallback
 	onLeaveColshape    OnLeaveColshapeCallback
 	onChatMessage      OnChatMessageCallback
+	onCommandError     OnCommandErrorCallback
 	onClientEvents     *sync.Map
 }
 
@@ -77,6 +78,10 @@ func (bus *EventBus) OnLeaveColshape(callback OnLeaveColshapeCallback) {
 
 func (bus *EventBus) OnChatMessage(callback OnChatMessageCallback) {
 	bus.onChatMessage = callback
+}
+
+func (bus *EventBus) OnCommandError(callback OnCommandErrorCallback) {
+	bus.onCommandError = callback
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {

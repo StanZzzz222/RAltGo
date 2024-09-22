@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"reflect"
 	"sync"
@@ -14,6 +15,7 @@ import (
 */
 
 var groups = &sync.Map{}
+var errorMessage = "Command parameter error"
 
 type middlewareCallback = func(player *models.IPlayer, name string, args []any) bool
 type Group struct {
@@ -41,6 +43,10 @@ func NewCommandGroup(name string) *Group {
 	}
 	groups.Store(name, group)
 	return group
+}
+
+func SetCommandErrorMessage(message string) {
+	errorMessage = message
 }
 
 func (g *Group) UseMiddleware(callback middlewareCallback) {
@@ -149,6 +155,27 @@ func GetCommandGroupByName(name string) *Group {
 
 func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 	callbackValue := reflect.ValueOf(command.callback)
+	callbackType := reflect.TypeOf(command.callback)
+	if callbackType.NumIn() != len(args)+1 {
+		if len(command.desc) <= 0 {
+			alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+			return
+		}
+		alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+		return
+	}
+	for i := 1; i < callbackType.NumIn(); i++ {
+		argType := callbackType.In(i)
+		targetType := reflect.TypeOf(args[i-1])
+		if argType.Kind() != targetType.Kind() {
+			if len(command.desc) <= 0 {
+				alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+				return
+			}
+			alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+			return
+		}
+	}
 	inputs := make([]reflect.Value, 0)
 	inputs = append(inputs, reflect.ValueOf(player))
 	if len(args) == 0 {
@@ -162,13 +189,34 @@ func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 }
 
 func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any) {
+	callbackValue := reflect.ValueOf(command.callback)
+	callbackType := reflect.TypeOf(command.callback)
+	if callbackType.NumIn() != len(args)+1 {
+		if len(command.desc) <= 0 {
+			alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+			return
+		}
+		alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+		return
+	}
+	for i := 1; i < callbackType.NumIn(); i++ {
+		argType := callbackType.In(i)
+		targetType := reflect.TypeOf(args[i-1])
+		if argType.Kind() != targetType.Kind() {
+			if len(command.desc) <= 0 {
+				alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+				return
+			}
+			alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+			return
+		}
+	}
 	combinedArgs := ""
 	if len(args) > 0 {
 		for _, arg := range args {
 			combinedArgs += fmt.Sprintf("%v ", arg)
 		}
 	}
-	callbackValue := reflect.ValueOf(command.callback)
 	inputs := make([]reflect.Value, 0)
 	inputs = append(inputs, reflect.ValueOf(player), reflect.ValueOf(combinedArgs))
 	callbackValue.Call(inputs)
