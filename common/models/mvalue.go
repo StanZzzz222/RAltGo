@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
@@ -81,6 +82,35 @@ func (mv *MValues) Dump() string {
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
 					"type":  enum.Colshape,
+				})
+				continue
+			case reflect.TypeOf((*entities.Vector3)(nil)).Elem():
+				param, ok := arg.(*entities.Vector3)
+				if !ok {
+					logger.LogErrorf("Invalid type for Vector3: %v", param)
+					continue
+				}
+				if param.Z == 0 {
+					obj = append(obj, map[string]any{
+						"value": param,
+						"type":  "vector2",
+					})
+				} else {
+					obj = append(obj, map[string]any{
+						"value": param,
+						"type":  "vector3",
+					})
+				}
+				continue
+			case reflect.TypeOf((*entities.Rgba)(nil)).Elem():
+				param, ok := arg.(*entities.Rgba)
+				if !ok {
+					logger.LogErrorf("Invalid type for RGBA: %v", param)
+					continue
+				}
+				obj = append(obj, map[string]any{
+					"value": param,
+					"type":  "rgba",
 				})
 				continue
 			}
