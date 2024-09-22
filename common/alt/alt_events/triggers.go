@@ -56,7 +56,7 @@ func (t *EventBusTrigger) TriggerOnPlayerDisconnect(player *models.IPlayer, reas
 
 func (t *EventBusTrigger) TriggerOnChatMessage(player *models.IPlayer, message string) {
 	if eventBus.onChatMessage != nil {
-		var players = []*models.IPlayer
+		var players []*models.IPlayer
 		for _, target := range pools.GetPlayers() {
 			if target.GetId() != player.GetId() {
 				players = append(players, target)
