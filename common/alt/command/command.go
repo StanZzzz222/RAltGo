@@ -151,6 +151,10 @@ func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 	callbackValue := reflect.ValueOf(command.callback)
 	inputs := make([]reflect.Value, 0)
 	inputs = append(inputs, reflect.ValueOf(player))
+	if len(args) == 0 {
+		callbackValue.Call(inputs)
+		return
+	}
 	for _, arg := range args {
 		inputs = append(inputs, reflect.ValueOf(arg))
 	}
@@ -159,8 +163,10 @@ func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 
 func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any) {
 	combinedArgs := ""
-	for _, arg := range args {
-		combinedArgs += fmt.Sprintf("%v ", arg)
+	if len(args) > 0 {
+		for _, arg := range args {
+			combinedArgs += fmt.Sprintf("%v ", arg)
+		}
 	}
 	callbackValue := reflect.ValueOf(command.callback)
 	inputs := make([]reflect.Value, 0)

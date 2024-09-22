@@ -91,6 +91,10 @@ func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName
 		args := t.EventArgsParse(eventArgs)
 		inputs := make([]reflect.Value, 0)
 		inputs = append(inputs, reflect.ValueOf(player))
+		if len(args) == 0 {
+			callbackValue.Call(inputs)
+			return
+		}
 		for _, arg := range args {
 			inputs = append(inputs, reflect.ValueOf(arg))
 		}
