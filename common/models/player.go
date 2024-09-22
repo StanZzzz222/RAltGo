@@ -406,6 +406,10 @@ func (p *IPlayer) SetInvincible(invincible bool) {
 	w.SetPlayerData(p.id, enum.Invincible, int64(value))
 }
 
+func (p *IPlayer) SendBroadcast(message string) {
+	p.Emit("chat:message", message)
+}
+
 func (p *IPlayer) SetData(key string, value any) {
 	p.datas.Store(key, value)
 }
