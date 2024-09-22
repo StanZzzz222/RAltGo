@@ -10,6 +10,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"runtime"
 	"strconv"
 	"strings"
 	"unsafe"
@@ -298,6 +299,9 @@ func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
 
 func panicRecover() {
 	if r := recover(); r != nil {
+		var stackBuf [4096]byte
+		stackSize := runtime.Stack(stackBuf[:], false)
 		logger.LogErrorf("Panic recovered: %v", r)
+		logger.LogErrorf("StackTrace: %v", stackBuf[:stackSize])
 	}
 }
