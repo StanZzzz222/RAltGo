@@ -49,7 +49,9 @@ func onStart() {
 							if strings.Contains(param, ".") {
 								if value, err := strconv.ParseFloat(param, 64); err == nil {
 									params = append(params, value)
+									continue
 								}
+								params = append(params, param)
 								continue
 							}
 							if value, err := strconv.ParseInt(param, 10, 64); err == nil {
