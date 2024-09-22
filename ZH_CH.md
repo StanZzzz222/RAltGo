@@ -37,7 +37,14 @@
 3. Vehicle - 创建、设置、获取
 4. Ped - 创建、设置、获取
 5. Colshape - 创建、设置、获取
-6. Pools - 对象池
+6. Pools - 对象池，已实现上方所有对象
+7. Marker - 待实现
+8. Checkpoint - 待实现
+9. VisualEntity - 待实现
+10. Object - 待实现
+12. VirtualEntityGroup - 待实现
+12. VoiceChannel - 待实现
+13. ConnectionInfo - 待实现
 
 事件:
 1. onStart
@@ -48,6 +55,8 @@
 6. onEnterVehicle
 7. onLeaveVehicle
 8. onClientEvent
+
+
 ```
 
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>

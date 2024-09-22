@@ -37,6 +37,14 @@ Object:
 3. Vehicle - Creation and set/get section
 4. Ped - Creation and set/get section
 5. Colshape - Creation and set/get section
+6. Pools - 
+7. Marker - To be implemented
+8. Checkpoint - To be implemented
+9. VisualEntity - To be implemented
+10. Object - To be implemented
+11. VirtualEntityGroup - To be implemented
+12. VoiceChannel - To be implemented
+13. ConnectionInfo - To be implemented
 
 Events:
 1. onStart
@@ -49,6 +57,7 @@ Events:
 8. onEnterColshape
 9. onLeaveColshape
 10. onClientEvent
+12. onCommand
 ```
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>
