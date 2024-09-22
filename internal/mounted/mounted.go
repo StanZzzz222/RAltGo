@@ -3,11 +3,15 @@ package mounted
 import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
+	"github.com/StanZzzz222/RAltGo/common/alt/command"
+	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"strconv"
+	"strings"
 	"unsafe"
 )
 
@@ -29,6 +33,38 @@ func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleH
 
 //export onStart
 func onStart() {
+	s := scheduler.NewScheduler()
+	s.AddTask(func() {
+		alt_events.Events().OnClientEvent("ChatMessage", func(player *models.IPlayer, message string) {
+			if message[0] == '/' {
+				args := strings.Split(message, " ")
+				groups := command.GetCommandGroups()
+				for _, group := range groups {
+					var callParams []any
+					params := args[1:]
+					for _, param := range params {
+						if value, err := strconv.ParseFloat(param, 64); err != nil {
+							callParams = append(callParams, value)
+							continue
+						}
+						if value, err := strconv.ParseInt(param, 10, 64); err != nil {
+							callParams = append(callParams, value)
+							continue
+						}
+						if value, err := strconv.ParseBool(param); err != nil {
+							callParams = append(callParams, value)
+							continue
+						}
+						callParams = append(callParams, param)
+					}
+					group.TriggerCommand(args[0], player, callParams...)
+				}
+				return
+			}
+			alt_events.Triggers().TriggerOnChatMessage(player, message)
+		})
+	})
+	s.Run()
 	alt_events.Triggers().TriggerOnStart()
 }
 

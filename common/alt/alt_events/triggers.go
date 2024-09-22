@@ -54,6 +54,12 @@ func (t *EventBusTrigger) TriggerOnPlayerDisconnect(player *models.IPlayer, reas
 	}
 }
 
+func (t *EventBusTrigger) TriggerOnChatMessage(player *models.IPlayer, message string) {
+	if eventBus.onChatMessage != nil {
+		eventBus.onChatMessage(player, message)
+	}
+}
+
 func (t *EventBusTrigger) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
 	if eventBus.onEnterVehicle != nil {
 		eventBus.onEnterVehicle(player, vehicle, seat)
