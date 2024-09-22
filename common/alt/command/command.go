@@ -75,7 +75,9 @@ func (g *Group) OnCommand(name string, callback any, greedy bool) {
 }
 
 func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any) {
+	fmt.Println("Trigger command: ", name)
 	if command, ok := g.getCommand(name); ok {
+		fmt.Println("Command Get")
 		var res = false
 		if len(g.middlewares) > 0 {
 			for _, callback := range g.middlewares {
@@ -86,8 +88,10 @@ func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any)
 			}
 		}
 		if res {
+			fmt.Println("Command invoke")
 			if command.greedy {
 				triggerGreedyCommand(command, player, args...)
+				return
 			}
 			triggerCommand(command, player, args...)
 		}
