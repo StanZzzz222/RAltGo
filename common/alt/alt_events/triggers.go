@@ -148,9 +148,6 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 			case reflect.Uint64.String():
 				result = append(result, uint64(argValue.(float64)))
 				continue
-			case reflect.Uint64.String():
-				result = append(result, uint64(argValue.(float64)))
-				continue
 			case reflect.Float64.String():
 				result = append(result, argValue.(float64))
 				continue
