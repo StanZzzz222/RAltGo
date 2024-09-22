@@ -285,6 +285,6 @@ func panicRecover() {
 		var stackBuf [4096]byte
 		stackSize := runtime.Stack(stackBuf[:], false)
 		logger.LogErrorf("Panic recovered: %v", r)
-		logger.LogErrorf("StackTrace: %v", stackBuf[:stackSize])
+		logger.LogErrorf("StackTrace: %s", stackBuf[:stackSize])
 	}
 }
