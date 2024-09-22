@@ -43,7 +43,7 @@ func onStart() {
 				for _, group := range groups {
 					s.AddTask(func() {
 						var callParams []any
-						params := args[1:]
+						var params = args[1:]
 						for _, param := range params {
 							if value, err := strconv.ParseFloat(param, 64); err != nil {
 								callParams = append(callParams, value)
