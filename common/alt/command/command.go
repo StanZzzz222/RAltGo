@@ -27,6 +27,11 @@ type Command struct {
 	greedy   bool
 	desc     string
 }
+type ExportCommand struct {
+	name   string
+	greedy bool
+	desc   string
+}
 
 func NewCommandGroup(name string) *Group {
 	group := &Group{
@@ -97,20 +102,18 @@ func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any)
 	}
 }
 
-func GetCommandGroups() []*Group {
-	var gs []*Group
-	groups.Range(func(key, value any) bool {
-		gs = append(gs, value.(*Group))
+func (g *Group) ExportCommands() []*ExportCommand {
+	var exportCommands []*ExportCommand
+	g.commands.Range(func(key, value any) bool {
+		command := value.(*Command)
+		exportCommands = append(exportCommands, &ExportCommand{
+			name:   command.name,
+			greedy: command.greedy,
+			desc:   command.desc,
+		})
 		return true
 	})
-	return gs
-}
-
-func GetCommandGroupByName(name string) *Group {
-	if value, ok := groups.Load(name); ok {
-		return value.(*Group)
-	}
-	return nil
+	return exportCommands
 }
 
 func (g *Group) getCommand(name string) (*Command, bool) {
@@ -126,6 +129,22 @@ func (g *Group) getCommand(name string) (*Command, bool) {
 		return true
 	})
 	return resCommand, res
+}
+
+func GetCommandGroups() []*Group {
+	var gs []*Group
+	groups.Range(func(key, value any) bool {
+		gs = append(gs, value.(*Group))
+		return true
+	})
+	return gs
+}
+
+func GetCommandGroupByName(name string) *Group {
+	if value, ok := groups.Load(name); ok {
+		return value.(*Group)
+	}
+	return nil
 }
 
 func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
