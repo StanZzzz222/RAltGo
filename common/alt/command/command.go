@@ -75,11 +75,11 @@ func (g *Group) OnCommand(name string, callback any, greedy bool) {
 }
 
 func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any) {
-	fmt.Println("Trigger command: ", name)
 	if command, ok := g.getCommand(name); ok {
-		fmt.Println("Command Get")
 		var res = false
-		if len(g.middlewares) > 0 {
+		if len(g.middlewares) <= 0 {
+			res = true
+		} else {
 			for _, callback := range g.middlewares {
 				res = callback(player, name, args)
 				if !res {
@@ -88,7 +88,6 @@ func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any)
 			}
 		}
 		if res {
-			fmt.Println("Command invoke")
 			if command.greedy {
 				triggerGreedyCommand(command, player, args...)
 				return
@@ -130,7 +129,6 @@ func (g *Group) getCommand(name string) (*Command, bool) {
 }
 
 func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
-	fmt.Println("Trigger command: ", command.name)
 	callbackValue := reflect.ValueOf(command.callback)
 	inputs := make([]reflect.Value, 0)
 	inputs = append(inputs, reflect.ValueOf(player))
