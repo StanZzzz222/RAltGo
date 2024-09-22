@@ -44,7 +44,7 @@ func onStart() {
 				for _, group := range groups {
 					s.AddTask(func() {
 						var params []any
-						for _, param := range []string{"test", "15"} {
+						for _, param := range args[1:] {
 							if strings.Contains(param, ".") {
 								if value, err := strconv.ParseFloat(param, 64); err == nil {
 									params = append(params, value)
