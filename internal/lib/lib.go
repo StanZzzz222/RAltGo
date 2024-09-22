@@ -9,6 +9,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/lib/syscall_warpper"
 	"github.com/StanZzzz222/RAltGo/internal/lib/windows_warpper"
 	"github.com/StanZzzz222/RAltGo/internal/utils"
+	"github.com/StanZzzz222/RAltGo/logger"
 	"runtime"
 	"unsafe"
 )
@@ -29,6 +30,7 @@ type Warpper struct {
 
 //export onTick
 func onTick() {
+	defer panicRecover()
 	if taskQueue.PopCheck() {
 		task := taskQueue.Pop()
 		task()
@@ -276,4 +278,10 @@ func (w *Warpper) PtrMarshalGoString(ret uintptr) string {
 		defer w.syscall.Free(ret)
 	}
 	return C.GoString(cStr)
+}
+
+func panicRecover() {
+	if r := recover(); r != nil {
+		logger.LogErrorf("Panic recovered: %v", r)
+	}
 }

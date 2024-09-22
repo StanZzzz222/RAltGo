@@ -1,4 +1,4 @@
-package mounted
+package main
 
 import "C"
 import (
@@ -21,18 +21,21 @@ import (
    File: mounted.go
 */
 
+func main() {}
+
 func Mounted() {}
 
 //export onModuleInit
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
+	defer panicRecover()
 	var w = lib.GetWarpper()
-	logger.LogInfo(":: Go module Initialize mounting")
-	defer logger.LogSuccess(":: Go module Initialize mounting done")
+	logger.LogInfo(":: Go module Initialize mounting...")
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
 }
 
 //export onStart
 func onStart() {
+	defer panicRecover()
 	s := scheduler.NewScheduler()
 	s.AddTask(func() {
 		alt_events.Events().OnClientEvent("chat:message", func(player *models.IPlayer, message string) {
@@ -75,16 +78,19 @@ func onStart() {
 
 //export onServerStarted
 func onServerStarted() {
+	defer panicRecover()
 	alt_events.Triggers().TriggerOnServerStarted()
 }
 
 //export onStop
 func onStop() {
+	defer panicRecover()
 	alt_events.Triggers().TriggerOnStop()
 }
 
 //export onPlayerConnect
 func onPlayerConnect(cPtr uintptr) {
+	defer panicRecover()
 	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
@@ -101,6 +107,7 @@ func onPlayerConnect(cPtr uintptr) {
 
 //export onPlayerDisconnect
 func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
+	defer panicRecover()
 	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
@@ -121,6 +128,7 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 
 //export onEnterVehicle
 func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
+	defer panicRecover()
 	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
@@ -147,6 +155,7 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 
 //export onLeaveVehicle
 func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
+	defer panicRecover()
 	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
@@ -173,6 +182,7 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 
 //export onEnterColshape
 func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
+	defer panicRecover()
 	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
@@ -226,6 +236,7 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 
 //export onLeaveColshape
 func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
+	defer panicRecover()
 	var w = lib.GetWarpper()
 	var player = &models.IPlayer{}
 	var veh = &models.IVehicle{}
@@ -279,9 +290,16 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 
 //export onClientEvent
 func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
+	defer panicRecover()
 	var w = lib.GetWarpper()
 	p := models.GetPools().GetPlayer(cPlayerId)
 	eventName := w.PtrMarshalGoString(cEventNamePtr)
 	eventArgs := w.PtrMarshalGoString(cEventArgsPtr)
 	alt_events.Triggers().TriggerOnClientEvent(p, eventName, eventArgs)
+}
+
+func panicRecover() {
+	if r := recover(); r != nil {
+		logger.LogErrorf("Panic recovered: %v", r)
+	}
 }
