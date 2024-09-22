@@ -43,8 +43,14 @@ func (g *Group) UseMiddleware(callback middlewareCallback) {
 }
 
 func (g *Group) OnCommandDesc(name string, callback any, greedy bool, desc string) {
+	var commandName string
+	if name[0] == '/' {
+		commandName = name
+	} else {
+		commandName = fmt.Sprintf("/%v", name)
+	}
 	command := &Command{
-		name:     fmt.Sprintf("/%v", name),
+		name:     commandName,
 		callback: callback,
 		greedy:   greedy,
 		desc:     desc,
@@ -53,8 +59,14 @@ func (g *Group) OnCommandDesc(name string, callback any, greedy bool, desc strin
 }
 
 func (g *Group) OnCommand(name string, callback any, greedy bool) {
+	var commandName string
+	if name[0] == '/' {
+		commandName = name
+	} else {
+		commandName = fmt.Sprintf("/%v", name)
+	}
 	command := &Command{
-		name:     fmt.Sprintf("/%v", name),
+		name:     commandName,
 		callback: callback,
 		greedy:   greedy,
 		desc:     "",
