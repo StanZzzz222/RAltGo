@@ -1,4 +1,4 @@
-package main
+package mounted
 
 import "C"
 import (
@@ -20,8 +20,6 @@ import (
    Date Time: 2024/9/9
    File: mounted.go
 */
-
-func main() {}
 
 func Mounted() {}
 
