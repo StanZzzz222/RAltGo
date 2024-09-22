@@ -55,8 +55,6 @@
 6. onEnterVehicle
 7. onLeaveVehicle
 8. onClientEvent
-
-
 ```
 
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>

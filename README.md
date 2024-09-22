@@ -37,7 +37,7 @@ Object:
 3. Vehicle - Creation and set/get section
 4. Ped - Creation and set/get section
 5. Colshape - Creation and set/get section
-6. Pools - 
+6. Pools - The object pool has implemented all the above objects
 7. Marker - To be implemented
 8. Checkpoint - To be implemented
 9. VisualEntity - To be implemented
