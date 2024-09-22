@@ -42,24 +42,25 @@ func onStart() {
 				groups := command.GetCommandGroups()
 				for _, group := range groups {
 					s.AddTask(func() {
-						var callParams []any
-						var params = args[1:]
-						for _, param := range params {
-							if value, err := strconv.ParseFloat(param, 64); err != nil {
-								callParams = append(callParams, value)
+						var params []any
+						for _, param := range []string{"test", "15"} {
+							if strings.Contains(param, ".") {
+								if value, err := strconv.ParseFloat(param, 64); err == nil {
+									params = append(params, value)
+								}
 								continue
 							}
-							if value, err := strconv.ParseInt(param, 10, 64); err != nil {
-								callParams = append(callParams, value)
+							if value, err := strconv.ParseInt(param, 10, 64); err == nil {
+								params = append(params, value)
 								continue
 							}
-							if value, err := strconv.ParseBool(param); err != nil {
-								callParams = append(callParams, value)
+							if value, err := strconv.ParseBool(param); err == nil {
+								params = append(params, value)
 								continue
 							}
-							callParams = append(callParams, param)
+							params = append(params, param)
 						}
-						group.TriggerCommand(args[0], player, callParams...)
+						group.TriggerCommand(args[0], player, params...)
 					})
 				}
 				s.Run()
