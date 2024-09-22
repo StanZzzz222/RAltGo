@@ -63,7 +63,6 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 
 func (p *IPlayer) GetId() uint32                           { return p.id }
 func (p *IPlayer) GetName() string                         { return p.name }
-func (p *IPlayer) GetChatName() string                     { return p.chatName }
 func (p *IPlayer) GetIP() *net.IP                          { return p.ip }
 func (p *IPlayer) GetModel() ped_hash.ModelHash            { return p.model }
 func (p *IPlayer) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
@@ -74,6 +73,12 @@ func (p *IPlayer) GetDimension() int32                     { return p.dimension 
 func (p *IPlayer) GetFrozen() bool                         { return p.frozen }
 func (p *IPlayer) GetCollision() bool                      { return p.collision }
 func (p *IPlayer) GetInvincible() bool                     { return p.invincible }
+func (p *IPlayer) GetChatName() string {
+	if len(p.chatName) <= 0 {
+		return p.name
+	}
+	return p.chatName
+}
 func (p *IPlayer) GetHealth() uint16 {
 	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Health))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -413,7 +418,7 @@ func (p *IPlayer) SetInvincible(invincible bool) {
 }
 
 func (p *IPlayer) SendBroadcast(message string) {
-	p.Emit("chat:message", message)
+	p.Emit("chat:message", p.GetChatName(), message)
 }
 
 func (p *IPlayer) SetData(key string, value any) {
