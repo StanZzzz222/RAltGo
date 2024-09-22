@@ -15,7 +15,7 @@ import (
 
 var groups = &sync.Map{}
 
-type middlewareCallback = func(player *models.IPlayer) bool
+type middlewareCallback = func(player *models.IPlayer, name string, args []any) bool
 type Group struct {
 	name        string
 	commands    *sync.Map
@@ -63,18 +63,29 @@ func (g *Group) OnCommand(name string, callback any, greedy bool) {
 }
 
 func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any) {
-	g.commands.Range(func(key, value any) bool {
-		command := value.(*Command)
-		if command.name == name {
-			if command.greedy {
-				triggerGreedyCommand(command, player, args...)
+	var flag bool
+	if len(g.middlewares) > 0 {
+		for _, callback := range g.middlewares {
+			flag = callback(player, name, args)
+			if !flag {
+				break
+			}
+		}
+	}
+	if flag {
+		g.commands.Range(func(key, value any) bool {
+			command := value.(*Command)
+			if command.name == name {
+				if command.greedy {
+					triggerGreedyCommand(command, player, args...)
+					return false
+				}
+				triggerCommand(command, player, args...)
 				return false
 			}
-			triggerCommand(command, player, args...)
-			return false
-		}
-		return true
-	})
+			return true
+		})
+	}
 }
 
 func GetCommandGroups() []*Group {
