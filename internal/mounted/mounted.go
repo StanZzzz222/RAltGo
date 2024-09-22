@@ -37,8 +37,8 @@ func onStart() {
 	s.AddTask(func() {
 		alt_events.Events().OnClientEvent("chat:message", func(player *models.IPlayer, message string) {
 			if message[0] == '/' {
-				args := strings.Split(message, " ")
 				s = scheduler.NewScheduler()
+				args := strings.Split(message, " ")
 				groups := command.GetCommandGroups()
 				for _, group := range groups {
 					s.AddTask(func() {
