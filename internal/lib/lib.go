@@ -220,6 +220,13 @@ func (w *Warpper) CreateColshape(colshapeType colshape_type.ColshapeType, posDat
 	return w.syscall.CreateColshape(colshapeType, posData, posMetaData, secondPosData, secondPosMetaData, radius, height)
 }
 
+func (w *Warpper) CreatePolygonColshape(colshapeType colshape_type.ColshapeType, minZ, maxZ float32, pointsData []byte) (uintptr, func()) {
+	if w.IsWindows() {
+		return w.windows.CreatePolygonColshape(colshapeType, minZ, maxZ, pointsData)
+	}
+	return w.syscall.CreatePolygonColshape(colshapeType, minZ, maxZ, pointsData)
+}
+
 func (w *Warpper) PushTask(callback func()) {
 	taskQueue.AddTask(callback)
 }

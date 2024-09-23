@@ -328,6 +328,27 @@ func (w *SyscallWarrper) CreateColshape(colshapeType colshape_type.ColshapeType,
 	return ret, freePtrFunc
 }
 
+func (w *SyscallWarrper) CreatePolygonColshape(colshapeType colshape_type.ColshapeType, minZ, maxZ float32, pointsData []byte) (uintptr, func()) {
+	var freeCStringFunc func()
+	var strPtr = uintptr(0)
+	var strData = string(pointsData)
+	if len(strData) > 0 {
+		strPtr, freeCStringFunc = w.GoStringMarshalPtr(strData)
+		defer freeCStringFunc()
+	}
+	ret, _, err := createColshapeProc.Call(uintptr(colshapeType), uintptr(math.Float32bits(minZ)), uintptr(math.Float32bits(maxZ)), strPtr)
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create polygon colshape failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeColshape(ret)
+		}
+	}
+	return ret, freePtrFunc
+}
+
 func (w *SyscallWarrper) Free(ptr uintptr) {
 	_, _, err := freeProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {

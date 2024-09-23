@@ -5,6 +5,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
+	"github.com/goccy/go-json"
 	"math"
 )
 
@@ -85,6 +86,22 @@ func CreateColshapeCylinder(pointPosition *entities.Vector3, radius, height floa
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(pointPosition.X))|(uint64(math.Float32bits(pointPosition.Y))<<32), uint64(math.Float32bits(pointPosition.Z))<<32
 	ret, freePtrFunc := w.CreateColshape(colshape_type.Cylinder, posData, posMetaData, 0, 0, radius, height)
+	cColshape := entities.ConvertCColshape(ret)
+	if cColshape != nil {
+		freePtrFunc()
+		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+		pools := models.GetPools()
+		pools.PutColshape(c)
+		return c
+	}
+	return nil
+}
+
+func CreateColshapePolygon(minZ, maxZ float32, points []*entities.Vector3) *models.IColshape {
+	var w = lib.GetWarpper()
+	var c = &models.IColshape{}
+	pointsBytes, _ := json.Marshal(points)
+	ret, freePtrFunc := w.CreatePolygonColshape(colshape_type.Polygon, minZ, maxZ, pointsBytes)
 	cColshape := entities.ConvertCColshape(ret)
 	if cColshape != nil {
 		freePtrFunc()
