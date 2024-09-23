@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/lib"
 )
 
 /*
@@ -10,8 +9,6 @@ import (
    Date Time: 2024/9/11
    File: base.go
 */
-
-var w = lib.GetWarpper()
 
 type BaseObject struct {
 	position  *entities.Vector3

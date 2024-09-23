@@ -16,6 +16,22 @@ import (
    File: vector3.go
 */
 
+func NewVector3Collection(points [][][]float32) []*entities.Vector3 {
+	var slice []*entities.Vector3
+	for _, v := range points {
+		for _, point := range v {
+			if len(point) >= 3 {
+				slice = append(slice, &entities.Vector3{
+					X: point[0],
+					Y: point[1],
+					Z: point[2],
+				})
+			}
+		}
+	}
+	return slice
+}
+
 func NewVector3(x, y, z float32) *entities.Vector3 {
 	return &entities.Vector3{X: x, Y: y, Z: z}
 }
