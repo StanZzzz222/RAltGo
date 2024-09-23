@@ -5,6 +5,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_hash"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_head_light_color_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_light_id_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_light_state_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_lock_state_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
@@ -148,7 +149,7 @@ func (v *IVehicle) GetDashboardColor() uint8 {
 	}
 	return 0
 }
-func (v *IVehicle) IsLightDamaged(lightId uint8) bool {
+func (v *IVehicle) IsLightDamaged(lightId vehicle_light_id_type.VehicleLightType) bool {
 	ret, freeDataResultFunc := w.GetMetaData(v.id, enum.Vehicle, uint8(enum.LightDamaged), int64(lightId))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -362,7 +363,7 @@ func (v *IVehicle) SetCustomTires(customTires bool) {
 	w.SetVehicleData(v.id, enum.CustomTires, int64(value))
 }
 
-func (v *IVehicle) SetLightDamaged(lightId uint8, damaged bool) {
+func (v *IVehicle) SetLightDamaged(lightId vehicle_light_id_type.VehicleLightType, damaged bool) {
 	value := 0
 	if damaged {
 		value = 1
