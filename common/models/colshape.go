@@ -58,7 +58,6 @@ func (c *IColshape) SetPosition(position *entities.Vector3) {
 	c.position = position
 	posData, posMetaData := int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	w.SetColshapeData(c.id, enum.ColshapePosition, posData, posMetaData)
-	pools.DestroyColshape(c)
 }
 
 func (c *IColshape) Destroy() {
