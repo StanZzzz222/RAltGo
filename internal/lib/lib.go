@@ -169,6 +169,14 @@ func (w *Warpper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDa
 	w.syscall.SetPlayerMetaModelData(id, playerDataType, model, data, metaData)
 }
 
+func (w *Warpper) SetPlayerHeadData(id uint32, playerDataType enum.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
+	if w.IsWindows() {
+		w.windows.SetPlayerHeadData(id, playerDataType, shape1, shape2, shape3, skin1, skin2, skin3, shapeMix, skinMix, thirdMix)
+		return
+	}
+	w.syscall.SetPlayerHeadData(id, playerDataType, shape1, shape2, shape3, skin1, skin2, skin3, shapeMix, skinMix, thirdMix)
+}
+
 func (w *Warpper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, data int64) {
 	if w.IsWindows() {
 		w.windows.SetPlayerData(id, playerDataType, data)

@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_hash"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_head_light_color_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_light_state_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_lock_state_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
@@ -26,9 +29,9 @@ type IVehicle struct {
 	neonActive       bool
 	driftMode        bool
 	disableTowing    bool
-	lockState        uint8
-	lightState       uint8
-	headLightColor   uint8
+	lockState        vehicle_lock_state_type.VehicleLockState
+	lightState       vehicle_light_state_type.VehicleLightState
+	headLightColor   vehicle_head_light_color_type.VehicleHeadLightColorType
 	dirtLevel        uint8
 	bodyHealth       uint32
 	lightsMultiplier float32
@@ -38,23 +41,42 @@ type IVehicle struct {
 	*BaseObject
 }
 
-func (v *IVehicle) GetId() uint32                    { return v.id }
-func (v *IVehicle) GetModel() vehicle_hash.ModelHash { return v.model }
-func (v *IVehicle) GetPrimaryColor() uint8           { return v.primaryColor }
-func (v *IVehicle) GetSecondColor() uint8            { return v.secondColor }
-func (v *IVehicle) GetNumberplate() string           { return v.numberplate }
-func (v *IVehicle) GetEngineOn() bool                { return v.engineOn }
-func (v *IVehicle) GetNeonActive() bool              { return v.neonActive }
-func (v *IVehicle) GetLockState() uint8              { return v.lockState }
-func (v *IVehicle) GetLightState() uint8             { return v.lightState }
-func (v *IVehicle) GetHeadLightColor() uint8         { return v.headLightColor }
-func (v *IVehicle) GetNeonColor() *entities.Rgba     { return v.neonColor }
-func (v *IVehicle) GetDimension() int32              { return v.dimension }
-func (v *IVehicle) GetFrozen() bool                  { return v.frozen }
-func (v *IVehicle) GetVisible() bool                 { return v.visible }
-func (v *IVehicle) GetCollision() bool               { return v.collision }
-func (v *IVehicle) GetDriftMode() bool               { return v.driftMode }
-func (v *IVehicle) GetDisableTowing() bool           { return v.disableTowing }
+func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entities.Vector3) *IVehicle {
+	return &IVehicle{
+		id:               id,
+		model:            vehicle_hash.ModelHash(model),
+		primaryColor:     primaryColor,
+		secondColor:      secondColor,
+		headLightColor:   vehicle_head_light_color_type.Default,
+		bodyHealth:       1000,
+		lightsMultiplier: 1,
+		wheelColor:       0,
+		lockState:        vehicle_lock_state_type.VehicleLockNone,
+		lightState:       vehicle_light_state_type.VehicleLightOff,
+		neonColor:        &entities.Rgba{R: 0, G: 0, B: 0, A: 0},
+		datas:            &sync.Map{},
+		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+	}
+}
+
+func (v *IVehicle) GetId() uint32                                          { return v.id }
+func (v *IVehicle) GetModel() vehicle_hash.ModelHash                       { return v.model }
+func (v *IVehicle) GetPrimaryColor() uint8                                 { return v.primaryColor }
+func (v *IVehicle) GetSecondColor() uint8                                  { return v.secondColor }
+func (v *IVehicle) GetNumberplate() string                                 { return v.numberplate }
+func (v *IVehicle) GetEngineOn() bool                                      { return v.engineOn }
+func (v *IVehicle) GetNeonActive() bool                                    { return v.neonActive }
+func (v *IVehicle) GetLockState() vehicle_lock_state_type.VehicleLockState { return v.lockState }
+func (v *IVehicle) GetNeonColor() *entities.Rgba                           { return v.neonColor }
+func (v *IVehicle) GetDimension() int32                                    { return v.dimension }
+func (v *IVehicle) GetFrozen() bool                                        { return v.frozen }
+func (v *IVehicle) GetVisible() bool                                       { return v.visible }
+func (v *IVehicle) GetCollision() bool                                     { return v.collision }
+func (v *IVehicle) GetDriftMode() bool                                     { return v.driftMode }
+func (v *IVehicle) GetDisableTowing() bool                                 { return v.disableTowing }
+func (v *IVehicle) GetHeadLightColor() vehicle_head_light_color_type.VehicleHeadLightColorType {
+	return v.headLightColor
+}
 func (v *IVehicle) GetPosition() *entities.Vector3 {
 	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.VehiclePosition))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -81,16 +103,23 @@ func (v *IVehicle) GetRotationString() string {
 	rotation := v.GetRotation()
 	return fmt.Sprintf("%v,%v,%v", rotation.X, rotation.Y, rotation.Z)
 }
-
-func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entities.Vector3) *IVehicle {
-	return &IVehicle{
-		id:           id,
-		model:        vehicle_hash.ModelHash(model),
-		primaryColor: primaryColor,
-		secondColor:  secondColor,
-		datas:        &sync.Map{},
-		BaseObject:   NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+func (v *IVehicle) GetLightState() vehicle_light_state_type.VehicleLightState {
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.LightState))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return vehicle_light_state_type.VehicleLightState(cDataResult.U8Val)
 	}
+	return vehicle_light_state_type.VehicleLightNormal
+}
+func (v *IVehicle) GetBodyHealth() uint32 {
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.BodyHealth))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.U32Val
+	}
+	return 1000
 }
 
 func (v *IVehicle) SetPrimaryColor(primaryColor uint8) {
@@ -175,17 +204,18 @@ func (v *IVehicle) ToggleEngine() {
 }
 
 func (v *IVehicle) SetLockState(lockState uint8) {
-	v.lockState = lockState
+	v.lockState = vehicle_lock_state_type.VehicleLockState(lockState)
 	w.SetVehicleData(v.id, enum.LockState, int64(lockState))
 }
 
-func (v *IVehicle) SetLightState(lightState uint8) {
+func (v *IVehicle) SetLightState(lightState vehicle_light_state_type.VehicleLightState) {
 	v.lightState = lightState
 	w.SetVehicleData(v.id, enum.LightState, int64(lightState))
 }
 
-func (v *IVehicle) SetHeadLightColor(headLightColor uint8) {
+func (v *IVehicle) SetHeadLightColor(headLightColor vehicle_head_light_color_type.VehicleHeadLightColorType) {
 	v.headLightColor = headLightColor
+	v.SetMod(22, 1)
 	w.SetVehicleData(v.id, enum.HeadLightColor, int64(headLightColor))
 }
 
@@ -208,11 +238,23 @@ func (v *IVehicle) SetDisableTowing(disableTowing bool) {
 }
 
 func (v *IVehicle) SetDirtLevel(dirtLevel uint8) {
+	if dirtLevel < 0 {
+		dirtLevel = 0
+	}
+	if dirtLevel > 15 {
+		dirtLevel = 15
+	}
 	v.dirtLevel = dirtLevel
 	w.SetVehicleData(v.id, enum.DirtLevel, int64(dirtLevel))
 }
 
 func (v *IVehicle) SetBodyHealth(bodyHealth uint32) {
+	if bodyHealth > 1000 {
+		bodyHealth = 1000
+	}
+	if bodyHealth < 0 {
+		bodyHealth = 0
+	}
 	v.bodyHealth = bodyHealth
 	w.SetVehicleData(v.id, enum.BodyHealth, int64(bodyHealth))
 }

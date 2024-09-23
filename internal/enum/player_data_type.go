@@ -45,4 +45,12 @@ const (
 	IsLeavingVehicle
 	IsInMelle
 	PlayerVehicle
+	ClearProps
+	ClearDecorations
+	ClearTasks
+	ResetHeadBlendData
+	HeadBlendData
+	HeadOverlay
+	HeadOverlayColor
+	HeadBlendPaletteColor
 )

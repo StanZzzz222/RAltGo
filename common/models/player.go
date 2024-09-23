@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/common/alt/broadcast"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/common/utils"
@@ -26,7 +27,7 @@ import (
 type IPlayer struct {
 	id                 uint32
 	name               string
-	chatName           string
+	gameName           string
 	ip                 *net.IP
 	authToken          string
 	hwIdHash           uint64
@@ -50,14 +51,16 @@ type IPlayer struct {
 func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hwIdExHash uint64, position, rotation *entities.Vector3) *IPlayer {
 	ipParse := net.ParseIP(ip)
 	return &IPlayer{
-		id:         id,
-		name:       name,
-		ip:         &ipParse,
-		authToken:  authToken,
-		hwIdHash:   hwIdHash,
-		hwIdExHash: hwIdExHash,
-		datas:      &sync.Map{},
-		BaseObject: NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		id:            id,
+		name:          name,
+		gameName:      name,
+		ip:            &ipParse,
+		authToken:     authToken,
+		hwIdHash:      hwIdHash,
+		hwIdExHash:    hwIdExHash,
+		currentWeapon: weapon_hash.Fist,
+		datas:         &sync.Map{},
+		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
 
@@ -66,19 +69,13 @@ func (p *IPlayer) GetName() string                         { return p.name }
 func (p *IPlayer) GetIP() *net.IP                          { return p.ip }
 func (p *IPlayer) GetModel() ped_hash.ModelHash            { return p.model }
 func (p *IPlayer) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
-func (p *IPlayer) GetWeather() weather_hash.WeatherType    { return p.weather }
 func (p *IPlayer) GetMaxHealth() uint16                    { return p.maxHealth }
 func (p *IPlayer) GetMaxArmour() uint16                    { return p.maxArmour }
 func (p *IPlayer) GetDimension() int32                     { return p.dimension }
 func (p *IPlayer) GetFrozen() bool                         { return p.frozen }
 func (p *IPlayer) GetCollision() bool                      { return p.collision }
 func (p *IPlayer) GetInvincible() bool                     { return p.invincible }
-func (p *IPlayer) GetChatName() string {
-	if len(p.chatName) <= 0 {
-		return p.name
-	}
-	return p.chatName
-}
+func (p *IPlayer) GetGameName() string                     { return p.gameName }
 func (p *IPlayer) GetHealth() uint16 {
 	ret, freeDataResultFunc := w.GetData(p.id, enum.Player, uint8(enum.Health))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -243,8 +240,8 @@ func (p *IPlayer) ClearBloodDamage() {
 	w.SetPlayerData(p.id, enum.ClearBloodDamage, int64(0))
 }
 
-func (p *IPlayer) SetChatName(name string) {
-	p.chatName = name
+func (p *IPlayer) SetGameName(gameName string) {
+	p.gameName = gameName
 }
 
 func (p *IPlayer) SetEyeColor(eyeColor int16) {
@@ -417,8 +414,44 @@ func (p *IPlayer) SetInvincible(invincible bool) {
 	w.SetPlayerData(p.id, enum.Invincible, int64(value))
 }
 
-func (p *IPlayer) SendBroadcast(message string) {
-	p.Emit("chat:message", p.GetChatName(), message)
+func (p *IPlayer) ClearProps(compoent uint8) {
+	w.SetPlayerData(p.id, enum.ClearProps, int64(compoent))
+}
+
+func (p *IPlayer) ClearDecorations() {
+	w.SetPlayerData(p.id, enum.ClearDecorations, int64(0))
+}
+
+func (p *IPlayer) ClearTasks() {
+	w.SetPlayerData(p.id, enum.ClearTasks, int64(0))
+}
+
+func (p *IPlayer) ResetHeadBlendData() {
+	w.SetPlayerData(p.id, enum.ResetHeadBlendData, int64(0))
+}
+
+func (p *IPlayer) SetHeadBlendData(shapeFirstId, shapeSecondId, shapeThirdId, skinFirstId, skinSecondId, skinThirdId uint32, shapeMix, skinMix, thirdMix float32) {
+	w.SetPlayerHeadData(p.id, enum.HeadBlendData, shapeFirstId, shapeSecondId, shapeThirdId, skinFirstId, skinSecondId, skinThirdId, shapeMix, skinMix, thirdMix)
+}
+
+func (p *IPlayer) SetHeadOverlay(overlayId uint32, index uint8, opacity float32) {
+	w.SetPlayerHeadData(p.id, enum.HeadOverlay, overlayId, uint32(index), uint32(0), uint32(0), uint32(0), uint32(0), opacity, float32(0), float32(0))
+}
+
+func (p *IPlayer) SetHeadOverlayColor(overlayId, colorType, colorIndex, secondColorIndex uint8) {
+	w.SetPlayerHeadData(p.id, enum.HeadOverlayColor, uint32(overlayId), uint32(colorType), uint32(colorIndex), uint32(secondColorIndex), uint32(0), uint32(0), float32(0), float32(0), float32(0))
+}
+
+func (p *IPlayer) SetHeadBlendPaletteColor(id, r, g, b uint8) {
+	w.SetPlayerHeadData(p.id, enum.HeadBlendPaletteColor, uint32(id), uint32(r), uint32(g), uint32(b), uint32(0), uint32(0), float32(0), float32(0), float32(0))
+}
+
+func (p *IPlayer) SendBroadcastMessage(message string) {
+	p.Emit("chat:message", "", message)
+}
+
+func (p *IPlayer) SendBroadcastAll(message string) {
+	broadcast.SendBroadcast(message)
 }
 
 func (p *IPlayer) SetData(key string, value any) {

@@ -36,6 +36,7 @@ var setColshapeData *windows.Proc
 var setVehicleDataProc *windows.Proc
 var setBlipDataProc *windows.Proc
 var setPlayerDataProc *windows.Proc
+var setPayerHeadDataProc *windows.Proc
 var setPedDataProc *windows.Proc
 var createVehicleProc *windows.Proc
 var createBlipProc *windows.Proc
@@ -71,6 +72,7 @@ func init() {
 		freeDataResultProc = dll.MustFindProc("free_data_result")
 		setPedDataProc = dll.MustFindProc("set_ped_data")
 		setPlayerDataProc = dll.MustFindProc("set_player_data")
+		setPayerHeadDataProc = dll.MustFindProc("set_player_head_data")
 		setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 		setBlipDataProc = dll.MustFindProc("set_blip_data")
 		setColshapeData = dll.MustFindProc("set_colshape_data")
@@ -238,6 +240,14 @@ func (w *WindowsWarrper) SetPlayerData(id uint32, playerDataType enum.PlayerData
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *WindowsWarrper) SetPlayerHeadData(id uint32, playerDataType enum.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
+	_, _, err := setPayerHeadDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(shape1), uintptr(shape2), uintptr(shape3), uintptr(skin1), uintptr(skin2), uintptr(skin3), uintptr(math.Float32bits(shapeMix)), uintptr(math.Float32bits(skinMix)), uintptr(math.Float32bits(thirdMix)))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set player head data failed: %v", err.Error())
 		return
 	}
 }

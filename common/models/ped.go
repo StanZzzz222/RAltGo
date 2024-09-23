@@ -31,6 +31,16 @@ type IPed struct {
 	*BaseObject
 }
 
+func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3) *IPed {
+	return &IPed{
+		id:            id,
+		model:         ped_hash.ModelHash(model),
+		currentWeapon: weapon_hash.Fist,
+		datas:         &sync.Map{},
+		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+	}
+}
+
 func (p *IPed) GetId() uint32                           { return p.id }
 func (p *IPed) GetModel() ped_hash.ModelHash            { return p.model }
 func (p *IPed) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
@@ -72,16 +82,6 @@ func (p *IPed) GetPositionRotation() (*entities.Vector3, *entities.Vector3) {
 }
 func (p *IPed) GetPositionRotationString() (string, string) {
 	return p.GetPositionString(), p.GetRotationString()
-}
-
-func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3) *IPed {
-	return &IPed{
-		id:            id,
-		model:         ped_hash.ModelHash(model),
-		currentWeapon: weapon_hash.Fist,
-		datas:         &sync.Map{},
-		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
-	}
 }
 
 func (p *IPed) SetPosition(position *entities.Vector3) {

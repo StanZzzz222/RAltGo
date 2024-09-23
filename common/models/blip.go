@@ -57,14 +57,29 @@ type IBlip struct {
 	datas                    *sync.Map
 }
 
+func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot float32, position *entities.Vector3) *IBlip {
+	return &IBlip{
+		id:            id,
+		blipType:      blip_type.BlipType(blipType),
+		spriteId:      spriteId,
+		name:          name,
+		color:         color,
+		rot:           rot,
+		position:      position,
+		alpha:         255,
+		flashInterval: 0,
+		flashTimer:    0,
+		number:        0,
+		datas:         &sync.Map{},
+	}
+}
+
 func (b *IBlip) GetId() uint32                     { return b.id }
 func (b *IBlip) GetName() string                   { return b.name }
-func (b *IBlip) GetGxtName() string                { return b.gxtName }
 func (b *IBlip) GetBlipType() blip_type.BlipType   { return b.blipType }
 func (b *IBlip) GetBlipColor() uint32              { return b.color }
 func (b *IBlip) GetSpriteId() uint32               { return b.spriteId }
 func (b *IBlip) GetAlpha() uint32                  { return b.alpha }
-func (b *IBlip) GetCategory() uint32               { return b.category }
 func (b *IBlip) GetFlashInterval() uint32          { return b.flashInterval }
 func (b *IBlip) GetFlashTimer() uint32             { return b.flashTimer }
 func (b *IBlip) GetVisible() bool                  { return b.visible }
@@ -89,10 +104,28 @@ func (b *IBlip) GetFlashesAlternate() bool         { return b.flashesAlternate }
 func (b *IBlip) GetCrewIndicatorVisible() bool     { return b.crewIndicatorVisible }
 func (b *IBlip) GetHeadingIndicatorVisible() bool  { return b.headingIndicatorVisible }
 func (b *IBlip) GetShortHeightThreshold() bool     { return b.shortHeightThreshold }
-func (b *IBlip) GetNumber() int32                  { return b.number }
 func (b *IBlip) GetRouteColor() *entities.Rgba     { return b.routeColor }
 func (b *IBlip) GetRgbaColor() *entities.Rgba      { return b.rgbaColor }
 func (b *IBlip) GetScale() *entities.Vector3       { return b.scale }
+func (b *IBlip) GetNumber() int32                  { return b.number }
+func (b *IBlip) GetGxtName() string {
+	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.Category))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.StringVal
+	}
+	return ""
+}
+func (b *IBlip) GetCategory() uint32 {
+	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.Category))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.U32Val
+	}
+	return 0
+}
 func (b *IBlip) GetPosition() *entities.Vector3 {
 	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.BlipPosition))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -105,19 +138,6 @@ func (b *IBlip) GetPosition() *entities.Vector3 {
 func (b *IBlip) GetPositionString() string {
 	position := b.GetPosition()
 	return fmt.Sprintf("%v,%v,%v", position.X, position.Y, position.Z)
-}
-
-func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot float32, position *entities.Vector3) *IBlip {
-	return &IBlip{
-		id:       id,
-		blipType: blip_type.BlipType(blipType),
-		spriteId: spriteId,
-		name:     name,
-		color:    color,
-		rot:      rot,
-		position: position,
-		datas:    &sync.Map{},
-	}
 }
 
 func (b *IBlip) SetSprite(spriteId uint32) {
