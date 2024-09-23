@@ -42,6 +42,7 @@ var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
 var createColshapeProc *syscall.Proc
+var createPolygonColshapeProc *syscall.Proc
 var getDataProc *syscall.Proc
 var emitProc *syscall.Proc
 var emitAllPlayerProc *syscall.Proc
@@ -80,6 +81,7 @@ func init() {
 		createBlipProc = dll.MustFindProc("create_blip")
 		createPedProc = dll.MustFindProc("create_ped")
 		createColshapeProc = dll.MustFindProc("create_colshape")
+		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
 		getDataProc = dll.MustFindProc("get_data")
 		emitProc = dll.MustFindProc("emit")
 		emitAllPlayerProc = dll.MustFindProc("emit_all")
@@ -336,7 +338,7 @@ func (w *SyscallWarrper) CreatePolygonColshape(colshapeType colshape_type.Colsha
 		strPtr, freeCStringFunc = w.GoStringMarshalPtr(strData)
 		defer freeCStringFunc()
 	}
-	ret, _, err := createColshapeProc.Call(uintptr(colshapeType), uintptr(math.Float32bits(minZ)), uintptr(math.Float32bits(maxZ)), strPtr)
+	ret, _, err := createPolygonColshapeProc.Call(uintptr(colshapeType), uintptr(math.Float32bits(minZ)), uintptr(math.Float32bits(maxZ)), strPtr)
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create polygon colshape failed: %v", err.Error())
 		return 0, func() {}
