@@ -2,7 +2,6 @@ package models
 
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/common/alt/broadcast"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/common/utils"
@@ -448,10 +447,6 @@ func (p *IPlayer) SetHeadBlendPaletteColor(id, r, g, b uint8) {
 
 func (p *IPlayer) SendBroadcastMessage(message string) {
 	p.Emit("chat:message", "", message)
-}
-
-func (p *IPlayer) SendBroadcastAll(message string) {
-	broadcast.SendBroadcast(message)
 }
 
 func (p *IPlayer) SetData(key string, value any) {

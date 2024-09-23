@@ -155,9 +155,23 @@ func (w *WindowsWarrper) OnClientEvent(eventName string, eventArgsDump string) {
 }
 
 func (w *WindowsWarrper) GetData(id uint32, objectType enum.ObjectType, dataType uint8) (uintptr, func()) {
-	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType))
+	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("get data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeDataResult(ret)
+		}
+	}
+	return ret, freeDataResultFunc
+}
+
+func (w *WindowsWarrper) GetMetaData(id uint32, objectType enum.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
+	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get meta data failed: %v", err.Error())
 		return 0, func() {}
 	}
 	freeDataResultFunc := func() {

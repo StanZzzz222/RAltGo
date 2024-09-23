@@ -113,6 +113,13 @@ func (w *Warpper) GetData(id uint32, objectType enum.ObjectType, dataType uint8)
 	return w.syscall.GetData(id, objectType, dataType)
 }
 
+func (w *Warpper) GetMetaData(id uint32, objectType enum.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
+	if w.IsWindows() {
+		return w.windows.GetMetaData(id, objectType, dataType, metaData)
+	}
+	return w.syscall.GetMetaData(id, objectType, dataType, metaData)
+}
+
 func (w *Warpper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
 	if w.IsWindows() {
 		w.windows.SetPedMetaData(id, pedDataType, data, metaData)

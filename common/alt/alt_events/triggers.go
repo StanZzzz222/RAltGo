@@ -55,7 +55,7 @@ func (t *EventBusTrigger) TriggerOnPlayerDisconnect(player *models.IPlayer, reas
 }
 
 func (t *EventBusTrigger) TriggerOnChatMessage(player *models.IPlayer, message string) {
-	EmitAllPlayer("chat:message", player.GetChatName(), message)
+	EmitAllPlayer("chat:message", player.GetGameName(), message)
 	if eventBus.onChatMessage != nil {
 		eventBus.onChatMessage(player, message)
 	}

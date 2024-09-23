@@ -24,11 +24,15 @@ type IVehicle struct {
 	model            vehicle_hash.ModelHash
 	primaryColor     uint8
 	secondColor      uint8
+	interiorColor    uint8
+	windowTint       uint8
 	numberplate      string
 	engineOn         bool
 	neonActive       bool
 	driftMode        bool
 	disableTowing    bool
+	boatAnchorActive bool
+	customTires      bool
 	lockState        vehicle_lock_state_type.VehicleLockState
 	lightState       vehicle_light_state_type.VehicleLightState
 	headLightColor   vehicle_head_light_color_type.VehicleHeadLightColorType
@@ -51,6 +55,7 @@ func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8
 		bodyHealth:       1000,
 		lightsMultiplier: 1,
 		wheelColor:       0,
+		interiorColor:    0,
 		lockState:        vehicle_lock_state_type.VehicleLockNone,
 		lightState:       vehicle_light_state_type.VehicleLightOff,
 		neonColor:        &entities.Rgba{R: 0, G: 0, B: 0, A: 0},
@@ -63,6 +68,8 @@ func (v *IVehicle) GetId() uint32                                          { ret
 func (v *IVehicle) GetModel() vehicle_hash.ModelHash                       { return v.model }
 func (v *IVehicle) GetPrimaryColor() uint8                                 { return v.primaryColor }
 func (v *IVehicle) GetSecondColor() uint8                                  { return v.secondColor }
+func (v *IVehicle) GetInteriorColor() uint8                                { return v.interiorColor }
+func (v *IVehicle) GetWindowTint() uint8                                   { return v.windowTint }
 func (v *IVehicle) GetNumberplate() string                                 { return v.numberplate }
 func (v *IVehicle) GetEngineOn() bool                                      { return v.engineOn }
 func (v *IVehicle) GetNeonActive() bool                                    { return v.neonActive }
@@ -70,6 +77,8 @@ func (v *IVehicle) GetLockState() vehicle_lock_state_type.VehicleLockState { ret
 func (v *IVehicle) GetNeonColor() *entities.Rgba                           { return v.neonColor }
 func (v *IVehicle) GetDimension() int32                                    { return v.dimension }
 func (v *IVehicle) GetFrozen() bool                                        { return v.frozen }
+func (v *IVehicle) GetBoatAnchorActive() bool                              { return v.boatAnchorActive }
+func (v *IVehicle) GetCustomTires() bool                                   { return v.customTires }
 func (v *IVehicle) GetVisible() bool                                       { return v.visible }
 func (v *IVehicle) GetCollision() bool                                     { return v.collision }
 func (v *IVehicle) GetDriftMode() bool                                     { return v.driftMode }
@@ -121,7 +130,33 @@ func (v *IVehicle) GetBodyHealth() uint32 {
 	}
 	return 1000
 }
-
+func (v *IVehicle) GetRadioStation() uint32 {
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.RadioStation))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.U32Val
+	}
+	return 0
+}
+func (v *IVehicle) GetDashboardColor() uint8 {
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.DashboardColor))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.U8Val
+	}
+	return 0
+}
+func (v *IVehicle) IsLightDamaged(lightId uint8) bool {
+	ret, freeDataResultFunc := w.GetMetaData(v.id, enum.Vehicle, uint8(enum.LightDamaged), int64(lightId))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
 func (v *IVehicle) SetPrimaryColor(primaryColor uint8) {
 	v.primaryColor = primaryColor
 	w.SetVehicleData(v.id, enum.PrimaryColor, int64(primaryColor))
@@ -302,6 +337,50 @@ func (v *IVehicle) SetNeonActive(neonActive bool) {
 func (v *IVehicle) SetNumberPlate(numberplate string) {
 	v.numberplate = numberplate
 	w.SetVehicleMetaData(v.id, enum.NumberPlate, int64(0), uint64(0), numberplate, uint8(0), uint8(0), uint8(0), uint8(0))
+}
+
+func (v *IVehicle) SetInteriorColor(color uint8) {
+	v.interiorColor = color
+	w.SetVehicleData(v.id, enum.InteriorColor, int64(color))
+}
+
+func (v *IVehicle) SetBoatAnchorActive(boatAnchorActive bool) {
+	v.boatAnchorActive = boatAnchorActive
+	value := 0
+	if boatAnchorActive {
+		value = 1
+	}
+	w.SetVehicleData(v.id, enum.BoatAnchorActive, int64(value))
+}
+
+func (v *IVehicle) SetCustomTires(customTires bool) {
+	v.customTires = customTires
+	value := 0
+	if customTires {
+		value = 1
+	}
+	w.SetVehicleData(v.id, enum.CustomTires, int64(value))
+}
+
+func (v *IVehicle) SetLightDamaged(lightId uint8, damaged bool) {
+	value := 0
+	if damaged {
+		value = 1
+	}
+	w.SetVehicleMetaData(v.id, enum.LightDamaged, int64(lightId), uint64(value), "", uint8(0), uint8(0), uint8(0), uint8(0))
+}
+
+func (v *IVehicle) SetRadioStation(index uint8) {
+	w.SetVehicleData(v.id, enum.RadioStation, int64(index))
+}
+
+func (v *IVehicle) SetDashboardColor(color uint8) {
+	w.SetVehicleData(v.id, enum.DashboardColor, int64(color))
+}
+
+func (v *IVehicle) SetWIndowTint(windowTint uint8) {
+	v.windowTint = windowTint
+	w.SetVehicleData(v.id, enum.WIndowTint, int64(windowTint))
 }
 
 func (v *IVehicle) Repair() {

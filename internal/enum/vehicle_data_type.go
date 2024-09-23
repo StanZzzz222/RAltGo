@@ -37,4 +37,11 @@ const (
 	ModKit
 	Repair
 	VehicleDestroy
+	InteriorColor
+	BoatAnchorActive
+	CustomTires
+	LightDamaged
+	RadioStation
+	DashboardColor
+	WIndowTint
 )

@@ -168,6 +168,20 @@ func (w *SyscallWarrper) GetData(id uint32, objectType enum.ObjectType, dataType
 	return ret, freeDataResultFunc
 }
 
+func (w *SyscallWarrper) GetMetaData(id uint32, objectType enum.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
+	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get meta data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeDataResult(ret)
+		}
+	}
+	return ret, freeDataResultFunc
+}
+
 func (w *SyscallWarrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
