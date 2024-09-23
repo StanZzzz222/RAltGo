@@ -6,6 +6,6 @@ package alt_events
    File: broadcast.go
 */
 
-func BroadcastAll(message string) {
-	EmitAllPlayer("chat:message", message)
+func SendBroadcast(message string) {
+	EmitAllPlayer("chat:message", "", message)
 }
