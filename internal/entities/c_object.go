@@ -3,7 +3,7 @@ package entities
 /*
 	#cgo CFLAGS: -I../headers
 	#include "c_vector3.h"
-	#include "c_check_point.h"
+	#include "c_object.h"
 */
 import "C"
 import (

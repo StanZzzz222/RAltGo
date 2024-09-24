@@ -3,7 +3,7 @@ package entities
 /*
 	#cgo CFLAGS: -I../headers
 	#include "c_vector3.h"
-	#include "c_check_point.h"
+	#include "c_marker.h"
 */
 import "C"
 import (
@@ -13,7 +13,7 @@ import (
 /*
    Create by zyx
    Date Time: 2024/9/25
-   File: c_object.go
+   File: c_marker.go
 */
 
 type CMarker struct {
@@ -23,7 +23,7 @@ type CMarker struct {
 }
 
 func ConvertCMarker(cPtr uintptr) *CMarker {
-	cMarker := (*C.CObject)(unsafe.Pointer(cPtr))
+	cMarker := (*C.CMarker)(unsafe.Pointer(cPtr))
 	if cMarker == nil {
 		return nil
 	}
