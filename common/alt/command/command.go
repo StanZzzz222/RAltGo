@@ -15,9 +15,11 @@ import (
 */
 
 var groups = &sync.Map{}
+var customHandler customCommandError
 var errorMessage = "Command parameter error"
 
 type middlewareCallback = func(player *models.IPlayer, name string, args []any) bool
+type customCommandError = func(player *models.IPlayer, name string, desc string, isParamInsufficient bool) string
 type Group struct {
 	name        string
 	commands    *sync.Map
@@ -43,6 +45,10 @@ func NewCommandGroup(name string) *Group {
 	}
 	groups.Store(name, group)
 	return group
+}
+
+func SetCommandErrorCustomHandler(handler customCommandError) {
+	customHandler = handler
 }
 
 func SetCommandErrorMessage(message string) {
@@ -157,6 +163,15 @@ func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 	callbackValue := reflect.ValueOf(command.callback)
 	callbackType := reflect.TypeOf(command.callback)
 	if callbackType.NumIn() != len(args)+1 {
+		if customHandler != nil {
+			var desc = ""
+			if len(command.desc) > 0 {
+				desc = command.desc
+			}
+			commandErrorMessage := customHandler(player, command.name, desc, true)
+			alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+			return
+		}
 		if len(command.desc) <= 0 {
 			alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
 			return
@@ -168,6 +183,15 @@ func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 		argType := callbackType.In(i)
 		targetType := reflect.TypeOf(args[i-1])
 		if argType.Kind() != targetType.Kind() {
+			if customHandler != nil {
+				var desc = ""
+				if len(command.desc) > 0 {
+					desc = command.desc
+				}
+				commandErrorMessage := customHandler(player, command.name, desc, false)
+				alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+				return
+			}
 			if len(command.desc) <= 0 {
 				alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
 				return
@@ -192,6 +216,15 @@ func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any)
 	callbackValue := reflect.ValueOf(command.callback)
 	callbackType := reflect.TypeOf(command.callback)
 	if callbackType.NumIn() != len(args)+1 {
+		if customHandler != nil {
+			var desc = ""
+			if len(command.desc) > 0 {
+				desc = command.desc
+			}
+			commandErrorMessage := customHandler(player, command.name, desc, true)
+			alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+			return
+		}
 		if len(command.desc) <= 0 {
 			alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
 			return
@@ -203,6 +236,15 @@ func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any)
 		argType := callbackType.In(i)
 		targetType := reflect.TypeOf(args[i-1])
 		if argType.Kind() != targetType.Kind() {
+			if customHandler != nil {
+				var desc = ""
+				if len(command.desc) > 0 {
+					desc = command.desc
+				}
+				commandErrorMessage := customHandler(player, command.name, desc, false)
+				alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+				return
+			}
 			if len(command.desc) <= 0 {
 				alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
 				return
