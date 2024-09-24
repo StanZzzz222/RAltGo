@@ -32,14 +32,14 @@
 
 ```
 对象:
-1. Blip - 创建、设置、获取
-2. Player - 创建、设置、获取、Emit
-3. Vehicle - 创建、设置、获取
-4. Ped - 创建、设置、获取
-5. Colshape - 创建、设置、获取
-6. Pools - 对象池，已实现上方所有对象
-7. Marker - 待实现
-8. Checkpoint - 待实现
+1. Blip - 大部分API已完成
+2. Player - 大部分API已完成
+3. Vehicle - 大部分API已完成
+4. Ped - 大部分API已完成
+5. Colshape - 大部分API已完成
+6. Checkpoint- 大部分API已完成
+7. Pools - 对象池，已实现上方所有对象
+8. Marker- 待实现
 9. VisualEntity - 待实现
 10. Object - 待实现
 12. VirtualEntityGroup - 待实现
@@ -47,14 +47,18 @@
 13. ConnectionInfo - 待实现
 
 事件:
-1. onStart
-2. onServerStarted
-3. onStop
-4. onPlayerConnect
-5. onPlayerDisconnect
-6. onEnterVehicle
-7. onLeaveVehicle
-8. onClientEvent
+1. onStart - 已完成
+2. onServerStarted - 已完成
+3. onStop - 已完成
+4. onPlayerConnect - 已完成
+5. onPlayerDisconnect - 已完成
+6. onEnterVehicle - 已完成
+7. onLeaveVehicle - 已完成
+8. onEnterColshape - 已完成
+9. onLeaveColshape - 已完成
+10. onClientEvent - 已完成
+12. onCommandEvent - 已完成
+....
 ```
 
 <font color="red">注：因基于 altv-rust 进行开发，所以 altv-rust 出现的问题该模块也都可能会出现！</font>

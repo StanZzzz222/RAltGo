@@ -32,14 +32,14 @@ Some APIs that have been implemented:
 
 ```
 Object:
-1. Blip - Create and set/get section
-2. Player - Spawn/Emit and set/get section
-3. Vehicle - Creation and set/get section
-4. Ped - Creation and set/get section
-5. Colshape - Creation and set/get section
-6. Pools - The object pool has implemented all the above objects
-7. Marker - To be implemented
-8. Checkpoint - To be implemented
+1. Blip - Mostly done
+2. Player - Mostly done
+3. Vehicle - Mostly done
+4. Ped - Mostly done
+5. Colshape - Mostly done
+6. Checkpoint - Mostly done
+7. Pools - The object pool has implemented all the above objects
+8. Marker- To be implemented
 9. VisualEntity - To be implemented
 10. Object - To be implemented
 11. VirtualEntityGroup - To be implemented
@@ -47,17 +47,18 @@ Object:
 13. ConnectionInfo - To be implemented
 
 Events:
-1. onStart
-2. onServerStarted
-3. onStop
-4. onPlayerConnect
-5. onPlayerDisconnect
-6. onEnterVehicle
-7. onLeaveVehicle
-8. onEnterColshape
-9. onLeaveColshape
-10. onClientEvent
-12. onCommand
+1. onStart - Done
+2. onServerStarted - Done
+3. onStop - Done
+4. onPlayerConnect - Done
+5. onPlayerDisconnect - Done
+6. onEnterVehicle - Done
+7. onLeaveVehicle - Done
+8. onEnterColshape - Done
+9. onLeaveColshape - Done
+10. onClientEvent - Done
+12. onCommandEvent - Done
+....
 ```
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>
