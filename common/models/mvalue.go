@@ -84,6 +84,17 @@ func (mv *MValues) Dump() string {
 					"type":  enum.Colshape,
 				})
 				continue
+			case reflect.TypeOf((*ICheckpoint)(nil)).Elem():
+				param, ok := arg.(*ICheckpoint)
+				if !ok {
+					logger.LogErrorf("Invalid type for Checkpoint: %v", param.GetId())
+					continue
+				}
+				obj = append(obj, map[string]any{
+					"value": param.GetId(),
+					"type":  enum.CheckPoint,
+				})
+				continue
 			case reflect.TypeOf((*entities.Vector3)(nil)).Elem():
 				param, ok := arg.(*entities.Vector3)
 				if !ok {

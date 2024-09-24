@@ -142,6 +142,10 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 					c := pools.GetColshape(uint32(argValue.(float64)))
 					result = append(result, c)
 					continue
+				case enum.CheckPoint:
+					c := pools.GetCheckpoint(uint32(argValue.(float64)))
+					result = append(result, c)
+					continue
 				case enum.Blip:
 					b := pools.GetBlip(uint32(argValue.(float64)))
 					result = append(result, b)
