@@ -81,7 +81,7 @@ func init() {
 		setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 		setBlipDataProc = dll.MustFindProc("set_blip_data")
 		setColshapeDataProc = dll.MustFindProc("set_colshape_data")
-		setCheckpointDataProc = dll.MustFindProc("set_checkpint_data")
+		setCheckpointDataProc = dll.MustFindProc("set_checkpoint_data")
 		createCheckPointProc = dll.MustFindProc("create_checkpoint")
 		createVehicleProc = dll.MustFindProc("create_vehicle")
 		createBlipProc = dll.MustFindProc("create_blip")
