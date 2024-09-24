@@ -3,7 +3,9 @@ package alt_events
 import (
 	"github.com/StanZzzz222/RAltGo/common/alt/pools"
 	"github.com/StanZzzz222/RAltGo/common/models"
+	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
@@ -163,6 +165,23 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 					result = append(result, argValue.(float64))
 					continue
 				case reflect.String.String():
+					switch argValue.(string) {
+					case "rgba":
+						var rgba *entities.Rgba
+						_ = json.Unmarshal([]byte(argValue.(string)), &rgba)
+						result = append(result, rgba)
+						continue
+					case "vector2":
+						var vec3 *entities.Vector3
+						_ = json.Unmarshal([]byte(argValue.(string)), &vec3)
+						result = append(result, vec3)
+						continue
+					case "vector3":
+						var vec2Map = map[string]any{}
+						_ = json.Unmarshal([]byte(argValue.(string)), &vec2Map)
+						result = append(result, utils.NewVector3(float32(vec2Map["x"].(float64)), float32(vec2Map["y"].(float64)), 0))
+						continue
+					}
 					result = append(result, argValue.(string))
 					continue
 				case "null":
