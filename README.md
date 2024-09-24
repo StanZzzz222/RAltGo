@@ -38,10 +38,10 @@ Object:
 4. Ped - Mostly done
 5. Colshape - Mostly done
 6. Checkpoint - Mostly done
-7. Pools - The object pool has implemented all the above objects
-8. Marker- To be implemented
-9. VisualEntity - To be implemented
-10. Object - To be implemented
+7. Marker- Mostly done
+8. Object - Mostly done
+9. Pools - The object pool has implemented all the above objects
+10. VisualEntity - To be implemented
 11. VirtualEntityGroup - To be implemented
 12. VoiceChannel - To be implemented
 13. ConnectionInfo - To be implemented

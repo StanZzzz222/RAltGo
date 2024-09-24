@@ -38,11 +38,11 @@
 4. Ped - 大部分API已完成
 5. Colshape - 大部分API已完成
 6. Checkpoint- 大部分API已完成
-7. Pools - 对象池，已实现上方所有对象
-8. Marker- 待实现
-9. VisualEntity - 待实现
-10. Object - 待实现
-12. VirtualEntityGroup - 待实现
+7. Marker- 大部分API已完成
+8. Object - 大部分API已完成
+9. Pools - 对象池，已实现上方所有对象
+10. VisualEntity - 待实现
+11. VirtualEntityGroup - 待实现
 12. VoiceChannel - 待实现
 13. ConnectionInfo - 待实现
 
