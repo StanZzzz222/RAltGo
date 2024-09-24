@@ -24,10 +24,10 @@ type IBlip struct {
 	category                 uint32
 	flashInterval            uint32
 	flashTimer               uint32
+	display                  uint32
 	number                   int32
 	rot                      float32
 	visible                  bool
-	display                  bool
 	friendly                 bool
 	highDetail               bool
 	missionCreator           bool
@@ -70,6 +70,8 @@ func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot 
 		flashInterval: 0,
 		flashTimer:    0,
 		number:        0,
+		display:       2,
+		visible:       true,
 		datas:         &sync.Map{},
 	}
 }
@@ -83,7 +85,7 @@ func (b *IBlip) GetAlpha() uint32                  { return b.alpha }
 func (b *IBlip) GetFlashInterval() uint32          { return b.flashInterval }
 func (b *IBlip) GetFlashTimer() uint32             { return b.flashTimer }
 func (b *IBlip) GetVisible() bool                  { return b.visible }
-func (b *IBlip) GetDisplay() bool                  { return b.display }
+func (b *IBlip) GetDisplay() uint32                { return b.display }
 func (b *IBlip) GetFriendly() bool                 { return b.friendly }
 func (b *IBlip) GetHighDetail() bool               { return b.highDetail }
 func (b *IBlip) GetMissionCreator() bool           { return b.missionCreator }
@@ -164,13 +166,9 @@ func (b *IBlip) SetVisible(visible bool) {
 	w.SetBlipData(b.id, enum.BlipVisible, int64(value))
 }
 
-func (b *IBlip) SetDisplay(display bool) {
+func (b *IBlip) SetDisplay(display uint32) {
 	b.display = display
-	value := 0
-	if display {
-		value = 1
-	}
-	w.SetBlipData(b.id, enum.Display, int64(value))
+	w.SetBlipData(b.id, enum.Display, int64(display))
 }
 
 func (b *IBlip) SetAlpha(alpha uint32) {

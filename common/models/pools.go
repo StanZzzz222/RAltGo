@@ -11,20 +11,22 @@ import "sync"
 var pools = newPools()
 
 type Pools struct {
-	blips     *sync.Map
-	vehicles  *sync.Map
-	players   *sync.Map
-	peds      *sync.Map
-	colshapes *sync.Map
+	blips       *sync.Map
+	vehicles    *sync.Map
+	players     *sync.Map
+	peds        *sync.Map
+	colshapes   *sync.Map
+	checkpoints *sync.Map
 }
 
 func newPools() *Pools {
 	return &Pools{
-		blips:     &sync.Map{},
-		vehicles:  &sync.Map{},
-		players:   &sync.Map{},
-		peds:      &sync.Map{},
-		colshapes: &sync.Map{},
+		blips:       &sync.Map{},
+		vehicles:    &sync.Map{},
+		players:     &sync.Map{},
+		peds:        &sync.Map{},
+		colshapes:   &sync.Map{},
+		checkpoints: &sync.Map{},
 	}
 }
 
@@ -58,6 +60,12 @@ func (p *Pools) PutColshape(colshape *IColshape) {
 	}
 }
 
+func (p *Pools) PutCheckpoint(checkpoint *ICheckpoint) {
+	if _, ok := p.checkpoints.Load(checkpoint.GetId()); !ok {
+		p.checkpoints.Store(checkpoint.GetId(), checkpoint)
+	}
+}
+
 func (p *Pools) DestroyBlip(blip *IBlip) {
 	if _, ok := p.blips.Load(blip.GetId()); ok {
 		p.blips.Delete(blip.GetId())
@@ -85,6 +93,12 @@ func (p *Pools) DestroyPed(ped *IPed) {
 func (p *Pools) DestroyColshape(colshape *IColshape) {
 	if _, ok := p.colshapes.Load(colshape.GetId()); ok {
 		p.colshapes.Delete(colshape.GetId())
+	}
+}
+
+func (p *Pools) DestroyCheckpoint(checkpoint *ICheckpoint) {
+	if _, ok := p.checkpoints.Load(checkpoint.GetId()); ok {
+		p.checkpoints.Delete(checkpoint.GetId())
 	}
 }
 
@@ -123,6 +137,13 @@ func (p *Pools) GetColshape(id uint32) *IColshape {
 	return nil
 }
 
+func (p *Pools) GetCheckpoint(id uint32) *ICheckpoint {
+	if value, ok := p.checkpoints.Load(id); ok {
+		return value.(*ICheckpoint)
+	}
+	return nil
+}
+
 func (p *Pools) GetVehiclePools() *sync.Map {
 	return p.vehicles
 }
@@ -141,6 +162,10 @@ func (p *Pools) GetPlayerPools() *sync.Map {
 
 func (p *Pools) GetColshapePools() *sync.Map {
 	return p.colshapes
+}
+
+func (p *Pools) GetCheckpointPools() *sync.Map {
+	return p.checkpoints
 }
 
 func GetPools() *Pools {

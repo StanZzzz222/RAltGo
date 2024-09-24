@@ -3,11 +3,15 @@ package models
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
+	"github.com/StanZzzz222/RAltGo/hash_enums/radio_station_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_door_state"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_door_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_hash"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_head_light_color_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_light_id_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_light_state_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_lock_state_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_mod_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
@@ -217,8 +221,8 @@ func (v *IVehicle) SetFrozen(frozen bool) {
 	w.SetVehicleData(v.id, enum.VehicleFrozen, int64(value))
 }
 
-func (v *IVehicle) SetDoorState(doorId uint8, state uint8) {
-	w.SetVehicleMetaData(v.id, enum.DoorState, int64(doorId), uint64(state), "", uint8(0), uint8(0), uint8(0), uint8(0))
+func (v *IVehicle) SetDoorState(door vehicle_door_type.VehicleDoorType, state vehicle_door_state.VehicleDoorState) {
+	w.SetVehicleMetaData(v.id, enum.DoorState, int64(door), uint64(state), "", uint8(0), uint8(0), uint8(0), uint8(0))
 }
 
 func (v *IVehicle) SetEngineOn(engineOn bool) {
@@ -251,7 +255,8 @@ func (v *IVehicle) SetLightState(lightState vehicle_light_state_type.VehicleLigh
 
 func (v *IVehicle) SetHeadLightColor(headLightColor vehicle_head_light_color_type.VehicleHeadLightColorType) {
 	v.headLightColor = headLightColor
-	v.SetMod(22, 1)
+	v.SetModKit(1)
+	v.SetMod(vehicle_mod_type.Xenon, 1)
 	w.SetVehicleData(v.id, enum.HeadLightColor, int64(headLightColor))
 }
 
@@ -309,8 +314,8 @@ func (v *IVehicle) SetWheelColor(wheelColor uint8) {
 	w.SetVehicleData(v.id, enum.WheelColor, int64(wheelColor))
 }
 
-func (v *IVehicle) SetMod(categray uint8, id uint8) {
-	w.SetVehicleMetaData(v.id, enum.Mod, int64(categray), uint64(id), "", uint8(0), uint8(0), uint8(0), uint8(0))
+func (v *IVehicle) SetMod(modType vehicle_mod_type.VehicleModType, id uint8) {
+	w.SetVehicleMetaData(v.id, enum.Mod, int64(modType), uint64(id), "", uint8(0), uint8(0), uint8(0), uint8(0))
 }
 
 func (v *IVehicle) SetModKit(id uint8) {
@@ -371,8 +376,8 @@ func (v *IVehicle) SetLightDamaged(lightId vehicle_light_id_type.VehicleLightTyp
 	w.SetVehicleMetaData(v.id, enum.LightDamaged, int64(lightId), uint64(value), "", uint8(0), uint8(0), uint8(0), uint8(0))
 }
 
-func (v *IVehicle) SetRadioStation(index uint8) {
-	w.SetVehicleData(v.id, enum.RadioStation, int64(index))
+func (v *IVehicle) SetRadioStation(radioStation radio_station_type.RadioStation) {
+	w.SetVehicleData(v.id, enum.RadioStation, int64(radioStation))
 }
 
 func (v *IVehicle) SetDashboardColor(color uint8) {

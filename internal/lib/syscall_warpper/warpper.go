@@ -31,13 +31,16 @@ var freeVehicleProc *syscall.Proc
 var freeBlipProc *syscall.Proc
 var freePedProc *syscall.Proc
 var freeColshapeProc *syscall.Proc
+var freeCheckpointProc *syscall.Proc
 var freeDataResultProc *syscall.Proc
-var setColshapeData *syscall.Proc
+var setColshapeDataProc *syscall.Proc
+var setCheckpointDataProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
 var setPayerHeadDataProc *syscall.Proc
 var setPedDataProc *syscall.Proc
+var createCheckPointProc *syscall.Proc
 var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
@@ -70,13 +73,16 @@ func init() {
 		freeBlipProc = dll.MustFindProc("free_blip")
 		freePedProc = dll.MustFindProc("free_ped")
 		freeColshapeProc = dll.MustFindProc("free_colshape")
+		freeCheckpointProc = dll.MustFindProc("free_checkpoint")
 		freeDataResultProc = dll.MustFindProc("free_data_result")
 		setPedDataProc = dll.MustFindProc("set_ped_data")
 		setPlayerDataProc = dll.MustFindProc("set_player_data")
 		setPayerHeadDataProc = dll.MustFindProc("set_player_head_data")
 		setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 		setBlipDataProc = dll.MustFindProc("set_blip_data")
-		setColshapeData = dll.MustFindProc("set_colshape_data")
+		setColshapeDataProc = dll.MustFindProc("set_colshape_data")
+		setCheckpointDataProc = dll.MustFindProc("set_checkpoint_data")
+		createCheckPointProc = dll.MustFindProc("create_checkpoint")
 		createVehicleProc = dll.MustFindProc("create_vehicle")
 		createBlipProc = dll.MustFindProc("create_blip")
 		createPedProc = dll.MustFindProc("create_ped")
@@ -107,9 +113,17 @@ func (w *SyscallWarrper) SetPedData(id uint32, pedDataType enum.PedDataType, dat
 }
 
 func (w *SyscallWarrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
-	_, _, err := setColshapeData.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
+	_, _, err := setColshapeDataProc.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set colshape data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) SetCheckpointData(id uint32, checkpointDataType enum.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
+	_, _, err := setCheckpointDataProc.Call(uintptr(id), uintptr(checkpointDataType), uintptr(data), uintptr(metaData), uintptr(math.Float32bits(otherData)), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set checkpoint data failed: %v", err.Error())
 		return
 	}
 }
@@ -268,10 +282,24 @@ func (w *SyscallWarrper) SetPlayerData(id uint32, playerDataType enum.PlayerData
 	}
 }
 
+func (w *SyscallWarrper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {
+	ret, _, err := createCheckPointProc.Call(uintptr(checkPointType), uintptr(posData), uintptr(posMetaData), uintptr(math.Float32bits(radius)), uintptr(math.Float32bits(height)), uintptr(r), uintptr(g), uintptr(b), uintptr(a), uintptr(streamingDistance))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create checkpoint failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeCheckpoint(ret)
+		}
+	}
+	return ret, freePtrFunc
+}
+
 func (w *SyscallWarrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
 	ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
-		logger.LogErrorf("create vehicle_hash failed: %v", err.Error())
+		logger.LogErrorf("create vehicle failed: %v", err.Error())
 		return 0, func() {}
 	}
 	freePtrFunc := func() {
@@ -395,6 +423,14 @@ func (w *SyscallWarrper) FreeColshape(ptr uintptr) {
 	_, _, err := freeColshapeProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free colshape failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) FreeCheckpoint(ptr uintptr) {
+	_, _, err := freeCheckpointProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free checkpoint failed: %v", err.Error())
 		return
 	}
 }

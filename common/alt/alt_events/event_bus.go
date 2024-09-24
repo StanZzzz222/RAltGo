@@ -1,12 +1,12 @@
 package alt_events
 
 import (
-	"encoding/json"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"github.com/goccy/go-json"
 	"reflect"
 	"sync"
 )

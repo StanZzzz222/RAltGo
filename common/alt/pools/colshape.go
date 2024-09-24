@@ -5,7 +5,7 @@ import "github.com/StanZzzz222/RAltGo/common/models"
 /*
    Create by zyx
    Date Time: 2024/9/18
-   File: colshape.go
+   File: checkpoint.go
 */
 
 func GetColshape(id uint32) *models.IColshape {

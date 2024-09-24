@@ -13,7 +13,4 @@ const (
 	PlayersOnly
 	ColshapePosition
 	ColshapeDestory
-	IsPointIn
-	IsEntityIn
-	IsEntityIdIn
 )

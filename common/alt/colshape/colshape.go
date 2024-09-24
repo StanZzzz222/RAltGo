@@ -12,7 +12,7 @@ import (
 /*
    Create by zyx
    Date Time: 2024/9/19
-   File: colshape.go
+   File: checkpoint.go
 */
 
 func CreateColshapeCircle(position *entities.Vector3, radius float32) *models.IColshape {

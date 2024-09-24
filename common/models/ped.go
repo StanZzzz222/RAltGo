@@ -31,13 +31,17 @@ type IPed struct {
 	*BaseObject
 }
 
-func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3) *IPed {
+func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3, streamingDistance uint32, streamed bool) *IPed {
 	return &IPed{
-		id:            id,
-		model:         ped_hash.ModelHash(model),
-		currentWeapon: weapon_hash.Fist,
-		datas:         &sync.Map{},
-		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		id:                id,
+		model:             ped_hash.ModelHash(model),
+		currentWeapon:     weapon_hash.Fist,
+		streamingDistance: streamingDistance,
+		armour:            0,
+		maxHealth:         200,
+		streamed:          streamed,
+		datas:             &sync.Map{},
+		BaseObject:        NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
 }
 

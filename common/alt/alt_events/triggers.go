@@ -1,12 +1,12 @@
 package alt_events
 
 import (
-	"encoding/json"
 	"github.com/StanZzzz222/RAltGo/common/alt/pools"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"github.com/goccy/go-json"
 	"reflect"
 )
 
@@ -116,59 +116,62 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 		logger.LogErrorf("EventArgsParse falied, %v", err.Error())
 		return args
 	}
-	for _, objAny := range args {
-		obj := objAny.(map[string]any)
-		argType := obj["type"]
-		argValue := obj["value"]
-		t := reflect.TypeOf(argType)
-		if t.Kind() == reflect.Float64 {
-			switch enum.ObjectType(int32(argType.(float64))) {
-			case enum.Player:
-				p := pools.GetPlayer(uint32(argValue.(float64)))
-				result = append(result, p)
-				continue
-			case enum.Ped:
-				p := pools.GetPed(uint32(argValue.(float64)))
-				result = append(result, p)
-				continue
-			case enum.Vehicle:
-				v := pools.GetVehicle(uint32(argValue.(float64)))
-				result = append(result, v)
-				continue
-			case enum.Colshape:
-				c := pools.GetColshape(uint32(argValue.(float64)))
-				result = append(result, c)
-				continue
-			case enum.Blip:
-				b := pools.GetBlip(uint32(argValue.(float64)))
-				result = append(result, b)
-				continue
-			default:
-				logger.LogErrorf("EventArgsParse falied, Unknow ObjectType: %v", argType)
-				return result
-			}
-		} else {
-			switch argType.(string) {
-			case reflect.Bool.String():
-				result = append(result, argValue.(bool))
-				continue
-			case reflect.Int.String():
-				result = append(result, int64(argValue.(float64)))
-				continue
-			case reflect.Uint64.String():
-				result = append(result, uint64(argValue.(float64)))
-				continue
-			case reflect.Float64.String():
-				result = append(result, argValue.(float64))
-				continue
-			case reflect.String.String():
-				result = append(result, argValue.(string))
-				continue
-			case "null":
-				result = append(result, nil)
-				continue
+	if len(args) != 0 {
+		for _, objAny := range args {
+			obj := objAny.(map[string]any)
+			argType := obj["type"]
+			argValue := obj["value"]
+			t := reflect.TypeOf(argType)
+			if t.Kind() == reflect.Float64 {
+				switch enum.ObjectType(int32(argType.(float64))) {
+				case enum.Player:
+					p := pools.GetPlayer(uint32(argValue.(float64)))
+					result = append(result, p)
+					continue
+				case enum.Ped:
+					p := pools.GetPed(uint32(argValue.(float64)))
+					result = append(result, p)
+					continue
+				case enum.Vehicle:
+					v := pools.GetVehicle(uint32(argValue.(float64)))
+					result = append(result, v)
+					continue
+				case enum.Colshape:
+					c := pools.GetColshape(uint32(argValue.(float64)))
+					result = append(result, c)
+					continue
+				case enum.Blip:
+					b := pools.GetBlip(uint32(argValue.(float64)))
+					result = append(result, b)
+					continue
+				default:
+					logger.LogErrorf("EventArgsParse falied, Unknow ObjectType: %v", argType)
+					return result
+				}
+			} else {
+				switch argType.(string) {
+				case reflect.Bool.String():
+					result = append(result, argValue.(bool))
+					continue
+				case reflect.Int.String():
+					result = append(result, int64(argValue.(float64)))
+					continue
+				case reflect.Uint64.String():
+					result = append(result, uint64(argValue.(float64)))
+					continue
+				case reflect.Float64.String():
+					result = append(result, argValue.(float64))
+					continue
+				case reflect.String.String():
+					result = append(result, argValue.(string))
+					continue
+				case "null":
+					result = append(result, nil)
+					continue
+				}
 			}
 		}
+		return result
 	}
-	return result
+	return args
 }

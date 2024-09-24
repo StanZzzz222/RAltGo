@@ -58,6 +58,8 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 		hwIdHash:      hwIdHash,
 		hwIdExHash:    hwIdExHash,
 		currentWeapon: weapon_hash.Fist,
+		armour:        0,
+		maxHealth:     200,
 		datas:         &sync.Map{},
 		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 	}
