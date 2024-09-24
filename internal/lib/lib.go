@@ -5,7 +5,6 @@ import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
-	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/internal/lib/syscall_warpper"
 	"github.com/StanZzzz222/RAltGo/internal/lib/windows_warpper"
@@ -201,11 +200,11 @@ func (w *Warpper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 	w.syscall.SetPlayerData(id, playerDataType, data)
 }
 
-func (w *Warpper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, rgba *entities.Rgba, streamingDistance uint32) (uintptr, func()) {
+func (w *Warpper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {
 	if w.IsWindows() {
-		return w.windows.CreateCheckpoint(checkPointType, posData, posMetaData, radius, height, rgba.R, rgba.G, rgba.B, rgba.A, streamingDistance)
+		return w.windows.CreateCheckpoint(checkPointType, posData, posMetaData, radius, height, r, g, b, a, streamingDistance)
 	}
-	return w.syscall.CreateCheckpoint(checkPointType, posData, posMetaData, radius, height, rgba.R, rgba.G, rgba.B, rgba.A, streamingDistance)
+	return w.syscall.CreateCheckpoint(checkPointType, posData, posMetaData, radius, height, r, g, b, a, streamingDistance)
 }
 
 func (w *Warpper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {

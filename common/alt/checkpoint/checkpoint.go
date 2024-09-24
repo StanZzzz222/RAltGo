@@ -18,11 +18,11 @@ func CreateCheckpoint(checkPointType check_point_type.CheckPointType, position *
 	var w = lib.GetWarpper()
 	var c = &models.ICheckpoint{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
-	ret, freePtrFunc := w.CreateCheckpoint(uint8(checkPointType), posData, posMetaData, radius, height, color, streamingDistance)
+	ret, freePtrFunc := w.CreateCheckpoint(uint8(checkPointType), posData, posMetaData, radius, height, color.R, color.G, color.B, color.A, streamingDistance)
 	cCheckpoint := entities.ConvertCCheckPoint(ret)
 	if cCheckpoint != nil {
 		freePtrFunc()
-		c = c.NewICheckPoint(cCheckpoint.ID, cCheckpoint.CheckpointType, cCheckpoint.Position)
+		c = c.NewICheckPoint(cCheckpoint.ID, cCheckpoint.CheckpointType, cCheckpoint.Position, height, radius)
 		pools := models.GetPools()
 		pools.PutCheckpoint(c)
 		return c
