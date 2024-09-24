@@ -9,42 +9,42 @@ package enum
 type BlipDataType int32
 
 const (
-	Sprite BlipDataType = iota
-	Color
-	RgbaColor
+	BlipSprite BlipDataType = iota
+	BlipColor
+	BlipRgbaColor
 	BlipVisible
-	Display
-	Alpha
-	Friendly
-	HighDetail
-	MissionCreator
-	ShortRange
-	Bright
-	CrewIndicatorVisible
-	Category
-	FlashInterval
-	FlashTimer
-	Flashes
-	FlashesAlternate
-	Global
-	MinimalOnEdge
-	Route
-	Pulse
-	HiddenOnLegend
-	OutlineIndicatorVisible
-	BlipRot
-	Shrinked
-	ShowCone
-	TickVisible
-	UseHeightIndicatorOnEdge
+	BlipDisplay
+	BlipAlpha
+	BlipFriendly
+	BlipHighDetail
+	BlipMissionCreator
+	BlipShortRange
+	BlipBright
+	BlipCrewIndicatorVisible
+	BlipCategory
+	BlipFlashInterval
+	BlipFlashTimer
+	BlipFlashes
+	BlipFlashesAlternate
+	BlipGlobal
+	BlipMinimalOnEdge
+	BlipRoute
+	BlipPulse
+	BlipHiddenOnLegend
+	BlipOutlineIndicatorVisible
+	BlipRotation
+	BlipShrinked
+	BlipShowCone
+	BlipTickVisible
+	BlipUseHeightIndicatorOnEdge
 	BlipPosition
-	Name
-	RouteColor
-	HeadingIndicatorVisible
-	ShortHeightThreshold
-	Number
-	Scale
-	GxtName
+	BlipName
+	BlipRouteColor
+	BlipHeadingIndicatorVisible
+	BlipShortHeightThreshold
+	BlipNumber
+	BlipScale
+	BlipGxtName
 	BlipType
 	BlipDestroy
 )

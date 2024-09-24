@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
@@ -72,20 +71,6 @@ func (p *IPed) GetRotation() *entities.Vector3 {
 		return cDataResult.Vector3Val
 	}
 	return nil
-}
-func (p *IPed) GetPositionString() string {
-	position := p.GetPosition()
-	return fmt.Sprintf("%v,%v,%v", position.X, position.Y, position.Z)
-}
-func (p *IPed) GetRotationString() string {
-	rotation := p.GetRotation()
-	return fmt.Sprintf("%v,%v,%v", rotation.X, rotation.Y, rotation.Z)
-}
-func (p *IPed) GetPositionRotation() (*entities.Vector3, *entities.Vector3) {
-	return p.GetPosition(), p.GetRotation()
-}
-func (p *IPed) GetPositionRotationString() (string, string) {
-	return p.GetPositionString(), p.GetRotationString()
 }
 
 func (p *IPed) SetPosition(position *entities.Vector3) {

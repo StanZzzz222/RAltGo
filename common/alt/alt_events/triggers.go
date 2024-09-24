@@ -142,9 +142,17 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 					c := pools.GetColshape(uint32(argValue.(float64)))
 					result = append(result, c)
 					continue
+				case enum.Object:
+					o := pools.GetObject(uint32(argValue.(float64)))
+					result = append(result, o)
+					continue
 				case enum.CheckPoint:
 					c := pools.GetCheckpoint(uint32(argValue.(float64)))
 					result = append(result, c)
+					continue
+				case enum.Marker:
+					m := pools.GetMarker(uint32(argValue.(float64)))
+					result = append(result, m)
 					continue
 				case enum.Blip:
 					b := pools.GetBlip(uint32(argValue.(float64)))

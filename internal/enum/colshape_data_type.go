@@ -10,7 +10,7 @@ type ColshapeDataType int32
 
 const (
 	ColshapeDimension ColshapeDataType = iota
-	PlayersOnly
+	ColshapePlayersOnly
 	ColshapePosition
 	ColshapeDestory
 )

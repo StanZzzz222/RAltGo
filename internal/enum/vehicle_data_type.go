@@ -9,39 +9,39 @@ package enum
 type VehicleDataType int32
 
 const (
-	PrimaryColor VehicleDataType = iota
-	SecondColor
-	NumberPlate
+	VehiclePrimaryColor VehicleDataType = iota
+	VehicleSecondColor
+	VehicleNumberPlate
 	VehicleCollision
 	VehicleFrozen
 	VehicleVisible
-	EngineOn
-	LockState
-	LightState
-	HeadLightColor
-	NeonColor
-	NeonActive
+	VehicleEngineOn
+	VehicleLockState
+	VehicleLightState
+	VehicleHeadLightColor
+	VehicleNeonColor
+	VehicleNeonActive
 	VehicleDimension
 	VehiclePosition
 	VehicleRot
-	DriftMode
-	DoorState
-	DisableTowing
-	DirtLevel
-	BodyHealth
-	EngineHealth
-	LightsMultiplier
-	WheelColor
-	RearWheels
-	Mod
-	ModKit
-	Repair
+	VehicleDriftMode
+	VehicleDoorState
+	VehicleDisableTowing
+	VehicleDirtLevel
+	VehicleBodyHealth
+	VehicleEngineHealth
+	VehicleLightsMultiplier
+	VehicleWheelColor
+	VehicleRearWheels
+	VehicleMod
+	VehicleModKit
+	VehicleRepair
 	VehicleDestroy
-	InteriorColor
-	BoatAnchorActive
-	CustomTires
-	LightDamaged
-	RadioStation
-	DashboardColor
-	WIndowTint
+	VehicleInteriorColor
+	VehicleBoatAnchorActive
+	VehicleCustomTires
+	VehicleLightDamaged
+	VehicleRadioStation
+	VehicleDashboardColor
+	VehicleWindowTint
 )

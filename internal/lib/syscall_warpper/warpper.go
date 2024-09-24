@@ -32,14 +32,20 @@ var freeBlipProc *syscall.Proc
 var freePedProc *syscall.Proc
 var freeColshapeProc *syscall.Proc
 var freeCheckpointProc *syscall.Proc
+var freeMarkerProc *syscall.Proc
+var freeObjectProc *syscall.Proc
 var freeDataResultProc *syscall.Proc
 var setColshapeDataProc *syscall.Proc
 var setCheckpointDataProc *syscall.Proc
+var setMarkerDataProc *syscall.Proc
+var setObjectDataProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
 var setPayerHeadDataProc *syscall.Proc
 var setPedDataProc *syscall.Proc
+var createObjectProc *syscall.Proc
+var createMarkerProc *syscall.Proc
 var createCheckPointProc *syscall.Proc
 var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
@@ -74,6 +80,8 @@ func init() {
 		freePedProc = dll.MustFindProc("free_ped")
 		freeColshapeProc = dll.MustFindProc("free_colshape")
 		freeCheckpointProc = dll.MustFindProc("free_checkpoint")
+		freeMarkerProc = dll.MustFindProc("free_marker")
+		freeObjectProc = dll.MustFindProc("free_object")
 		freeDataResultProc = dll.MustFindProc("free_data_result")
 		setPedDataProc = dll.MustFindProc("set_ped_data")
 		setPlayerDataProc = dll.MustFindProc("set_player_data")
@@ -82,6 +90,10 @@ func init() {
 		setBlipDataProc = dll.MustFindProc("set_blip_data")
 		setColshapeDataProc = dll.MustFindProc("set_colshape_data")
 		setCheckpointDataProc = dll.MustFindProc("set_checkpoint_data")
+		setMarkerDataProc = dll.MustFindProc("set_marker_data")
+		setObjectDataProc = dll.MustFindProc("set_object_data")
+		createMarkerProc = dll.MustFindProc("create_marker")
+		createObjectProc = dll.MustFindProc("create_object")
 		createCheckPointProc = dll.MustFindProc("create_checkpoint")
 		createVehicleProc = dll.MustFindProc("create_vehicle")
 		createBlipProc = dll.MustFindProc("create_blip")
@@ -112,18 +124,34 @@ func (w *SyscallWarrper) SetPedData(id uint32, pedDataType enum.PedDataType, dat
 	}
 }
 
-func (w *SyscallWarrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
-	_, _, err := setColshapeDataProc.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
-	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("set colshape data failed: %v", err.Error())
-		return
-	}
-}
-
 func (w *SyscallWarrper) SetCheckpointData(id uint32, checkpointDataType enum.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
 	_, _, err := setCheckpointDataProc.Call(uintptr(id), uintptr(checkpointDataType), uintptr(data), uintptr(metaData), uintptr(math.Float32bits(otherData)), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set checkpoint data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) SetMarkerData(id uint32, markerDataType enum.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
+	_, _, err := setMarkerDataProc.Call(uintptr(id), uintptr(markerDataType), uintptr(data), uintptr(metaData), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set marker data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) SetObjectData(id uint32, objectDataType enum.ObjectDataType, data int64, metaData uint64) {
+	_, _, err := setObjectDataProc.Call(uintptr(id), uintptr(objectDataType), uintptr(data), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set object data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
+	_, _, err := setColshapeDataProc.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set colshape data failed: %v", err.Error())
 		return
 	}
 }
@@ -296,6 +324,34 @@ func (w *SyscallWarrper) CreateCheckpoint(checkPointType uint8, posData, posMeta
 	return ret, freePtrFunc
 }
 
+func (w *SyscallWarrper) CreateMarker(markerType uint8, posData, posMetaData uint64, r, g, b, a uint8) (uintptr, func()) {
+	ret, _, err := createMarkerProc.Call(uintptr(markerType), uintptr(posData), uintptr(posMetaData), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create marker failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeMarker(ret)
+		}
+	}
+	return ret, freePtrFunc
+}
+
+func (w *SyscallWarrper) CreateObject(model uint32, posData, posMetaData, rotData, rotMetaData uint64) (uintptr, func()) {
+	ret, _, err := createObjectProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create object failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeObject(ret)
+		}
+	}
+	return ret, freePtrFunc
+}
+
 func (w *SyscallWarrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
 	ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
@@ -431,6 +487,22 @@ func (w *SyscallWarrper) FreeCheckpoint(ptr uintptr) {
 	_, _, err := freeCheckpointProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free checkpoint failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) FreeMarker(ptr uintptr) {
+	_, _, err := freeMarkerProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free marker failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) FreeObject(ptr uintptr) {
+	_, _, err := freeObjectProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free object failed: %v", err.Error())
 		return
 	}
 }

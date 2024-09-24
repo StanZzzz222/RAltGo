@@ -51,7 +51,7 @@ func (c *IColshape) SetPlayersOnly(playersOnly bool) {
 	if playersOnly {
 		value = 1
 	}
-	w.SetColshapeData(c.id, enum.PlayersOnly, int64(value), 0)
+	w.SetColshapeData(c.id, enum.ColshapePlayersOnly, int64(value), 0)
 }
 
 func (c *IColshape) SetPosition(position *entities.Vector3) {

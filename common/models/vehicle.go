@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/radio_station_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_door_state"
@@ -109,16 +108,8 @@ func (v *IVehicle) GetRotation() *entities.Vector3 {
 	}
 	return nil
 }
-func (v *IVehicle) GetPositionString() string {
-	position := v.GetPosition()
-	return fmt.Sprintf("%v,%v,%v", position.X, position.Y, position.Z)
-}
-func (v *IVehicle) GetRotationString() string {
-	rotation := v.GetRotation()
-	return fmt.Sprintf("%v,%v,%v", rotation.X, rotation.Y, rotation.Z)
-}
 func (v *IVehicle) GetLightState() vehicle_light_state_type.VehicleLightState {
-	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.LightState))
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.VehicleLightState))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -127,7 +118,7 @@ func (v *IVehicle) GetLightState() vehicle_light_state_type.VehicleLightState {
 	return vehicle_light_state_type.VehicleLightNormal
 }
 func (v *IVehicle) GetBodyHealth() uint32 {
-	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.BodyHealth))
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.VehicleBodyHealth))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -136,7 +127,7 @@ func (v *IVehicle) GetBodyHealth() uint32 {
 	return 1000
 }
 func (v *IVehicle) GetRadioStation() uint32 {
-	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.RadioStation))
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.VehicleRadioStation))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -145,7 +136,7 @@ func (v *IVehicle) GetRadioStation() uint32 {
 	return 0
 }
 func (v *IVehicle) GetDashboardColor() uint8 {
-	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.DashboardColor))
+	ret, freeDataResultFunc := w.GetData(v.id, enum.Vehicle, uint8(enum.VehicleDashboardColor))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -154,7 +145,7 @@ func (v *IVehicle) GetDashboardColor() uint8 {
 	return 0
 }
 func (v *IVehicle) IsLightDamaged(lightId vehicle_light_id_type.VehicleLightType) bool {
-	ret, freeDataResultFunc := w.GetMetaData(v.id, enum.Vehicle, uint8(enum.LightDamaged), int64(lightId))
+	ret, freeDataResultFunc := w.GetMetaData(v.id, enum.Vehicle, uint8(enum.VehicleLightDamaged), int64(lightId))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -164,12 +155,12 @@ func (v *IVehicle) IsLightDamaged(lightId vehicle_light_id_type.VehicleLightType
 }
 func (v *IVehicle) SetPrimaryColor(primaryColor uint8) {
 	v.primaryColor = primaryColor
-	w.SetVehicleData(v.id, enum.PrimaryColor, int64(primaryColor))
+	w.SetVehicleData(v.id, enum.VehiclePrimaryColor, int64(primaryColor))
 }
 
 func (v *IVehicle) SetSecondColor(secondColor uint8) {
 	v.secondColor = secondColor
-	w.SetVehicleData(v.id, enum.SecondColor, int64(secondColor))
+	w.SetVehicleData(v.id, enum.VehicleSecondColor, int64(secondColor))
 }
 
 func (v *IVehicle) SetPosition(position *entities.Vector3) {
@@ -222,7 +213,7 @@ func (v *IVehicle) SetFrozen(frozen bool) {
 }
 
 func (v *IVehicle) SetDoorState(door vehicle_door_type.VehicleDoorType, state vehicle_door_state.VehicleDoorState) {
-	w.SetVehicleMetaData(v.id, enum.DoorState, int64(door), uint64(state), "", uint8(0), uint8(0), uint8(0), uint8(0))
+	w.SetVehicleMetaData(v.id, enum.VehicleDoorState, int64(door), uint64(state), "", uint8(0), uint8(0), uint8(0), uint8(0))
 }
 
 func (v *IVehicle) SetEngineOn(engineOn bool) {
@@ -231,7 +222,7 @@ func (v *IVehicle) SetEngineOn(engineOn bool) {
 	if engineOn {
 		value = 1
 	}
-	w.SetVehicleData(v.id, enum.EngineOn, int64(value))
+	w.SetVehicleData(v.id, enum.VehicleEngineOn, int64(value))
 }
 
 func (v *IVehicle) ToggleEngine() {
@@ -240,24 +231,24 @@ func (v *IVehicle) ToggleEngine() {
 	if v.engineOn {
 		value = 1
 	}
-	w.SetVehicleData(v.id, enum.EngineOn, int64(value))
+	w.SetVehicleData(v.id, enum.VehicleEngineOn, int64(value))
 }
 
 func (v *IVehicle) SetLockState(lockState uint8) {
 	v.lockState = vehicle_lock_state_type.VehicleLockState(lockState)
-	w.SetVehicleData(v.id, enum.LockState, int64(lockState))
+	w.SetVehicleData(v.id, enum.VehicleLockState, int64(lockState))
 }
 
 func (v *IVehicle) SetLightState(lightState vehicle_light_state_type.VehicleLightState) {
 	v.lightState = lightState
-	w.SetVehicleData(v.id, enum.LightState, int64(lightState))
+	w.SetVehicleData(v.id, enum.VehicleLightState, int64(lightState))
 }
 
 func (v *IVehicle) SetHeadLightColor(headLightColor vehicle_head_light_color_type.VehicleHeadLightColorType) {
 	v.headLightColor = headLightColor
 	v.SetModKit(1)
 	v.SetMod(vehicle_mod_type.Xenon, 1)
-	w.SetVehicleData(v.id, enum.HeadLightColor, int64(headLightColor))
+	w.SetVehicleData(v.id, enum.VehicleHeadLightColor, int64(headLightColor))
 }
 
 func (v *IVehicle) SetDriftMode(driftMode bool) {
@@ -266,7 +257,7 @@ func (v *IVehicle) SetDriftMode(driftMode bool) {
 	if driftMode {
 		value = 1
 	}
-	w.SetVehicleData(v.id, enum.DriftMode, int64(value))
+	w.SetVehicleData(v.id, enum.VehicleDriftMode, int64(value))
 }
 
 func (v *IVehicle) SetDisableTowing(disableTowing bool) {
@@ -275,7 +266,7 @@ func (v *IVehicle) SetDisableTowing(disableTowing bool) {
 	if disableTowing {
 		value = 1
 	}
-	w.SetVehicleData(v.id, enum.DisableTowing, int64(value))
+	w.SetVehicleData(v.id, enum.VehicleDisableTowing, int64(value))
 }
 
 func (v *IVehicle) SetDirtLevel(dirtLevel uint8) {
@@ -286,7 +277,7 @@ func (v *IVehicle) SetDirtLevel(dirtLevel uint8) {
 		dirtLevel = 15
 	}
 	v.dirtLevel = dirtLevel
-	w.SetVehicleData(v.id, enum.DirtLevel, int64(dirtLevel))
+	w.SetVehicleData(v.id, enum.VehicleDirtLevel, int64(dirtLevel))
 }
 
 func (v *IVehicle) SetBodyHealth(bodyHealth uint32) {
@@ -297,38 +288,38 @@ func (v *IVehicle) SetBodyHealth(bodyHealth uint32) {
 		bodyHealth = 0
 	}
 	v.bodyHealth = bodyHealth
-	w.SetVehicleData(v.id, enum.BodyHealth, int64(bodyHealth))
+	w.SetVehicleData(v.id, enum.VehicleBodyHealth, int64(bodyHealth))
 }
 
 func (v *IVehicle) SetEngineHealth(engineHealth int32) {
-	w.SetVehicleData(v.id, enum.EngineHealth, int64(engineHealth))
+	w.SetVehicleData(v.id, enum.VehicleEngineHealth, int64(engineHealth))
 }
 
 func (v *IVehicle) SetLightsMultiplier(lightsMultiplier float32) {
 	v.lightsMultiplier = lightsMultiplier
-	w.SetVehicleData(v.id, enum.LightsMultiplier, int64(math.Float64bits(float64(lightsMultiplier))))
+	w.SetVehicleData(v.id, enum.VehicleLightsMultiplier, int64(math.Float64bits(float64(lightsMultiplier))))
 }
 
 func (v *IVehicle) SetWheelColor(wheelColor uint8) {
 	v.wheelColor = wheelColor
-	w.SetVehicleData(v.id, enum.WheelColor, int64(wheelColor))
+	w.SetVehicleData(v.id, enum.VehicleWheelColor, int64(wheelColor))
 }
 
 func (v *IVehicle) SetMod(modType vehicle_mod_type.VehicleModType, id uint8) {
-	w.SetVehicleMetaData(v.id, enum.Mod, int64(modType), uint64(id), "", uint8(0), uint8(0), uint8(0), uint8(0))
+	w.SetVehicleMetaData(v.id, enum.VehicleMod, int64(modType), uint64(id), "", uint8(0), uint8(0), uint8(0), uint8(0))
 }
 
 func (v *IVehicle) SetModKit(id uint8) {
-	w.SetVehicleData(v.id, enum.ModKit, int64(id))
+	w.SetVehicleData(v.id, enum.VehicleModKit, int64(id))
 }
 
 func (v *IVehicle) SetRearWheels(variation uint8) {
-	w.SetVehicleData(v.id, enum.RearWheels, int64(variation))
+	w.SetVehicleData(v.id, enum.VehicleRearWheels, int64(variation))
 }
 
 func (v *IVehicle) SetNeonColor(neonColor *entities.Rgba) {
 	v.neonColor = neonColor
-	w.SetVehicleMetaData(v.id, enum.NeonColor, int64(0), uint64(0), "", neonColor.R, neonColor.G, neonColor.B, neonColor.A)
+	w.SetVehicleMetaData(v.id, enum.VehicleNeonColor, int64(0), uint64(0), "", neonColor.R, neonColor.G, neonColor.B, neonColor.A)
 }
 
 func (v *IVehicle) SetNeonActive(neonActive bool) {
@@ -337,17 +328,17 @@ func (v *IVehicle) SetNeonActive(neonActive bool) {
 	if neonActive {
 		value = 1
 	}
-	w.SetVehicleMetaData(v.id, enum.NeonActive, int64(0), uint64(0), "", uint8(value), uint8(value), uint8(value), uint8(value))
+	w.SetVehicleMetaData(v.id, enum.VehicleNeonActive, int64(0), uint64(0), "", uint8(value), uint8(value), uint8(value), uint8(value))
 }
 
 func (v *IVehicle) SetNumberPlate(numberplate string) {
 	v.numberplate = numberplate
-	w.SetVehicleMetaData(v.id, enum.NumberPlate, int64(0), uint64(0), numberplate, uint8(0), uint8(0), uint8(0), uint8(0))
+	w.SetVehicleMetaData(v.id, enum.VehicleNumberPlate, int64(0), uint64(0), numberplate, uint8(0), uint8(0), uint8(0), uint8(0))
 }
 
 func (v *IVehicle) SetInteriorColor(color uint8) {
 	v.interiorColor = color
-	w.SetVehicleData(v.id, enum.InteriorColor, int64(color))
+	w.SetVehicleData(v.id, enum.VehicleInteriorColor, int64(color))
 }
 
 func (v *IVehicle) SetBoatAnchorActive(boatAnchorActive bool) {
@@ -356,7 +347,7 @@ func (v *IVehicle) SetBoatAnchorActive(boatAnchorActive bool) {
 	if boatAnchorActive {
 		value = 1
 	}
-	w.SetVehicleData(v.id, enum.BoatAnchorActive, int64(value))
+	w.SetVehicleData(v.id, enum.VehicleBoatAnchorActive, int64(value))
 }
 
 func (v *IVehicle) SetCustomTires(customTires bool) {
@@ -365,7 +356,7 @@ func (v *IVehicle) SetCustomTires(customTires bool) {
 	if customTires {
 		value = 1
 	}
-	w.SetVehicleData(v.id, enum.CustomTires, int64(value))
+	w.SetVehicleData(v.id, enum.VehicleCustomTires, int64(value))
 }
 
 func (v *IVehicle) SetLightDamaged(lightId vehicle_light_id_type.VehicleLightType, damaged bool) {
@@ -373,24 +364,24 @@ func (v *IVehicle) SetLightDamaged(lightId vehicle_light_id_type.VehicleLightTyp
 	if damaged {
 		value = 1
 	}
-	w.SetVehicleMetaData(v.id, enum.LightDamaged, int64(lightId), uint64(value), "", uint8(0), uint8(0), uint8(0), uint8(0))
+	w.SetVehicleMetaData(v.id, enum.VehicleLightDamaged, int64(lightId), uint64(value), "", uint8(0), uint8(0), uint8(0), uint8(0))
 }
 
 func (v *IVehicle) SetRadioStation(radioStation radio_station_type.RadioStation) {
-	w.SetVehicleData(v.id, enum.RadioStation, int64(radioStation))
+	w.SetVehicleData(v.id, enum.VehicleRadioStation, int64(radioStation))
 }
 
 func (v *IVehicle) SetDashboardColor(color uint8) {
-	w.SetVehicleData(v.id, enum.DashboardColor, int64(color))
+	w.SetVehicleData(v.id, enum.VehicleDashboardColor, int64(color))
 }
 
 func (v *IVehicle) SetWIndowTint(windowTint uint8) {
 	v.windowTint = windowTint
-	w.SetVehicleData(v.id, enum.WIndowTint, int64(windowTint))
+	w.SetVehicleData(v.id, enum.VehicleWindowTint, int64(windowTint))
 }
 
 func (v *IVehicle) Repair() {
-	w.SetVehicleData(v.id, enum.Repair, int64(0))
+	w.SetVehicleData(v.id, enum.VehicleRepair, int64(0))
 }
 
 func (v *IVehicle) Destroy() {

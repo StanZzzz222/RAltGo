@@ -14,6 +14,7 @@ const (
 	Ped
 	Blip
 	Colshape
+	Object
 	CheckPoint
 	Marker
 )

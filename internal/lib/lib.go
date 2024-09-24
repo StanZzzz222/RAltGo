@@ -90,6 +90,22 @@ func (w *Warpper) SetCheckpointData(id uint32, checkpointDataType enum.Checkpoin
 	w.syscall.SetCheckpointData(id, checkpointDataType, data, metaData, otherData, r, g, b, a)
 }
 
+func (w *Warpper) SetMarkerData(id uint32, markerDataType enum.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
+	if w.IsWindows() {
+		w.windows.SetMarkerData(id, markerDataType, data, metaData, r, g, b, a)
+		return
+	}
+	w.syscall.SetMarkerData(id, markerDataType, data, metaData, r, g, b, a)
+}
+
+func (w *Warpper) SetObjectData(id uint32, objectDataType enum.ObjectDataType, data int64, metaData uint64) {
+	if w.IsWindows() {
+		w.windows.SetObjectData(id, objectDataType, data, metaData)
+		return
+	}
+	w.syscall.SetObjectData(id, objectDataType, data, metaData)
+}
+
 func (w *Warpper) Emit(id uint32, eventName, data string) {
 	if w.IsWindows() {
 		w.windows.Emit(id, eventName, data)
@@ -205,6 +221,20 @@ func (w *Warpper) CreateCheckpoint(checkPointType uint8, posData, posMetaData ui
 		return w.windows.CreateCheckpoint(checkPointType, posData, posMetaData, radius, height, r, g, b, a, streamingDistance)
 	}
 	return w.syscall.CreateCheckpoint(checkPointType, posData, posMetaData, radius, height, r, g, b, a, streamingDistance)
+}
+
+func (w *Warpper) CreateMarker(markerType uint8, posData, posMetaData uint64, r, g, b, a uint8) (uintptr, func()) {
+	if w.IsWindows() {
+		return w.windows.CreateMarker(markerType, posData, posMetaData, r, g, b, a)
+	}
+	return w.syscall.CreateMarker(markerType, posData, posMetaData, r, g, b, a)
+}
+
+func (w *Warpper) CreateObject(model uint32, posData, posMetaData, rotData, rotMetaData uint64) (uintptr, func()) {
+	if w.IsWindows() {
+		return w.windows.CreateObject(model, posData, posMetaData, rotData, rotMetaData)
+	}
+	return w.syscall.CreateObject(model, posData, posMetaData, rotData, rotMetaData)
 }
 
 func (w *Warpper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {

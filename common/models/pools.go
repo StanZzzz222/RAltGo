@@ -17,6 +17,8 @@ type Pools struct {
 	peds        *sync.Map
 	colshapes   *sync.Map
 	checkpoints *sync.Map
+	markers     *sync.Map
+	objects     *sync.Map
 }
 
 func newPools() *Pools {
@@ -27,6 +29,8 @@ func newPools() *Pools {
 		peds:        &sync.Map{},
 		colshapes:   &sync.Map{},
 		checkpoints: &sync.Map{},
+		markers:     &sync.Map{},
+		objects:     &sync.Map{},
 	}
 }
 
@@ -66,6 +70,18 @@ func (p *Pools) PutCheckpoint(checkpoint *ICheckpoint) {
 	}
 }
 
+func (p *Pools) PutMarker(marker *IMarker) {
+	if _, ok := p.markers.Load(marker.GetId()); !ok {
+		p.markers.Store(marker.GetId(), marker)
+	}
+}
+
+func (p *Pools) PutObject(object *IObject) {
+	if _, ok := p.objects.Load(object.GetId()); !ok {
+		p.objects.Store(object.GetId(), object)
+	}
+}
+
 func (p *Pools) DestroyBlip(blip *IBlip) {
 	if _, ok := p.blips.Load(blip.GetId()); ok {
 		p.blips.Delete(blip.GetId())
@@ -99,6 +115,18 @@ func (p *Pools) DestroyColshape(colshape *IColshape) {
 func (p *Pools) DestroyCheckpoint(checkpoint *ICheckpoint) {
 	if _, ok := p.checkpoints.Load(checkpoint.GetId()); ok {
 		p.checkpoints.Delete(checkpoint.GetId())
+	}
+}
+
+func (p *Pools) DestroyMarker(marker *IMarker) {
+	if _, ok := p.markers.Load(marker.GetId()); ok {
+		p.markers.Delete(marker.GetId())
+	}
+}
+
+func (p *Pools) DestroyObject(object *IObject) {
+	if _, ok := p.objects.Load(object.GetId()); ok {
+		p.objects.Delete(object.GetId())
 	}
 }
 
@@ -144,6 +172,20 @@ func (p *Pools) GetCheckpoint(id uint32) *ICheckpoint {
 	return nil
 }
 
+func (p *Pools) GetMarker(id uint32) *IMarker {
+	if value, ok := p.markers.Load(id); ok {
+		return value.(*IMarker)
+	}
+	return nil
+}
+
+func (p *Pools) GetObject(id uint32) *IObject {
+	if value, ok := p.objects.Load(id); ok {
+		return value.(*IObject)
+	}
+	return nil
+}
+
 func (p *Pools) GetVehiclePools() *sync.Map {
 	return p.vehicles
 }
@@ -166,6 +208,14 @@ func (p *Pools) GetColshapePools() *sync.Map {
 
 func (p *Pools) GetCheckpointPools() *sync.Map {
 	return p.checkpoints
+}
+
+func (p *Pools) GetMarkerPools() *sync.Map {
+	return p.markers
+}
+
+func (p *Pools) GetObjectPools() *sync.Map {
+	return p.objects
 }
 
 func GetPools() *Pools {

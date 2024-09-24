@@ -84,6 +84,17 @@ func (mv *MValues) Dump() string {
 					"type":  enum.Colshape,
 				})
 				continue
+			case reflect.TypeOf((*IObject)(nil)).Elem():
+				param, ok := arg.(*IObject)
+				if !ok {
+					logger.LogErrorf("Invalid type for Object: %v", param.GetId())
+					continue
+				}
+				obj = append(obj, map[string]any{
+					"value": param.GetId(),
+					"type":  enum.Object,
+				})
+				continue
 			case reflect.TypeOf((*ICheckpoint)(nil)).Elem():
 				param, ok := arg.(*ICheckpoint)
 				if !ok {
@@ -93,6 +104,17 @@ func (mv *MValues) Dump() string {
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
 					"type":  enum.CheckPoint,
+				})
+				continue
+			case reflect.TypeOf((*IMarker)(nil)).Elem():
+				param, ok := arg.(*IMarker)
+				if !ok {
+					logger.LogErrorf("Invalid type for Marker: %v", param.GetId())
+					continue
+				}
+				obj = append(obj, map[string]any{
+					"value": param.GetId(),
+					"type":  enum.Marker,
 				})
 				continue
 			case reflect.TypeOf((*entities.Vector3)(nil)).Elem():

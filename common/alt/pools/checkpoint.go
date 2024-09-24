@@ -14,7 +14,7 @@ func GetCheckpoint(id uint32) *models.ICheckpoint {
 
 func GetCheckpoints() []*models.ICheckpoint {
 	var checkpoints []*models.ICheckpoint
-	var pools = models.GetPools().GetColshapePools()
+	var pools = models.GetPools().GetCheckpointPools()
 	pools.Range(func(key, value any) bool {
 		checkpoints = append(checkpoints, value.(*models.ICheckpoint))
 		return true
@@ -24,7 +24,7 @@ func GetCheckpoints() []*models.ICheckpoint {
 
 func GetCheckpointIterator() <-chan *models.ICheckpoint {
 	var checkpointChan = make(chan *models.ICheckpoint)
-	var pools = models.GetPools().GetColshapePools()
+	var pools = models.GetPools().GetCheckpointPools()
 	go func() {
 		defer close(checkpointChan)
 		pools.Range(func(key, value any) bool {
