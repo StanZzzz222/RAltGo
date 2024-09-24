@@ -30,6 +30,6 @@ func ConvertCMarker(cPtr uintptr) *CMarker {
 	return &CMarker{
 		ID:         uint32(cMarker.id),
 		MarkerType: uint8(cMarker.marker_type),
-		Position:   (*Vector3)(cMarker.position),
+		Position:   (*Vector3)(unsafe.Pointer(cMarker.position)),
 	}
 }
