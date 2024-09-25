@@ -17,8 +17,6 @@ const (
 	PedCollision
 	PedFrozen
 	PedVisible
-	PedStreamed
-	PedStreamingDistance
 	PedMaxHealth
 	PedCurrentWeapon
 	PedDestroy

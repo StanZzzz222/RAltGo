@@ -40,6 +40,7 @@ var setCheckpointDataProc *syscall.Proc
 var setMarkerDataProc *syscall.Proc
 var setObjectDataProc *syscall.Proc
 var setVehicleDataProc *syscall.Proc
+var setNetworkDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
 var setPayerHeadDataProc *syscall.Proc
@@ -83,6 +84,7 @@ func init() {
 		freeMarkerProc = dll.MustFindProc("free_marker")
 		freeObjectProc = dll.MustFindProc("free_object")
 		freeDataResultProc = dll.MustFindProc("free_data_result")
+		setNetworkDataProc = dll.MustFindProc("set_network_data")
 		setPedDataProc = dll.MustFindProc("set_ped_data")
 		setPlayerDataProc = dll.MustFindProc("set_player_data")
 		setPayerHeadDataProc = dll.MustFindProc("set_player_head_data")
@@ -298,6 +300,20 @@ func (w *SyscallWarrper) SetPlayerHeadData(id uint32, playerDataType enum.Player
 	_, _, err := setPayerHeadDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(shape1), uintptr(shape2), uintptr(shape3), uintptr(skin1), uintptr(skin2), uintptr(skin3), uintptr(math.Float32bits(shapeMix)), uintptr(math.Float32bits(skinMix)), uintptr(math.Float32bits(thirdMix)))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player head data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) SetNetworkData(id uint32, dataType, networkDataType uint8, keysData, valuesData string) {
+	keysDataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(keysData)
+	valuesDataPtr, freeValuesDataCStringFunc := w.GoStringMarshalPtr(valuesData)
+	defer func() {
+		freeValuesDataCStringFunc()
+		freeDataCStringFunc()
+	}()
+	_, _, err := setNetworkDataProc.Call(uintptr(id), uintptr(dataType), uintptr(networkDataType), keysDataPtr, valuesDataPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set network data failed: %v", err.Error())
 		return
 	}
 }

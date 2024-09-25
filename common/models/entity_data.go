@@ -25,30 +25,33 @@ func (e *EntityData) GetNetOwner() *IPlayer {
 }
 
 func (e *EntityData) SetNetOwner(owner *IPlayer, disableMigration bool) {
-	switch e.entityObjectType {
-	case enum.Player:
-		logger.LogInfof("TODO: not implement")
-		break
-	case enum.Vehicle:
-		logger.LogInfof("TODO: not implement")
-		break
-	case enum.Ped:
-		logger.LogInfof("TODO: not implement")
-		break
-	case enum.Blip:
-		logger.LogInfof("TODO: not implement")
-		break
-	case enum.Colshape:
-		logger.LogInfof("TODO: not implement")
-		break
-	case enum.Object:
-		logger.LogInfof("TODO: not implement")
-		break
-	case enum.CheckPoint:
-		logger.LogInfof("TODO: not implement")
-		break
-	case enum.Marker:
-		logger.LogInfof("TODO: not implement")
-		break
-	}
+	logger.LogInfof("TODO: not implement")
+}
+
+func (e *EntityData) SetStreamed(streamed bool) {
+	logger.LogInfof("TODO: not implement")
+}
+
+func (e *EntityData) SetStreamingDistance(streamingDistance uint32) {
+	logger.LogInfof("TODO: not implement")
+}
+
+func (e *EntityData) GetStreamed(streamed bool) {
+	logger.LogInfof("TODO: not implement")
+}
+
+func (e *EntityData) GetStreamingDistance(streamingDistance uint32) {
+	logger.LogInfof("TODO: not implement")
+}
+
+func (e *EntityData) Detach() {
+	logger.LogInfof("TODO: not implement")
+}
+
+func (e *EntityData) AttachToEntityBoneName(targetEntity any, bone *AttachToEntityBoneName) {
+	logger.LogInfof("TODO: not implement")
+}
+
+func (e *EntityData) AttachToEntityBoneIndex(targetEntity any, boneIndex *AttachToEntityBoneIndex) {
+	logger.LogInfof("TODO: not implement")
 }

@@ -17,8 +17,6 @@ const (
 	ObjectVisible
 	ObjectLodDistance
 	ObjectTextureVariation
-	ObjectStreamingDistance
-	ObjectStreamed
 	ObjectFrozen
 	ObjectCollision
 )

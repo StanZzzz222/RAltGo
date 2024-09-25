@@ -42,6 +42,8 @@ type IPlayer struct {
 	hairHighlightColor uint8
 	currentWeapon      weapon_hash.ModelHash
 	invincible         bool
+	streamed           bool
+	streamingDistance  uint32
 	time               time.Time
 	datas              *sync.Map
 	*BaseObject

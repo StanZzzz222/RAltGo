@@ -67,16 +67,14 @@ func (o *IObject) GetRotation() *entities.Vector3 {
 
 func (o *IObject) NewIObject(id, model uint32, position, rotation *entities.Vector3) *IObject {
 	return &IObject{
-		id:                id,
-		model:             model,
-		alpha:             255,
-		textureVariation:  0,
-		streamingDistance: 0,
-		streamed:          false,
-		datas:             &sync.Map{},
-		BaseObject:        NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
-		NetworkData:       NewNetworkData(id, enum.Object),
-		EntityData:        NewEntityData(id, enum.Object),
+		id:               id,
+		model:            model,
+		alpha:            255,
+		textureVariation: 0,
+		datas:            &sync.Map{},
+		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		NetworkData:      NewNetworkData(id, enum.Object),
+		EntityData:       NewEntityData(id, enum.Object),
 	}
 }
 
@@ -106,20 +104,6 @@ func (o *IObject) SetLodDistance(lodDistance uint16) {
 func (o *IObject) SetTextureVariation(textureVariation uint8) {
 	o.textureVariation = textureVariation
 	w.SetObjectData(o.id, enum.ObjectTextureVariation, int64(textureVariation), 0)
-}
-
-func (o *IObject) SetStreamingDistance(streamingDistance uint32) {
-	o.streamingDistance = streamingDistance
-	w.SetObjectData(o.id, enum.ObjectStreamingDistance, int64(streamingDistance), 0)
-}
-
-func (o *IObject) SetStreamed(streamed bool) {
-	o.streamed = streamed
-	value := 0
-	if streamed {
-		value = 1
-	}
-	w.SetObjectData(o.id, enum.ObjectStreamed, int64(value), 0)
 }
 
 func (o *IObject) SetFrozen(frozen bool) {

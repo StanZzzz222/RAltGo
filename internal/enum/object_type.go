@@ -6,6 +6,7 @@ package enum
    File: object_type.go
 */
 
+//go:generate stringer -type=ObjectType
 type ObjectType int32
 
 const (

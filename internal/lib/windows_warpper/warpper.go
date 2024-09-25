@@ -40,6 +40,7 @@ var setCheckpointDataProc *windows.Proc
 var setMarkerDataProc *windows.Proc
 var setObjectDataProc *windows.Proc
 var setVehicleDataProc *windows.Proc
+var setNetworkDataProc *windows.Proc
 var setBlipDataProc *windows.Proc
 var setPlayerDataProc *windows.Proc
 var setPayerHeadDataProc *windows.Proc
@@ -83,6 +84,7 @@ func init() {
 		freeMarkerProc = dll.MustFindProc("free_marker")
 		freeObjectProc = dll.MustFindProc("free_object")
 		freeDataResultProc = dll.MustFindProc("free_data_result")
+		setNetworkDataProc = dll.MustFindProc("set_network_data")
 		setPedDataProc = dll.MustFindProc("set_ped_data")
 		setPlayerDataProc = dll.MustFindProc("set_player_data")
 		setPayerHeadDataProc = dll.MustFindProc("set_player_head_data")
@@ -290,6 +292,20 @@ func (w *WindowsWarrper) SetPlayerMetaModelData(id uint32, playerDataType enum.P
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(model), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *WindowsWarrper) SetNetworkData(id uint32, dataType, networkDataType uint8, keysData, valuesData string) {
+	keysDataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(keysData)
+	valuesDataPtr, freeValuesDataCStringFunc := w.GoStringMarshalPtr(valuesData)
+	defer func() {
+		freeValuesDataCStringFunc()
+		freeDataCStringFunc()
+	}()
+	_, _, err := setNetworkDataProc.Call(uintptr(id), uintptr(dataType), uintptr(networkDataType), keysDataPtr, valuesDataPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set network data failed: %v", err.Error())
 		return
 	}
 }

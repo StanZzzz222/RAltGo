@@ -37,9 +37,9 @@ func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vec
 		id:                id,
 		model:             ped_hash.ModelHash(model),
 		currentWeapon:     weapon_hash.Fist,
-		streamingDistance: streamingDistance,
 		armour:            0,
 		maxHealth:         200,
+		streamingDistance: streamingDistance,
 		streamed:          streamed,
 		datas:             &sync.Map{},
 		BaseObject:        NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
@@ -132,20 +132,6 @@ func (p *IPed) SetVisible(visible bool) {
 		value = 1
 	}
 	w.SetPedData(p.id, enum.PedVisible, int64(value))
-}
-
-func (p *IPed) SetStreamed(streamed bool) {
-	p.streamed = streamed
-	value := 0
-	if streamed {
-		value = 1
-	}
-	w.SetPedData(p.id, enum.PedStreamed, int64(value))
-}
-
-func (p *IPed) SetStreamingDistance(streamingDistance uint32) {
-	p.streamingDistance = streamingDistance
-	w.SetPedData(p.id, enum.PedStreamingDistance, int64(streamingDistance))
 }
 
 func (p *IPed) SetMaxHealth(maxHealth uint16) {

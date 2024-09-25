@@ -216,6 +216,14 @@ func (w *Warpper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 	w.syscall.SetPlayerData(id, playerDataType, data)
 }
 
+func (w *Warpper) SetNetworkData(id uint32, dataType enum.ObjectType, networkDataType enum.NetworkDataType, keysData, valuesData string) {
+	if w.IsWindows() {
+		w.windows.SetNetworkData(id, uint8(dataType), uint8(networkDataType), keysData, valuesData)
+		return
+	}
+	w.syscall.SetNetworkData(id, uint8(dataType), uint8(networkDataType), keysData, valuesData)
+}
+
 func (w *Warpper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {
 	if w.IsWindows() {
 		return w.windows.CreateCheckpoint(checkPointType, posData, posMetaData, radius, height, r, g, b, a, streamingDistance)

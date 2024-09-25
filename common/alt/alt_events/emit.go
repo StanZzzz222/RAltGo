@@ -28,10 +28,12 @@ func EmitAllPlayer(eventName string, args ...any) {
 }
 
 func EmitSomePlayers(players []*models.IPlayer, eventName string, args ...any) {
+	var w = lib.GetWarpper()
 	s := scheduler.NewScheduler()
 	for _, player := range players {
 		s.AddTask(func() {
-			player.Emit(eventName, args...)
+			mvalues := models.NewMValues(args...)
+			w.Emit(player.GetId(), eventName, mvalues.Dump())
 		})
 	}
 	s.Run()
