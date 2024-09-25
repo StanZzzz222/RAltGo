@@ -375,7 +375,7 @@ func (v *IVehicle) SetDashboardColor(color uint8) {
 	w.SetVehicleData(v.id, enum.VehicleDashboardColor, int64(color))
 }
 
-func (v *IVehicle) SetWIndowTint(windowTint uint8) {
+func (v *IVehicle) SetWindowTint(windowTint uint8) {
 	v.windowTint = windowTint
 	w.SetVehicleData(v.id, enum.VehicleWindowTint, int64(windowTint))
 }
