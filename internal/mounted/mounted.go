@@ -3,8 +3,8 @@ package mounted
 import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
-	"github.com/StanZzzz222/RAltGo/common/alt/command"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
+	"github.com/StanZzzz222/RAltGo/common/command"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
