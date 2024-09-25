@@ -2,6 +2,7 @@ package alt_events
 
 import (
 	"github.com/StanZzzz222/RAltGo/common/alt/pools"
+	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
@@ -107,6 +108,26 @@ func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName
 			inputs = append(inputs, reflect.ValueOf(arg))
 		}
 		callbackValue.Call(inputs)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnLocalEvent(eventName, eventArgs string) {
+	if callback, ok := eventBus.onLocalEvents.Load(eventName); ok {
+		s := scheduler.NewScheduler()
+		s.AddTask(func() {
+			callbackValue := reflect.ValueOf(callback)
+			args := t.EventArgsParse(eventArgs)
+			inputs := make([]reflect.Value, 0)
+			if len(args) == 0 {
+				callbackValue.Call(inputs)
+				return
+			}
+			for _, arg := range args {
+				inputs = append(inputs, reflect.ValueOf(arg))
+			}
+			callbackValue.Call(inputs)
+		})
+		s.Run()
 	}
 }
 

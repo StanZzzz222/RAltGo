@@ -12,6 +12,11 @@ import (
    File: emit.go
 */
 
+func EmitLocalEvent(eventName string, args ...any) {
+	var mvalues = models.NewMValues(args...)
+	Triggers().TriggerOnLocalEvent(eventName, mvalues.Dump())
+}
+
 func EmitAllPlayer(eventName string, args ...any) {
 	var w = lib.GetWarpper()
 	s := scheduler.NewScheduler()

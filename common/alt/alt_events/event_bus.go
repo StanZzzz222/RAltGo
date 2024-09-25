@@ -19,6 +19,7 @@ import (
 
 var eventBus = &EventBus{
 	onClientEvents: &sync.Map{},
+	onLocalEvents:  &sync.Map{},
 }
 
 type EventBus struct {
@@ -34,6 +35,7 @@ type EventBus struct {
 	onChatMessage      OnChatMessageCallback
 	onCommandError     OnCommandErrorCallback
 	onClientEvents     *sync.Map
+	onLocalEvents      *sync.Map
 }
 
 func Events() *EventBus {
@@ -106,6 +108,15 @@ func (bus *EventBus) OnClientEvent(eventName string, callback any) {
 		return
 	}
 	logger.LogErrorf("OnClientEvent: unknown callback type: %v", t.Name())
+}
+
+func (bus *EventBus) OnLocalEvent(eventName string, callback any) {
+	t := reflect.TypeOf(callback)
+	if t.Kind() == reflect.Func {
+		bus.onLocalEvents.Store(eventName, callback)
+		return
+	}
+	logger.LogErrorf("OnLocalEvent: unknown callback type: %v", t.Name())
 }
 
 func checkZeroEventArgs(callback any) bool {
