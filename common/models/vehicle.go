@@ -153,6 +153,16 @@ func (v *IVehicle) IsLightDamaged(lightId vehicle_light_id_type.VehicleLightType
 	}
 	return false
 }
+func (v *IVehicle) GetDriver() *IPlayer {
+	ret, freeDataResultFunc := w.GetMetaData(v.id, enum.Vehicle, uint8(enum.VehicleDriver), int64(0))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return pools.GetPlayer(cDataResult.U32Val)
+	}
+	return nil
+}
+
 func (v *IVehicle) SetPrimaryColor(primaryColor uint8) {
 	v.primaryColor = primaryColor
 	w.SetVehicleData(v.id, enum.VehiclePrimaryColor, int64(primaryColor))

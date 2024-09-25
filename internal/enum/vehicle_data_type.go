@@ -44,4 +44,5 @@ const (
 	VehicleRadioStation
 	VehicleDashboardColor
 	VehicleWindowTint
+	VehicleDriver
 )
