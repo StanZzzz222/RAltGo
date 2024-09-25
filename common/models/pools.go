@@ -99,43 +99,43 @@ func (p *Pools) DestroyPlayer(player **IPlayer) {
 func (p *Pools) DestroyVehicle(vehicle **IVehicle) {
 	if _, ok := p.vehicles.Load((*vehicle).GetId()); ok {
 		p.vehicles.Delete((*vehicle).GetId())
-		*vehicle = nil
 	}
+	*vehicle = nil
 }
 
 func (p *Pools) DestroyPed(ped **IPed) {
 	if _, ok := p.peds.Load((*ped).GetId()); ok {
 		p.peds.Delete((*ped).GetId())
-		*ped = nil
 	}
+	*ped = nil
 }
 
 func (p *Pools) DestroyColshape(colshape **IColshape) {
 	if _, ok := p.colshapes.Load((*colshape).GetId()); ok {
 		p.colshapes.Delete((*colshape).GetId())
-		colshape = nil
 	}
+	colshape = nil
 }
 
 func (p *Pools) DestroyCheckpoint(checkpoint **ICheckpoint) {
 	if _, ok := p.checkpoints.Load((*checkpoint).GetId()); ok {
 		p.checkpoints.Delete((*checkpoint).GetId())
-		*checkpoint = nil
 	}
+	*checkpoint = nil
 }
 
 func (p *Pools) DestroyMarker(marker **IMarker) {
 	if _, ok := p.markers.Load((*marker).GetId()); ok {
 		p.markers.Delete((*marker).GetId())
-		*marker = nil
 	}
+	*marker = nil
 }
 
 func (p *Pools) DestroyObject(object **IObject) {
 	if _, ok := p.objects.Load((*object).GetId()); ok {
 		p.objects.Delete((*object).GetId())
-		*object = nil
 	}
+	*object = nil
 }
 
 func (p *Pools) GetPed(id uint32) *IPed {
