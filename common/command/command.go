@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/common/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/models"
+	"github.com/StanZzzz222/RAltGo/logger"
 	"reflect"
 	"sync"
 )
@@ -53,6 +54,39 @@ func SetCommandErrorCustomHandler(handler customCommandError) {
 
 func SetCommandErrorMessage(message string) {
 	errorMessage = message
+}
+
+func TriggerLocalCommand(name string, args ...any) {
+	if name[0] == '/' {
+		name = name[1:]
+	}
+	if !checkZeroEventArgs(args) {
+		logger.LogError("TriggerLocalCommand: should not be zero parameters")
+		return
+	}
+	if !checkFirstEventArgs(args[0]) {
+		logger.LogError("TriggerLocalCommand: The first parameter should be *models.IPlayer")
+		return
+	}
+	groups.Range(func(key, value any) bool {
+		flag := false
+		group := value.(*Group)
+		group.commands.Range(func(key, value any) bool {
+			targetName := key.(string)
+			if targetName == name {
+				flag = true
+				command := value.(*Command)
+				if command.greedy {
+					triggerGreedyCommand(command, args[0].(*models.IPlayer), args[1:]...)
+					return false
+				}
+				triggerCommand(command, args[0].(*models.IPlayer), args[1:]...)
+				return false
+			}
+			return true
+		})
+		return flag
+	})
 }
 
 func (g *Group) UseMiddleware(callback middlewareCallback) {
@@ -262,4 +296,19 @@ func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any)
 	inputs := make([]reflect.Value, 0)
 	inputs = append(inputs, reflect.ValueOf(player), reflect.ValueOf(combinedArgs))
 	callbackValue.Call(inputs)
+}
+
+func checkZeroEventArgs(args ...any) bool {
+	return len(args) != 0
+}
+
+func checkFirstEventArgs(arg any) bool {
+	var paramType = reflect.TypeOf(arg)
+	if paramType.Kind() == reflect.Ptr {
+		elemType := paramType.Elem()
+		if elemType == reflect.TypeOf((*models.IPlayer)(nil)).Elem() {
+			return true
+		}
+	}
+	return false
 }
