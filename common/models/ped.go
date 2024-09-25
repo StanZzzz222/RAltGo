@@ -167,7 +167,7 @@ func (p *IPed) SetCurrentWeaponByName(model string) {
 
 func (p *IPed) Destroy() {
 	w.SetPedData(p.id, enum.PedDestroy, int64(0))
-	pools.DestroyPed(&p)
+	pools.DestroyPed(p)
 }
 
 func (p *IPed) SetData(key string, value any) {

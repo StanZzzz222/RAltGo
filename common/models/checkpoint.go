@@ -121,7 +121,7 @@ func (c *ICheckpoint) SetIconColor(iconColor *entities.Rgba) {
 
 func (c *ICheckpoint) Destroy() {
 	w.SetCheckpointData(c.id, enum.CheckpointDestory, 0, 0, 0, 0, 0, 0, 0)
-	pools.DestroyCheckpoint(&c)
+	pools.DestroyCheckpoint(c)
 }
 
 func (c *ICheckpoint) SetData(key string, value any) {

@@ -62,7 +62,7 @@ func (c *IColshape) SetPosition(position *entities.Vector3) {
 
 func (c *IColshape) Destroy() {
 	w.SetColshapeData(c.id, enum.ColshapeDestory, 0, 0)
-	pools.DestroyColshape(&c)
+	pools.DestroyColshape(c)
 }
 
 func (c *IColshape) SetData(key string, value any) {

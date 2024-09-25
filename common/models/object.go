@@ -150,7 +150,7 @@ func (o *IObject) SetRotation(rotation *entities.Vector3) {
 
 func (o *IObject) Destroy() {
 	w.SetObjectData(o.id, enum.ObjectDestory, int64(0), 0)
-	pools.DestroyObject(&o)
+	pools.DestroyObject(o)
 }
 
 func (o *IObject) SetData(key string, value any) {

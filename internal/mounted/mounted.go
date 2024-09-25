@@ -118,7 +118,7 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 		defer func() {
 			w.FreePlayer(cPtr)
 			pools := models.GetPools()
-			pools.DestroyPlayer(&player)
+			pools.DestroyPlayer(player)
 		}()
 		if p == nil {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)

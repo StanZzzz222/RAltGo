@@ -386,7 +386,7 @@ func (v *IVehicle) Repair() {
 
 func (v *IVehicle) Destroy() {
 	w.SetVehicleData(v.id, enum.VehicleDestroy, int64(0))
-	pools.DestroyVehicle(&v)
+	pools.DestroyVehicle(v)
 }
 
 func (v *IVehicle) SetData(key string, value any) {

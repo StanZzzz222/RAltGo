@@ -148,7 +148,7 @@ func (m *IMarker) SetRotation(rotation *entities.Vector3) {
 
 func (m *IMarker) Destroy() {
 	w.SetMarkerData(m.id, enum.MarkerDestory, int64(0), 0, 0, 0, 0, 0)
-	pools.DestroyMarker(&m)
+	pools.DestroyMarker(m)
 }
 
 func (m *IMarker) SetData(key string, value any) {
