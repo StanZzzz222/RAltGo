@@ -54,6 +54,7 @@ type IBlip struct {
 	position                 *entities.Vector3
 	scale                    *entities.Vector3
 	datas                    *sync.Map
+	*NetworkData
 }
 
 func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot float32, position *entities.Vector3) *IBlip {
@@ -72,6 +73,7 @@ func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot 
 		display:       2,
 		visible:       true,
 		datas:         &sync.Map{},
+		NetworkData:   NewNetworkData(id, enum.Blip),
 	}
 }
 

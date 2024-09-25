@@ -29,6 +29,7 @@ type IMarker struct {
 	scale      *entities.Vector3
 	color      *entities.Rgba
 	datas      *sync.Map
+	*NetworkData
 }
 
 func (m *IMarker) GetId() uint32                         { return m.id }
@@ -56,18 +57,19 @@ func (m *IMarker) GetTarget() *IPlayer {
 
 func (m *IMarker) NewIMarker(id uint32, markerType uint8, position *entities.Vector3) *IMarker {
 	return &IMarker{
-		id:         id,
-		markerType: marker_type.MarkerType(markerType),
-		position:   position,
-		dimension:  hash_enums.DefaultDimension,
-		visible:    true,
-		bobUpDown:  false,
-		faceCamera: false,
-		rotating:   false,
-		dir:        nil,
-		scale:      nil,
-		color:      nil,
-		datas:      &sync.Map{},
+		id:          id,
+		markerType:  marker_type.MarkerType(markerType),
+		position:    position,
+		dimension:   hash_enums.DefaultDimension,
+		visible:     true,
+		bobUpDown:   false,
+		faceCamera:  false,
+		rotating:    false,
+		dir:         nil,
+		scale:       nil,
+		color:       nil,
+		datas:       &sync.Map{},
+		NetworkData: NewNetworkData(id, enum.Marker),
 	}
 }
 

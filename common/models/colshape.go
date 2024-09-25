@@ -22,6 +22,7 @@ type IColshape struct {
 	playersOnly  bool
 	dimension    int32
 	datas        *sync.Map
+	*NetworkData
 }
 
 func (c *IColshape) GetId() uint32                               { return c.id }
@@ -37,6 +38,7 @@ func (c *IColshape) NewIColshape(id uint32, colshapeType uint32, position *entit
 		position:     position,
 		dimension:    hash_enums.DefaultDimension,
 		datas:        &sync.Map{},
+		NetworkData:  NewNetworkData(id, enum.Colshape),
 	}
 }
 

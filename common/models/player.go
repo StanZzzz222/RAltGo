@@ -45,6 +45,8 @@ type IPlayer struct {
 	time               time.Time
 	datas              *sync.Map
 	*BaseObject
+	*NetworkData
+	*EntityData
 }
 
 func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hwIdExHash uint64, position, rotation *entities.Vector3) *IPlayer {
@@ -62,6 +64,8 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 		maxHealth:     200,
 		datas:         &sync.Map{},
 		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		NetworkData:   NewNetworkData(id, enum.Player),
+		EntityData:    NewEntityData(id, enum.Player),
 	}
 }
 

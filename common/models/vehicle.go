@@ -47,6 +47,8 @@ type IVehicle struct {
 	neonColor        *entities.Rgba
 	datas            *sync.Map
 	*BaseObject
+	*NetworkData
+	*EntityData
 }
 
 func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *entities.Vector3) *IVehicle {
@@ -65,6 +67,8 @@ func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8
 		neonColor:        &entities.Rgba{R: 0, G: 0, B: 0, A: 0},
 		datas:            &sync.Map{},
 		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		NetworkData:      NewNetworkData(id, enum.Vehicle),
+		EntityData:       NewEntityData(id, enum.Vehicle),
 	}
 }
 

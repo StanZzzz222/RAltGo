@@ -28,6 +28,8 @@ type IPed struct {
 	streamed          bool
 	datas             *sync.Map
 	*BaseObject
+	*NetworkData
+	*EntityData
 }
 
 func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3, streamingDistance uint32, streamed bool) *IPed {
@@ -41,6 +43,8 @@ func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vec
 		streamed:          streamed,
 		datas:             &sync.Map{},
 		BaseObject:        NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		NetworkData:       NewNetworkData(id, enum.Ped),
+		EntityData:        NewEntityData(id, enum.Ped),
 	}
 }
 

@@ -23,6 +23,8 @@ type IObject struct {
 	streamed          bool
 	datas             *sync.Map
 	*BaseObject
+	*NetworkData
+	*EntityData
 }
 
 func (o *IObject) GetId() uint32                { return o.id }
@@ -73,6 +75,8 @@ func (o *IObject) NewIObject(id, model uint32, position, rotation *entities.Vect
 		streamed:          false,
 		datas:             &sync.Map{},
 		BaseObject:        NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		NetworkData:       NewNetworkData(id, enum.Object),
+		EntityData:        NewEntityData(id, enum.Object),
 	}
 }
 

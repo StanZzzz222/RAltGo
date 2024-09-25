@@ -28,6 +28,8 @@ type ICheckpoint struct {
 	color          *entities.Rgba
 	iconColor      *entities.Rgba
 	datas          *sync.Map
+	*NetworkData
+	*EntityData
 }
 
 func (c *ICheckpoint) GetId() uint32                                      { return c.id }
@@ -56,6 +58,8 @@ func (c *ICheckpoint) NewICheckPoint(id uint32, checkPointType uint8, position *
 		color:          nil,
 		iconColor:      nil,
 		datas:          &sync.Map{},
+		NetworkData:    NewNetworkData(id, enum.CheckPoint),
+		EntityData:     NewEntityData(id, enum.CheckPoint),
 	}
 }
 
