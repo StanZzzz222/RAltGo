@@ -417,7 +417,7 @@ func (b *IBlip) SetScale(scale *entities.Vector3) {
 
 func (b *IBlip) Destroy() {
 	w.SetBlipData(b.id, enum.BlipDestroy, int64(0))
-	pools.DestroyBlip(&b)
+	pools.DestroyBlip(b)
 }
 
 func (b *IBlip) SetData(key string, value any) {
