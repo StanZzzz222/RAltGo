@@ -5,7 +5,6 @@ import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
-	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/internal/lib/syscall_warpper"
 	"github.com/StanZzzz222/RAltGo/internal/lib/windows_warpper"
@@ -217,21 +216,13 @@ func (w *Warpper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 	w.syscall.SetPlayerData(id, playerDataType, data)
 }
 
-func (w *Warpper) GetEntityData(id uint32, dataType enum.ObjectType, networkDataType enum.EntityDataType) (*entities.CDataResult, func()) {
+func (w *Warpper) GetEntityData(id uint32, dataType enum.ObjectType, networkDataType enum.EntityDataType) (uintptr, func()) {
 	if w.IsWindows() {
 		ret, freeEntityDataFunc := w.windows.GetEntityData(id, uint8(dataType), uint8(networkDataType))
-		res := entities.ConverCDataResult(ret)
-		if res != nil {
-			return res, freeEntityDataFunc
-		}
-		return nil, func() {}
+		return ret, freeEntityDataFunc
 	}
 	ret, freeEntityDataFunc := w.syscall.GetEntityData(id, uint8(dataType), uint8(networkDataType))
-	res := entities.ConverCDataResult(ret)
-	if res != nil {
-		return res, freeEntityDataFunc
-	}
-	return nil, func() {}
+	return ret, freeEntityDataFunc
 }
 
 func (w *Warpper) SetEntityData(id uint32, dataType enum.ObjectType, entityDataType enum.EntityDataType, entityType enum.ObjectType, data uint64, metaData uint32, attachData string) {

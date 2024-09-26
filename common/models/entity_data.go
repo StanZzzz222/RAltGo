@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"reflect"
@@ -26,9 +27,10 @@ func NewEntityData(id uint32, objectType enum.ObjectType) *EntityData {
 func (e *EntityData) GetNetOwner() *IPlayer {
 	switch e.entityObjectType {
 	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		res, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.NetOwner)
-		defer freeEntityDataFunc()
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.NetOwner)
+		res := entities.ConverCDataResult(ret)
 		if res != nil {
+			defer freeEntityDataFunc()
 			return pools.GetPlayer(res.U32Val)
 		}
 		return nil
@@ -42,9 +44,12 @@ func (e *EntityData) GetNetOwner() *IPlayer {
 func (e *EntityData) GetSyncId() SyncId {
 	switch e.entityObjectType {
 	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		res, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.SyncId)
-		defer freeEntityDataFunc()
-		return SyncId(res.U32Val)
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.SyncId)
+		res := entities.ConverCDataResult(ret)
+		if res != nil {
+			defer freeEntityDataFunc()
+			return SyncId(res.U32Val)
+		}
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the GetNetOwner method", e.entityObjectType.String())
 		break
@@ -55,9 +60,12 @@ func (e *EntityData) GetSyncId() SyncId {
 func (e *EntityData) GetStreamed() bool {
 	switch e.entityObjectType {
 	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		res, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.Streamed)
-		defer freeEntityDataFunc()
-		return res.BoolVal
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.Streamed)
+		res := entities.ConverCDataResult(ret)
+		if res != nil {
+			defer freeEntityDataFunc()
+			return res.BoolVal
+		}
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the GetStreamed method", e.entityObjectType.String())
 		break
@@ -68,9 +76,12 @@ func (e *EntityData) GetStreamed() bool {
 func (e *EntityData) GetStreamingDistance() uint32 {
 	switch e.entityObjectType {
 	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		res, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.Streamed)
-		defer freeEntityDataFunc()
-		return res.U32Val
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.Streamed)
+		res := entities.ConverCDataResult(ret)
+		if res != nil {
+			defer freeEntityDataFunc()
+			return res.U32Val
+		}
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the GetStreamingDistance method", e.entityObjectType.String())
 		break
