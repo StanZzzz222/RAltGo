@@ -67,6 +67,7 @@ func CreateBlipPointAtPlayer(player *models.IPlayer, spriteId, color uint32, nam
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
 		blip.AddTargetPlayer(player)
+		blip.AttachTo(player)
 		return blip
 	}
 	return nil
@@ -124,6 +125,7 @@ func CreateBlipAreaAtPlayer(player *models.IPlayer, color uint32, name string, p
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
 		blip.AddTargetPlayer(player)
+		blip.AttachTo(player)
 		return blip
 	}
 	return nil
@@ -194,6 +196,7 @@ func CreateBlipRadiusAtPlayer(player *models.IPlayer, color uint32, name string,
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
 		blip.AddTargetPlayer(player)
+		blip.AttachTo(player)
 		return blip
 	}
 	return nil

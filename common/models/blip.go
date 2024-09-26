@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
@@ -342,8 +343,9 @@ func (b *IBlip) RemoveTargetPlayer(player *IPlayer) {
 }
 
 func (b *IBlip) AttachTo(targetEntity any) {
-	if ok, entityType, id := checkSupport(targetEntity); ok {
+	if ok, entityType, id := b.checkAttachToSupport(targetEntity); ok {
 		b.attached = true
+		fmt.Println(entityType, id)
 		w.SetBlipMetaData(b.id, enum.BlipAttachTo, int64(entityType), uint64(id), "", 0, 0, 0, 0)
 		return
 	}
