@@ -8,8 +8,10 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
+	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
+	"github.com/goccy/go-json"
 	"runtime"
 	"strconv"
 	"strings"
@@ -151,6 +153,148 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			models.GetPools().PutVehicle(veh)
 		}
 		alt_events.Triggers().TriggerOnEnterVehicle(p, v, seat)
+	}
+}
+
+//export onEnteringVehicle
+func onEnteringVehicle(cPtr, cvPtr uintptr, seat uint8) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var player = &models.IPlayer{}
+	var veh = &models.IVehicle{}
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	if cPlayer != nil && cVehicle != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		v := models.GetPools().GetVehicle(cVehicle.ID)
+		defer func() {
+			w.FreePlayer(cPtr)
+			w.FreeVehicle(cvPtr)
+		}()
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		if v == nil {
+			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			models.GetPools().PutVehicle(veh)
+		}
+		alt_events.Triggers().TriggerOnEnteringVehicle(p, v, seat)
+	}
+}
+
+//export onConsoleCommand
+func onConsoleCommand(cNamePtr, cArgsPtr uintptr) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var args []string
+	sName := w.PtrMarshalGoString(cNamePtr)
+	sArgs := w.PtrMarshalGoString(cArgsPtr)
+	_ = json.Unmarshal([]byte(sArgs), args)
+	alt_events.Triggers().TriggerOnConsoleCommand(sName, args)
+}
+
+//export onNetOwnerChange
+func onNetOwnerChange(objectType uint8, entityId, oldNetOwnerId, newNetOwnerId uint32) {
+	defer panicRecover()
+	pools := models.GetPools()
+	switch enum.ObjectType(objectType) {
+	case enum.Player:
+		entity, oldNetOwner, newNetOwner := pools.GetPlayer(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		break
+	case enum.Vehicle:
+		entity, oldNetOwner, newNetOwner := pools.GetVehicle(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		break
+	case enum.Ped:
+		entity, oldNetOwner, newNetOwner := pools.GetPed(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		break
+	case enum.Object:
+		entity, oldNetOwner, newNetOwner := pools.GetObject(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		break
+	default:
+		break
+	}
+}
+
+//export onPlayerSpawn
+func onPlayerSpawn(cPtr uintptr) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var player = &models.IPlayer{}
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		defer w.FreePlayer(cPtr)
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		alt_events.Triggers().TriggerOnPlayerSpawn(player)
+	}
+}
+
+//export onInteriorChange
+func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var player = &models.IPlayer{}
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		defer w.FreePlayer(cPtr)
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		alt_events.Triggers().TriggerOnInteriorChange(player, oldInterior, newInterior)
+	}
+}
+
+//export onPlayerDimensionChange
+func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var player = &models.IPlayer{}
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		defer w.FreePlayer(cPtr)
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		alt_events.Triggers().TriggerOnDimensionChange(player, oldDimension, newDimension)
+	}
+}
+
+//export onChangeVehicleSeat
+func onChangeVehicleSeat(cPtr, cvPtr uintptr, oldSeat, newSeat uint8) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var player = &models.IPlayer{}
+	var veh = &models.IVehicle{}
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	if cPlayer != nil && cVehicle != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
+		v := models.GetPools().GetVehicle(cVehicle.ID)
+		defer func() {
+			w.FreePlayer(cPtr)
+			w.FreeVehicle(cvPtr)
+		}()
+		if p == nil {
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			models.GetPools().PutPlayer(p)
+		}
+		if v == nil {
+			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
+			models.GetPools().PutVehicle(veh)
+		}
+		alt_events.Triggers().TriggerOnChangeVehicleSeat(p, v, oldSeat, newSeat)
 	}
 }
 

@@ -64,6 +64,12 @@ func (t *EventBusTrigger) TriggerOnChatMessage(player *models.IPlayer, message s
 	}
 }
 
+func (t *EventBusTrigger) TriggerOnEnteringVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
+	if eventBus.onEnteringVehicle != nil {
+		eventBus.onEnteringVehicle(player, vehicle, seat)
+	}
+}
+
 func (t *EventBusTrigger) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
 	if eventBus.onEnterVehicle != nil {
 		eventBus.onEnterVehicle(player, vehicle, seat)
@@ -91,6 +97,42 @@ func (t *EventBusTrigger) TriggerOnLeaveColshape(colshapeEntityType colshape_ent
 func (t *EventBusTrigger) TriggerOnCommandError(player *models.IPlayer, commandName, desc string) {
 	if eventBus.onCommandError != nil {
 		eventBus.onCommandError(player, commandName, desc)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnConsoleCommand(name string, args []string) {
+	if eventBus.onConsoleCommand != nil {
+		eventBus.onConsoleCommand(name, args)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnNetOwnerChange(entity any, oldNetOwner *models.IPlayer, newNetOwner *models.IPlayer) {
+	if eventBus.onNetOwnerChange != nil {
+		eventBus.onNetOwnerChange(entity, oldNetOwner, newNetOwner)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnChangeVehicleSeat(player *models.IPlayer, vehicle *models.IVehicle, oldSeat, newSeat uint8) {
+	if eventBus.onChangeVehicleSeat != nil {
+		eventBus.onChangeVehicleSeat(player, vehicle, oldSeat, newSeat)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPlayerSpawn(player *models.IPlayer) {
+	if eventBus.onPlayerSpawn != nil {
+		eventBus.onPlayerSpawn(player)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnInteriorChange(player *models.IPlayer, oldInterior, newInterior uint32) {
+	if eventBus.onInteriorChange != nil {
+		eventBus.onInteriorChange(player, oldInterior, newInterior)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnDimensionChange(player *models.IPlayer, oldDimension, newDimension int32) {
+	if eventBus.onDimensionChange != nil {
+		eventBus.onDimensionChange(player, oldDimension, newDimension)
 	}
 }
 
