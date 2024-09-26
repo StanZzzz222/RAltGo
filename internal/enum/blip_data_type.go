@@ -47,4 +47,7 @@ const (
 	BlipGxtName
 	BlipType
 	BlipDestroy
+	BlipAddTargetPlayer
+	BlipRemoveTargetPlayer
+	BlipAttachTo
 )

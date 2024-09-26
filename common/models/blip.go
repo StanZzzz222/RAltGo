@@ -5,6 +5,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"math"
+	"reflect"
 	"sync"
 )
 
@@ -31,6 +32,7 @@ type IBlip struct {
 	highDetail               bool
 	missionCreator           bool
 	shortRange               bool
+	attached                 bool
 	bright                   bool
 	flashes                  bool
 	global                   bool
@@ -53,6 +55,7 @@ type IBlip struct {
 	rgbaColor                *entities.Rgba
 	position                 *entities.Vector3
 	scale                    *entities.Vector3
+	players                  *sync.Map
 	datas                    *sync.Map
 	*NetworkData
 }
@@ -72,7 +75,9 @@ func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot 
 		number:        0,
 		display:       2,
 		visible:       true,
+		attached:      false,
 		datas:         &sync.Map{},
+		players:       &sync.Map{},
 		NetworkData:   NewNetworkData(id, enum.Blip),
 	}
 }
@@ -91,6 +96,7 @@ func (b *IBlip) GetFriendly() bool                 { return b.friendly }
 func (b *IBlip) GetHighDetail() bool               { return b.highDetail }
 func (b *IBlip) GetMissionCreator() bool           { return b.missionCreator }
 func (b *IBlip) GetShortRange() bool               { return b.shortRange }
+func (b *IBlip) GetAttached() bool                 { return b.attached }
 func (b *IBlip) GetBright() bool                   { return b.bright }
 func (b *IBlip) GetFlashes() bool                  { return b.flashes }
 func (b *IBlip) GetGlobal() bool                   { return b.global }
@@ -111,6 +117,18 @@ func (b *IBlip) GetRouteColor() *entities.Rgba     { return b.routeColor }
 func (b *IBlip) GetRgbaColor() *entities.Rgba      { return b.rgbaColor }
 func (b *IBlip) GetScale() *entities.Vector3       { return b.scale }
 func (b *IBlip) GetNumber() int32                  { return b.number }
+func (b *IBlip) GetPlayers() []*IPlayer {
+	if b.global {
+		var players = make([]*IPlayer, 0)
+		b.players.Range(func(key, value any) bool {
+			player := value.(*IPlayer)
+			players = append(players, player)
+			return true
+		})
+		return players
+	}
+	return nil
+}
 func (b *IBlip) GetGxtName() string {
 	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.BlipCategory))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -276,6 +294,59 @@ func (b *IBlip) SetGlobal(global bool) {
 		value = 1
 	}
 	w.SetBlipData(b.id, enum.BlipGlobal, int64(value))
+}
+
+func (b *IBlip) SetSomePlayers(players []*IPlayer) {
+	if b.global {
+		b.SetGlobal(false)
+	}
+	b.players.Range(func(key, value any) bool {
+		player := value.(*IPlayer)
+		b.RemoveTargetPlayer(player)
+		return true
+	})
+	for _, player := range players {
+		b.AddTargetPlayer(player)
+	}
+}
+
+func (b *IBlip) SetOnlyPlayer(player *IPlayer) {
+	if b.global {
+		b.SetGlobal(false)
+	}
+	b.players.Range(func(key, value any) bool {
+		target := value.(*IPlayer)
+		b.RemoveTargetPlayer(target)
+		return true
+	})
+	b.AddTargetPlayer(player)
+}
+
+func (b *IBlip) AddTargetPlayer(player *IPlayer) {
+	if !b.checkInPlayers(player) {
+		if b.global {
+			b.SetGlobal(false)
+		}
+		b.players.Store(player.id, player)
+		w.SetBlipData(b.id, enum.BlipAddTargetPlayer, int64(player.id))
+	}
+}
+
+func (b *IBlip) RemoveTargetPlayer(player *IPlayer) {
+	if !b.global && !b.checkInPlayers(player) {
+		if !b.checkInPlayers(player) {
+			b.players.Delete(player.id)
+			w.SetBlipData(b.id, enum.BlipRemoveTargetPlayer, int64(player.id))
+		}
+	}
+}
+
+func (b *IBlip) AttachTo(targetEntity any) {
+	if ok, entityType, id := checkSupport(targetEntity); ok {
+		b.attached = true
+		w.SetBlipMetaData(b.id, enum.BlipAttachTo, int64(entityType), uint64(id), "", 0, 0, 0, 0)
+		return
+	}
 }
 
 func (b *IBlip) SetMinimalOnEdge(minimalOnEdge bool) {
@@ -463,4 +534,50 @@ func (b *IBlip) GetDatas() []any {
 		return true
 	})
 	return datas
+}
+
+func (b *IBlip) checkInPlayers(player *IPlayer) bool {
+	var flag = false
+	b.players.Range(func(key, value any) bool {
+		target := value.(*IPlayer)
+		if target.id == player.id {
+			flag = true
+			return false
+		}
+		return true
+	})
+	return flag
+}
+
+func (b *IBlip) checkAttachToSupport(targetEntity any) (bool, enum.ObjectType, uint32) {
+	var res = false
+	var entityType = enum.ObjectType(0)
+	var id uint32 = 0
+	t := reflect.TypeOf(targetEntity)
+	if t.Kind() == reflect.Ptr {
+		elemType := t.Elem()
+		switch elemType {
+		case reflect.TypeOf((*IPlayer)(nil)).Elem():
+			res = true
+			entityType = enum.Player
+			id = targetEntity.(*IPlayer).GetId()
+			break
+		case reflect.TypeOf((*IVehicle)(nil)).Elem():
+			res = true
+			entityType = enum.Vehicle
+			id = targetEntity.(*IVehicle).GetId()
+			break
+		case reflect.TypeOf((*IPed)(nil)).Elem():
+			res = true
+			entityType = enum.Ped
+			id = targetEntity.(*IPed).GetId()
+			break
+		case reflect.TypeOf((*IObject)(nil)).Elem():
+			res = true
+			entityType = enum.Object
+			id = targetEntity.(*IObject).GetId()
+			break
+		}
+	}
+	return res, entityType, id
 }
