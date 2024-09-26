@@ -27,17 +27,10 @@ func NewNetworkData(id uint32, objectType enum.ObjectType) *NetworkData {
 }
 
 func (n *NetworkData) SetMetaData(key string, value any) {
-	var keys []string
-	var datas []any
 	var warpper = lib.GetWarpper()
 	n.metaData.Store(key, value)
-	n.metaData.Range(func(key, value any) bool {
-		keys = append(keys, key.(string))
-		datas = append(datas, value)
-		return true
-	})
-	mvalues := NewMValues(datas...)
-	warpper.SetNetworkData(n.networdId, n.networkObjectType, enum.NetworkMeta, strings.Join(keys, ","), mvalues.Dump())
+	mvalues := NewMValues(value)
+	warpper.SetNetworkData(n.networdId, n.networkObjectType, enum.NetworkMeta, key, mvalues.Dump())
 }
 
 func (n *NetworkData) SetSyncedMetaData(key string, value any) {

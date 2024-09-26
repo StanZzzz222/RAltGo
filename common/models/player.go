@@ -233,7 +233,9 @@ func (p *IPlayer) Spawn(model ped_hash.ModelHash, position *entities.Vector3) {
 func (p *IPlayer) Emit(eventName string, args ...any) {
 	s := scheduler.NewScheduler()
 	s.AddTask(func() {
+		fmt.Println(args)
 		mvalues := NewMValues(args...)
+		fmt.Println(mvalues.Dump())
 		w.Emit(p.id, eventName, mvalues.Dump())
 	})
 	s.Run()
