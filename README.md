@@ -16,11 +16,13 @@
 
 **It is still under development and is not recommended for use in any production environment at the moment.**
 
-<strong>But you can try to use it and raise a related issue if you encounter problems</strong>
+<strong>You can try to use it and raise a related issue if you encounter problems</strong>
 
 **<font color="red">Note: Since the author has other things to do, he can only try to spend as much time as possible to update. You can rest assured that I will keep updating in my free time</font>**
 
-We know many people may be concerned about the performance of this module, so we've added benchmarks to the examples resources. The current code and results are below. If you have any questions, you can try the sample server. Because resource scheduling will only be performed onTick, your performance issues will be alerted by the server-side resourceManager.
+**We know many people may be concerned about the performance of this module, so we've added benchmarks to the examples resources. The current code and results are below. We think it is great to be able to achieve the current data. Of course, we will look for opportunities to continue to optimize it in the future as we continue to update it.**
+
+**Note: If you have fully tested part of the benchmark performance on the sample resources, you can calculate the TPS based on the time taken and the number of processes in the benchmark performance to calculate whether it can support your server. After our many tests, we can calculate that the current TPS of this module can fully support: 0-1800 people on the server side. With continued optimization and development in the future, we hope that it can eventually support 0-4000 people. Server side. Of course, what we need now is to implement all server-side APIs**
 
 <img title="" src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmPnMCgJRbDKQ7S6xp4HJu9vN4XQAU5ovVK7yQC764EQGg/code.png" alt="" data-align="center">
 
@@ -45,20 +47,31 @@ Object:
 11. VirtualEntityGroup - To be implemented
 12. VoiceChannel - To be implemented
 13. ConnectionInfo - To be implemented
+.... TODO: The remaining objects to be implemented, 
+.... and the real optimization after the module is completed
 
 Events:
-1. onStart - Done
-2. onServerStarted - Done
-3. onStop - Done
-4. onPlayerConnect - Done
-5. onPlayerDisconnect - Done
-6. onEnterVehicle - Done
-7. onLeaveVehicle - Done
-8. onEnterColshape - Done
-9. onLeaveColshape - Done
-10. onClientEvent - Done
-12. onCommandEvent - Done
-....
+1. OnStart - Done
+2. OnServerStarted - Done
+3. OnStop - Done
+4. OnPlayerConnect - Done
+5. OnPlayerDisconnect - Done
+6. OnEnterVehicle - Done
+7. OnLeaveVehicle - Done
+8. OnEnterColshape - Done
+9. OnLeaveColshape - Done
+10. OnClientEvent - Done
+11. OnLocalEvent - Done
+12. OnCommandEvent - Done
+13. OnConsoleCommand - Done
+14. OnEnteringVehicle - Done
+15. OnNetOwnerChange - Done
+16. OnChangeVehicleSeat - Done
+17. OnPlayerSpawn - Done
+18. OnInteriorChange - Done
+19. OnDimensionChange - Done
+.... TODO: The remaining events to be implemented, 
+.... and the real optimization after the module is completed
 ```
 
 <font color="red">Note: Because it is developed based on altv-rust, the problems that occur in altv-rust may also occur in this module!</font>
