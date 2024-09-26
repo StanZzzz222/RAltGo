@@ -4,7 +4,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/enum"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
-	"strings"
 	"sync"
 )
 
@@ -33,37 +32,62 @@ func (n *NetworkData) SetMetaData(key string, value any) {
 	warpper.SetNetworkData(n.networdId, n.networkObjectType, enum.NetworkMeta, key, mvalues.Dump())
 }
 
+func (n *NetworkData) GetMetaData(key string) any {
+	value, ok := n.metaData.Load(key)
+	if ok {
+		return value
+	}
+	return nil
+}
+
+func (n *NetworkData) HasMetaData(key string) bool {
+	_, ok := n.metaData.Load(key)
+	return ok
+}
+
 func (n *NetworkData) SetSyncedMetaData(key string, value any) {
-	var keys []string
-	var datas []any
 	var warpper = lib.GetWarpper()
-	n.metaData.Store(key, value)
-	n.metaData.Range(func(key, value any) bool {
-		keys = append(keys, key.(string))
-		datas = append(datas, value)
-		return true
-	})
-	mvalues := NewMValues(datas...)
-	warpper.SetNetworkData(n.networdId, n.networkObjectType, enum.NetworkSyncedMeta, strings.Join(keys, ","), mvalues.Dump())
+	n.syncedMetaData.Store(key, value)
+	mvalues := NewMValues(value)
+	warpper.SetNetworkData(n.networdId, n.networkObjectType, enum.NetworkSyncedMeta, key, mvalues.Dump())
+}
+
+func (n *NetworkData) GetSyncedMetaData(key string) any {
+	value, ok := n.syncedMetaData.Load(key)
+	if ok {
+		return value
+	}
+	return nil
+}
+
+func (n *NetworkData) HasSyncedMetaData(key string) bool {
+	_, ok := n.syncedMetaData.Load(key)
+	return ok
 }
 
 func (n *NetworkData) SetStreamSyncedMetaData(key string, value any) {
 	switch n.networkObjectType {
 	case enum.Player, enum.Vehicle, enum.Ped:
-		var keys []string
-		var datas []any
 		var warpper = lib.GetWarpper()
-		n.metaData.Store(key, value)
-		n.metaData.Range(func(key, value any) bool {
-			keys = append(keys, key.(string))
-			datas = append(datas, value)
-			return true
-		})
-		mvalues := NewMValues(datas...)
-		warpper.SetNetworkData(n.networdId, n.networkObjectType, enum.NetworkStreamSyncedMeta, strings.Join(keys, ","), mvalues.Dump())
+		n.streamSyncedMetaData.Store(key, value)
+		mvalues := NewMValues(value)
+		warpper.SetNetworkData(n.networdId, n.networkObjectType, enum.NetworkStreamSyncedMeta, key, mvalues.Dump())
 		break
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the SetStreamSyncedMetaData method", n.networkObjectType.String())
 		break
 	}
+}
+
+func (n *NetworkData) GetStreamSyncedMetaData(key string) any {
+	value, ok := n.streamSyncedMetaData.Load(key)
+	if ok {
+		return value
+	}
+	return nil
+}
+
+func (n *NetworkData) HasStreamSyncedMetaData(key string) bool {
+	_, ok := n.streamSyncedMetaData.Load(key)
+	return ok
 }
