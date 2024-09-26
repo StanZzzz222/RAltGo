@@ -233,7 +233,7 @@ func onPlayerSpawn(cPtr uintptr) {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
-		alt_events.Triggers().TriggerOnPlayerSpawn(player)
+		alt_events.Triggers().TriggerOnPlayerSpawn(p)
 	}
 }
 
@@ -250,7 +250,7 @@ func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
-		alt_events.Triggers().TriggerOnInteriorChange(player, oldInterior, newInterior)
+		alt_events.Triggers().TriggerOnInteriorChange(p, oldInterior, newInterior)
 	}
 }
 
@@ -267,7 +267,7 @@ func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
-		alt_events.Triggers().TriggerOnDimensionChange(player, oldDimension, newDimension)
+		alt_events.Triggers().TriggerOnDimensionChange(p, oldDimension, newDimension)
 	}
 }
 
