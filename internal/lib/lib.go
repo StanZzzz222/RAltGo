@@ -30,10 +30,9 @@ type Warpper struct {
 
 //export onTick
 func onTick() {
-	defer panicRecover()
 	if taskQueue.PopCheck() {
-		task := taskQueue.Pop()
-		task()
+		defer panicRecover()
+		taskQueue.Pop()()
 	}
 }
 
