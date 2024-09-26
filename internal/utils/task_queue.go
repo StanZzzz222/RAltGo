@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"container/list"
+	"github.com/gammazero/deque"
 	"sync"
 )
 
@@ -12,13 +12,13 @@ import (
 */
 
 type TaskQueue struct {
-	tasks *list.List
+	tasks *deque.Deque[func()]
 	rw    sync.RWMutex
 }
 
 func NewTaskQueue() *TaskQueue {
 	q := &TaskQueue{
-		tasks: list.New(),
+		tasks: deque.New[func()](),
 	}
 	return q
 }
@@ -27,18 +27,6 @@ func (q *TaskQueue) AddTask(task func()) {
 	q.rw.Lock()
 	defer q.rw.Unlock()
 	q.tasks.PushBack(task)
-}
-
-func (q *TaskQueue) GetTasks() []func() {
-	q.rw.RLock()
-	defer q.rw.RUnlock()
-
-	var tasks []func()
-	for e := q.tasks.Front(); e != nil; e = e.Next() {
-		tasks = append(tasks, e.Value.(func()))
-	}
-	q.tasks.Init()
-	return tasks
 }
 
 func (q *TaskQueue) PopCheck() bool {
@@ -53,7 +41,5 @@ func (q *TaskQueue) PopCheck() bool {
 func (q *TaskQueue) Pop() func() {
 	q.rw.Lock()
 	defer q.rw.Unlock()
-	elem := q.tasks.Front()
-	q.tasks.Remove(elem)
-	return elem.Value.(func())
+	return q.tasks.PopFront()
 }
