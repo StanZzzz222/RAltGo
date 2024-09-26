@@ -53,6 +53,8 @@ var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
 var createColshapeProc *syscall.Proc
 var createPolygonColshapeProc *syscall.Proc
+var setEntityDataProc *syscall.Proc
+var getEntityDataProc *syscall.Proc
 var getDataProc *syscall.Proc
 var emitProc *syscall.Proc
 var emitAllPlayerProc *syscall.Proc
@@ -102,6 +104,8 @@ func init() {
 		createPedProc = dll.MustFindProc("create_ped")
 		createColshapeProc = dll.MustFindProc("create_colshape")
 		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
+		getEntityDataProc = dll.MustFindProc("get_entity_data")
+		setEntityDataProc = dll.MustFindProc("set_entity_data")
 		getDataProc = dll.MustFindProc("get_data")
 		emitProc = dll.MustFindProc("emit")
 		emitAllPlayerProc = dll.MustFindProc("emit_all")
@@ -300,6 +304,30 @@ func (w *SyscallWarrper) SetPlayerHeadData(id uint32, playerDataType enum.Player
 	_, _, err := setPayerHeadDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(shape1), uintptr(shape2), uintptr(shape3), uintptr(skin1), uintptr(skin2), uintptr(skin3), uintptr(math.Float32bits(shapeMix)), uintptr(math.Float32bits(skinMix)), uintptr(math.Float32bits(thirdMix)))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player head data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) GetEntityData(id uint32, dataType, networkDataType uint8) (uintptr, func()) {
+	ret, _, err := getEntityDataProc.Call(uintptr(id), uintptr(dataType), uintptr(networkDataType))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get entity data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeDataResult(ret)
+		}
+	}
+	return ret, freeDataResultFunc
+}
+
+func (w *SyscallWarrper) SetEntityData(id uint32, dataType, entityDataType, entityType uint8, data uint64, metaData uint32, attachData string) {
+	attachDataPtr, freeAttachDataCStringFunc := w.GoStringMarshalPtr(attachData)
+	defer freeAttachDataCStringFunc()
+	_, _, err := setEntityDataProc.Call(uintptr(id), uintptr(dataType), uintptr(entityDataType), uintptr(entityType), uintptr(data), uintptr(metaData), attachDataPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set entity data failed: %v", err.Error())
 		return
 	}
 }

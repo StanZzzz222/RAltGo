@@ -53,6 +53,8 @@ var createBlipProc *windows.Proc
 var createPedProc *windows.Proc
 var createColshapeProc *windows.Proc
 var createPolygonColshapeProc *windows.Proc
+var setEntityDataProc *windows.Proc
+var getEntityDataProc *windows.Proc
 var getDataProc *windows.Proc
 var emitProc *windows.Proc
 var emitAllPlayerProc *windows.Proc
@@ -102,6 +104,8 @@ func init() {
 		createPedProc = dll.MustFindProc("create_ped")
 		createColshapeProc = dll.MustFindProc("create_colshape")
 		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
+		getEntityDataProc = dll.MustFindProc("get_entity_data")
+		setEntityDataProc = dll.MustFindProc("set_entity_data")
 		getDataProc = dll.MustFindProc("get_data")
 		emitProc = dll.MustFindProc("emit")
 		emitAllPlayerProc = dll.MustFindProc("emit_all")
@@ -292,6 +296,34 @@ func (w *WindowsWarrper) SetPlayerMetaModelData(id uint32, playerDataType enum.P
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(model), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *WindowsWarrper) GetEntityData(id uint32, dataType, networkDataType uint8) (uintptr, func()) {
+	ret, _, err := getEntityDataProc.Call(uintptr(id), uintptr(dataType), uintptr(networkDataType))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get entity data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeDataResult(ret)
+		}
+	}
+	return ret, freeDataResultFunc
+}
+
+func (w *WindowsWarrper) SetEntityData(id uint32, dataType, entityDataType, entityType uint8, data uint64, metaData uint32, attachData string) {
+	var freeCStringFunc func()
+	var strPtr = uintptr(0)
+	if len(attachData) > 0 {
+		strPtr, freeCStringFunc = w.GoStringMarshalPtr(attachData)
+		defer freeCStringFunc()
+	}
+	_, _, err := setEntityDataProc.Call(uintptr(id), uintptr(dataType), uintptr(entityDataType), uintptr(entityType), uintptr(data), uintptr(metaData), strPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set entity data failed: %v", err.Error())
 		return
 	}
 }
