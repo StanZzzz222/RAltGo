@@ -45,9 +45,7 @@ func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint3
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
-		for _, player := range players {
-			blip.AddTargetPlayer(player)
-		}
+		blip.SetSomePlayers(players)
 		return blip
 	}
 	return nil
@@ -103,9 +101,7 @@ func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name str
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
-		for _, player := range players {
-			blip.AddTargetPlayer(player)
-		}
+		blip.SetSomePlayers(players)
 		return blip
 	}
 	return nil
@@ -170,9 +166,7 @@ func CreateBlipRadiusSomePlayers(players []*models.IPlayer, color uint32, name s
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
-		for _, player := range players {
-			blip.AddTargetPlayer(player)
-		}
+		blip.SetSomePlayers(players)
 		return blip
 	}
 	return nil
