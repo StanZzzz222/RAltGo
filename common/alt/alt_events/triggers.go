@@ -124,15 +124,15 @@ func (t *EventBusTrigger) TriggerOnPlayerSpawn(player *models.IPlayer) {
 	}
 }
 
-func (t *EventBusTrigger) TriggerOnInteriorChange(player *models.IPlayer, oldInterior, newInterior uint32) {
-	if eventBus.onInteriorChange != nil {
-		eventBus.onInteriorChange(player, oldInterior, newInterior)
+func (t *EventBusTrigger) TriggerOnPlayerInteriorChange(player *models.IPlayer, oldInterior, newInterior uint32) {
+	if eventBus.onPlayerInteriorChange != nil {
+		eventBus.onPlayerInteriorChange(player, oldInterior, newInterior)
 	}
 }
 
-func (t *EventBusTrigger) TriggerOnDimensionChange(player *models.IPlayer, oldDimension, newDimension int32) {
-	if eventBus.onDimensionChange != nil {
-		eventBus.onDimensionChange(player, oldDimension, newDimension)
+func (t *EventBusTrigger) TriggerOnPlayerDimensionChange(player *models.IPlayer, oldDimension, newDimension int32) {
+	if eventBus.onPlayerDimensionChange != nil {
+		eventBus.onPlayerDimensionChange(player, oldDimension, newDimension)
 	}
 }
 

@@ -23,26 +23,26 @@ var eventBus = &EventBus{
 }
 
 type EventBus struct {
-	onStart             OnStartCallback
-	onStop              OnStopCallback
-	onServerStarted     OnServerStartedCallback
-	onPlayerConnect     OnPlayerConnectCallback
-	onPlayerDisconnect  OnPlayerDisconnectCallback
-	onConsoleCommand    OnConsoleCommandCallback
-	onNetOwnerChange    OnNetOwnerChangeCallback
-	onChangeVehicleSeat OnChangeVehicleSeatCallback
-	onPlayerSpawn       OnPlayerSpawnCallback
-	onInteriorChange    OnPlayerInteriorChangeCallback
-	onDimensionChange   OnPlayerDimensionChangeCallback
-	onEnteringVehicle   OnEnteringVehicleCallback
-	onEnterVehicle      OnEnterVehicleCallback
-	onLeaveVehicle      OnLeaveVehicleCallback
-	onEnterColshape     OnEnterColshapeCallback
-	onLeaveColshape     OnLeaveColshapeCallback
-	onChatMessage       OnChatMessageCallback
-	onCommandError      OnCommandErrorCallback
-	onClientEvents      *sync.Map
-	onLocalEvents       *sync.Map
+	onStart                 OnStartCallback
+	onStop                  OnStopCallback
+	onServerStarted         OnServerStartedCallback
+	onPlayerConnect         OnPlayerConnectCallback
+	onPlayerDisconnect      OnPlayerDisconnectCallback
+	onConsoleCommand        OnConsoleCommandCallback
+	onNetOwnerChange        OnNetOwnerChangeCallback
+	onChangeVehicleSeat     OnChangeVehicleSeatCallback
+	onPlayerSpawn           OnPlayerSpawnCallback
+	onPlayerInteriorChange  OnPlayerInteriorChangeCallback
+	onPlayerDimensionChange OnPlayerDimensionChangeCallback
+	onEnteringVehicle       OnEnteringVehicleCallback
+	onEnterVehicle          OnEnterVehicleCallback
+	onLeaveVehicle          OnLeaveVehicleCallback
+	onEnterColshape         OnEnterColshapeCallback
+	onLeaveColshape         OnLeaveColshapeCallback
+	onChatMessage           OnChatMessageCallback
+	onCommandError          OnCommandErrorCallback
+	onClientEvents          *sync.Map
+	onLocalEvents           *sync.Map
 }
 
 func Events() *EventBus {
@@ -113,12 +113,12 @@ func (bus *EventBus) OnPlayerSpawn(callback OnPlayerSpawnCallback) {
 	bus.onPlayerSpawn = callback
 }
 
-func (bus *EventBus) OnInteriorChange(callback OnPlayerInteriorChangeCallback) {
-	bus.onInteriorChange = callback
+func (bus *EventBus) OnPlayerInteriorChange(callback OnPlayerInteriorChangeCallback) {
+	bus.onPlayerInteriorChange = callback
 }
 
-func (bus *EventBus) OnDimensionChange(callback OnPlayerDimensionChangeCallback) {
-	bus.onDimensionChange = callback
+func (bus *EventBus) OnPlayerDimensionChange(callback OnPlayerDimensionChangeCallback) {
+	bus.onPlayerDimensionChange = callback
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {
