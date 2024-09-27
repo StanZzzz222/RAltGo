@@ -3,6 +3,7 @@ package logger
 import (
 	"fmt"
 	"github.com/gookit/color"
+	"os"
 	"time"
 )
 
@@ -18,6 +19,7 @@ var (
 	warningChan = make(chan string)
 	errorChan   = make(chan string)
 	printlnChan = make(chan string)
+	logFilePath = "./server.log"
 )
 
 func init() {
@@ -28,21 +30,26 @@ func init() {
 				currentTime := time.Now().Format("15:04:05")
 				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
 				color.Rgb(40, 225, 119, false).Println(msg)
+				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
 			case msg := <-infoChan:
 				currentTime := time.Now().Format("15:04:05")
 				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
 				color.Rgb(49, 122, 221, false).Println(msg)
+				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
 			case msg := <-warningChan:
 				currentTime := time.Now().Format("15:04:05")
 				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
 				color.Rgb(255, 153, 0, false).Println(msg)
+				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
 			case msg := <-errorChan:
 				currentTime := time.Now().Format("15:04:05")
 				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
 				color.Rgb(227, 80, 13, false).Println(msg)
+				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
 			case msg := <-printlnChan:
 				currentTime := time.Now().Format("15:04:05")
 				color.Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
+				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
 			}
 		}
 	}()
