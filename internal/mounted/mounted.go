@@ -190,7 +190,7 @@ func onConsoleCommand(cNamePtr, cArgsPtr uintptr) {
 	var args []string
 	sName := w.PtrMarshalGoString(cNamePtr)
 	sArgs := w.PtrMarshalGoString(cArgsPtr)
-	_ = json.Unmarshal([]byte(sArgs), args)
+	_ = json.Unmarshal([]byte(sArgs), &args)
 	alt_events.Triggers().TriggerOnConsoleCommand(sName, args)
 }
 
