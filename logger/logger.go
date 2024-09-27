@@ -20,36 +20,38 @@ var (
 	errorChan   = make(chan string)
 	printlnChan = make(chan string)
 	logFilePath = "./server.log"
+	logFile     *os.File
 )
 
 func init() {
+	logFile, _ = os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, os.ModePerm)
 	go func() {
 		for {
 			select {
 			case msg := <-successChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v]  ", currentTime))
 				color.Rgb(40, 225, 119, false).Println(msg)
-				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
+				_, _ = logFile.WriteString(fmt.Sprintf("[%v]  %v", currentTime, msg))
 			case msg := <-infoChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v]  ", currentTime))
 				color.Rgb(49, 122, 221, false).Println(msg)
-				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
+				_, _ = logFile.WriteString(fmt.Sprintf("[%v]  %v", currentTime, msg))
 			case msg := <-warningChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v]  ", currentTime))
 				color.Rgb(255, 153, 0, false).Println(msg)
-				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
+				_, _ = logFile.WriteString(fmt.Sprintf("[%v]  %v", currentTime, msg))
 			case msg := <-errorChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v]  ", currentTime))
 				color.Rgb(227, 80, 13, false).Println(msg)
-				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
+				_, _ = logFile.WriteString(fmt.Sprintf("[%v]  %v", currentTime, msg))
 			case msg := <-printlnChan:
 				currentTime := time.Now().Format("15:04:05")
 				color.Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
-				_ = os.WriteFile(logFilePath, []byte(fmt.Sprintf("[%v]  %v", currentTime, msg)), os.ModeAppend)
+				_, _ = logFile.WriteString(fmt.Sprintf("[%v]  %v", currentTime, msg))
 			}
 		}
 	}()
