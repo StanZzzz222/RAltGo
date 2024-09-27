@@ -26,16 +26,20 @@ func init() {
 			select {
 			case msg := <-successChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(40, 225, 119, false).Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(40, 225, 119, false).Println(msg)
 			case msg := <-infoChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(49, 122, 221, false).Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(49, 122, 221, false).Println(msg)
 			case msg := <-warningChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(255, 153, 0, false).Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(255, 153, 0, false).Println(msg)
 			case msg := <-errorChan:
 				currentTime := time.Now().Format("15:04:05")
-				color.Rgb(227, 80, 13, false).Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
+				color.Rgb(255, 255, 255, false).Print(fmt.Sprintf("[%v] ", currentTime))
+				color.Rgb(227, 80, 13, false).Println(msg)
 			case msg := <-printlnChan:
 				currentTime := time.Now().Format("15:04:05")
 				color.Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
