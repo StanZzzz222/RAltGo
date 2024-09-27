@@ -1,10 +1,10 @@
 package alt_events
 
 import (
+	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/common/alt/pools"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
-	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enum"
@@ -254,7 +254,7 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 					case "vector3":
 						var vec2Map = map[string]any{}
 						_ = json.Unmarshal([]byte(argValue.(string)), &vec2Map)
-						result = append(result, utils.NewVector3(float32(vec2Map["x"].(float64)), float32(vec2Map["y"].(float64)), 0))
+						result = append(result, common.NewVector3(float32(vec2Map["x"].(float64)), float32(vec2Map["y"].(float64)), 0))
 						continue
 					}
 					result = append(result, argValue.(string))

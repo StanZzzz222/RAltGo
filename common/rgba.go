@@ -1,4 +1,4 @@
-package utils
+package common
 
 import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"

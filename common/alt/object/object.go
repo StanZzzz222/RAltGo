@@ -1,8 +1,8 @@
 package object
 
 import (
+	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/common/models"
-	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"math"
@@ -32,7 +32,7 @@ func CreateObject(model uint32, position, rotation *entities.Vector3) *models.IO
 }
 
 func CreateObjectByModelName(model string, position, rotation *entities.Vector3) *models.IObject {
-	var modelHash = utils.Hash(model)
+	var modelHash = common.Hash(model)
 	var w = lib.GetWarpper()
 	var o = &models.IObject{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32

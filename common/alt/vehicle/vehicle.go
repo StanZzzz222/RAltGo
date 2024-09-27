@@ -2,8 +2,8 @@ package vehicle
 
 import "C"
 import (
+	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/common/models"
-	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums/vehicle_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
@@ -22,7 +22,7 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	rotData, rotMetaData := uint64(math.Float32bits(rotation.X))|(uint64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32
 	numplate, freeCStringFunc := w.GoStringMarshalPtr(numberPlate)
-	ret, freePtrFunc := w.CreateVehicle(utils.Hash(model), posData, posMetaData, rotData, rotMetaData, numplate, primaryColor, secondColor)
+	ret, freePtrFunc := w.CreateVehicle(common.Hash(model), posData, posMetaData, rotData, rotMetaData, numplate, primaryColor, secondColor)
 	cVeh := entities.ConvertCVehicle(ret)
 	if cVeh != nil {
 		freePtrFunc()

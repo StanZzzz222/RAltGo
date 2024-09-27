@@ -2,9 +2,9 @@ package models
 
 import (
 	"fmt"
+	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/alt/timers"
-	"github.com/StanZzzz222/RAltGo/common/utils"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
@@ -312,11 +312,11 @@ func (p *IPlayer) SetMaxArmour(maxArmour uint16) {
 }
 
 func (p *IPlayer) SetAmmo(weapon string, ammo uint16) {
-	w.SetPlayerMetaData(p.id, enum.PlayerAmmo, int64(utils.Hash(weapon)), uint64(ammo))
+	w.SetPlayerMetaData(p.id, enum.PlayerAmmo, int64(common.Hash(weapon)), uint64(ammo))
 }
 
 func (p *IPlayer) SetMaxAmmo(weapon string, ammo uint16) {
-	w.SetPlayerMetaData(p.id, enum.PlayerMaxAmmo, int64(utils.Hash(weapon)), uint64(ammo))
+	w.SetPlayerMetaData(p.id, enum.PlayerMaxAmmo, int64(common.Hash(weapon)), uint64(ammo))
 }
 
 func (p *IPlayer) SetCurrentWeapon(currentWeapon weapon_hash.ModelHash) {
@@ -325,7 +325,7 @@ func (p *IPlayer) SetCurrentWeapon(currentWeapon weapon_hash.ModelHash) {
 }
 
 func (p *IPlayer) SetCurrentWeaponByName(model string) {
-	modelHash := weapon_hash.ModelHash(utils.Hash(model))
+	modelHash := weapon_hash.ModelHash(common.Hash(model))
 	if len(modelHash.String()) > 0 {
 		p.currentWeapon = modelHash
 		w.SetPlayerData(p.id, enum.PlayerCurrentWeapon, int64(modelHash))
@@ -378,7 +378,7 @@ func (p *IPlayer) SetPedModel(model ped_hash.ModelHash) {
 }
 
 func (p *IPlayer) SetPedModelByName(model string) {
-	modelHash := ped_hash.ModelHash(utils.Hash(model))
+	modelHash := ped_hash.ModelHash(common.Hash(model))
 	if len(modelHash.String()) > 0 {
 		p.model = modelHash
 		w.SetPlayerData(p.id, enum.PlayerModel, int64(modelHash))
