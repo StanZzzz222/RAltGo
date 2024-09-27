@@ -51,26 +51,6 @@ func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint3
 	return nil
 }
 
-func CreateBlipPointAtPlayer(player *models.IPlayer, spriteId, color uint32, name string, position *entities.Vector3) *models.IBlip {
-	var w = lib.GetWarpper()
-	var blip = &models.IBlip{}
-	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
-	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Point, spriteId, color, name, posData, posMetadata, 0, 0, 0)
-	cBlip := entities.ConvertCBlip(ret)
-	if cBlip != nil {
-		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		pools := models.GetPools()
-		pools.PutBlip(blip)
-		blip.SetGlobal(false)
-		blip.AddTargetPlayer(player)
-		blip.AttachTo(player)
-		return blip
-	}
-	return nil
-}
-
 func CreateBlipArea(global bool, color uint32, name string, position *entities.Vector3, width, height float32) *models.IBlip {
 	var w = lib.GetWarpper()
 	var blip = &models.IBlip{}
@@ -102,26 +82,6 @@ func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name str
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
 		blip.SetSomePlayers(players)
-		return blip
-	}
-	return nil
-}
-
-func CreateBlipAreaAtPlayer(player *models.IPlayer, color uint32, name string, position *entities.Vector3, width, height float32) *models.IBlip {
-	var w = lib.GetWarpper()
-	var blip = &models.IBlip{}
-	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
-	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Area, 5, color, name, posData, posMetadata, width, height, 0)
-	cBlip := entities.ConvertCBlip(ret)
-	if cBlip != nil {
-		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		pools := models.GetPools()
-		pools.PutBlip(blip)
-		blip.SetGlobal(false)
-		blip.AddTargetPlayer(player)
-		blip.AttachTo(player)
 		return blip
 	}
 	return nil
@@ -167,30 +127,6 @@ func CreateBlipRadiusSomePlayers(players []*models.IPlayer, color uint32, name s
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
 		blip.SetSomePlayers(players)
-		return blip
-	}
-	return nil
-}
-
-func CreateBlipRadiusAtPlayer(player *models.IPlayer, color uint32, name string, position *entities.Vector3, radius float32, outline bool) *models.IBlip {
-	var w = lib.GetWarpper()
-	var blip = &models.IBlip{}
-	var spriteId = 9
-	if outline {
-		spriteId = 10
-	}
-	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
-	posMetadata := uint64(math.Float32bits(position.Z)) << 32
-	ret, freePtrFunc := w.CreateBlip(blip_type.Radius, uint32(spriteId), color, name, posData, posMetadata, 0, 0, radius)
-	cBlip := entities.ConvertCBlip(ret)
-	if cBlip != nil {
-		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
-		pools := models.GetPools()
-		pools.PutBlip(blip)
-		blip.SetGlobal(false)
-		blip.AddTargetPlayer(player)
-		blip.AttachTo(player)
 		return blip
 	}
 	return nil

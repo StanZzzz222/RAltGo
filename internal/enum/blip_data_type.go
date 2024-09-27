@@ -49,5 +49,4 @@ const (
 	BlipDestroy
 	BlipAddTargetPlayer
 	BlipRemoveTargetPlayer
-	BlipAttachTo
 )

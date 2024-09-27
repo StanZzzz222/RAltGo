@@ -341,14 +341,6 @@ func (b *IBlip) RemoveTargetPlayer(player *IPlayer) {
 	}
 }
 
-func (b *IBlip) AttachTo(targetEntity any) {
-	if ok, entityType, id := b.checkAttachToSupport(targetEntity); ok {
-		b.attached = true
-		w.SetBlipMetaData(b.id, enum.BlipAttachTo, int64(entityType), uint64(id), "", 0, 0, 0, 0)
-		return
-	}
-}
-
 func (b *IBlip) SetMinimalOnEdge(minimalOnEdge bool) {
 	b.minimalOnEdge = minimalOnEdge
 	value := 0
