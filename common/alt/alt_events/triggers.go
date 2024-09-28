@@ -7,7 +7,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
 	"reflect"
@@ -188,36 +188,36 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 			argValue := obj["value"]
 			t := reflect.TypeOf(argType)
 			if t.Kind() == reflect.Float64 {
-				switch enum.ObjectType(int32(argType.(float64))) {
-				case enum.Player:
+				switch enums.ObjectType(int32(argType.(float64))) {
+				case enums.Player:
 					p := pools.GetPlayer(uint32(argValue.(float64)))
 					result = append(result, p)
 					continue
-				case enum.Ped:
+				case enums.Ped:
 					p := pools.GetPed(uint32(argValue.(float64)))
 					result = append(result, p)
 					continue
-				case enum.Vehicle:
+				case enums.Vehicle:
 					v := pools.GetVehicle(uint32(argValue.(float64)))
 					result = append(result, v)
 					continue
-				case enum.Colshape:
+				case enums.Colshape:
 					c := pools.GetColshape(uint32(argValue.(float64)))
 					result = append(result, c)
 					continue
-				case enum.Object:
+				case enums.Object:
 					o := pools.GetObject(uint32(argValue.(float64)))
 					result = append(result, o)
 					continue
-				case enum.CheckPoint:
+				case enums.CheckPoint:
 					c := pools.GetCheckpoint(uint32(argValue.(float64)))
 					result = append(result, c)
 					continue
-				case enum.Marker:
+				case enums.Marker:
 					m := pools.GetMarker(uint32(argValue.(float64)))
 					result = append(result, m)
 					continue
-				case enum.Blip:
+				case enums.Blip:
 					b := pools.GetBlip(uint32(argValue.(float64)))
 					result = append(result, b)
 					continue

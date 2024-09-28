@@ -5,7 +5,7 @@ import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/internal/lib/syscall_warpper"
 	"github.com/StanZzzz222/RAltGo/internal/lib/windows_warpper"
 	"github.com/StanZzzz222/RAltGo/internal/utils"
@@ -65,7 +65,7 @@ func (w *Warpper) ModuleMain(altVersion, core, resourceName, resourceHandlers, m
 	return w.syscall.ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers)
 }
 
-func (w *Warpper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64) {
+func (w *Warpper) SetPedData(id uint32, pedDataType enums.PedDataType, data int64) {
 	if w.IsWindows() {
 		w.windows.SetPedData(id, pedDataType, data)
 		return
@@ -73,7 +73,7 @@ func (w *Warpper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64
 	w.syscall.SetPedData(id, pedDataType, data)
 }
 
-func (w *Warpper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
+func (w *Warpper) SetColshapeData(id uint32, colshapeDataType enums.ColshapeDataType, data int64, metaData uint64) {
 	if w.IsWindows() {
 		w.windows.SetColshapeData(id, colshapeDataType, data, metaData)
 		return
@@ -81,7 +81,7 @@ func (w *Warpper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataT
 	w.syscall.SetColshapeData(id, colshapeDataType, data, metaData)
 }
 
-func (w *Warpper) SetCheckpointData(id uint32, checkpointDataType enum.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
+func (w *Warpper) SetCheckpointData(id uint32, checkpointDataType enums.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
 	if w.IsWindows() {
 		w.windows.SetCheckpointData(id, checkpointDataType, data, metaData, otherData, r, g, b, a)
 		return
@@ -89,7 +89,7 @@ func (w *Warpper) SetCheckpointData(id uint32, checkpointDataType enum.Checkpoin
 	w.syscall.SetCheckpointData(id, checkpointDataType, data, metaData, otherData, r, g, b, a)
 }
 
-func (w *Warpper) SetMarkerData(id uint32, markerDataType enum.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
+func (w *Warpper) SetMarkerData(id uint32, markerDataType enums.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
 	if w.IsWindows() {
 		w.windows.SetMarkerData(id, markerDataType, data, metaData, r, g, b, a)
 		return
@@ -97,7 +97,7 @@ func (w *Warpper) SetMarkerData(id uint32, markerDataType enum.MarkerDataType, d
 	w.syscall.SetMarkerData(id, markerDataType, data, metaData, r, g, b, a)
 }
 
-func (w *Warpper) SetObjectData(id uint32, objectDataType enum.ObjectDataType, data int64, metaData uint64) {
+func (w *Warpper) SetObjectData(id uint32, objectDataType enums.ObjectDataType, data int64, metaData uint64) {
 	if w.IsWindows() {
 		w.windows.SetObjectData(id, objectDataType, data, metaData)
 		return
@@ -129,21 +129,21 @@ func (w *Warpper) OnClientEvent(eventName string, eventArgsDump string) {
 	w.syscall.OnClientEvent(eventName, eventArgsDump)
 }
 
-func (w *Warpper) GetData(id uint32, objectType enum.ObjectType, dataType uint8) (uintptr, func()) {
+func (w *Warpper) GetData(id uint32, objectType enums.ObjectType, dataType uint8) (uintptr, func()) {
 	if w.IsWindows() {
 		return w.windows.GetData(id, objectType, dataType)
 	}
 	return w.syscall.GetData(id, objectType, dataType)
 }
 
-func (w *Warpper) GetMetaData(id uint32, objectType enum.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
+func (w *Warpper) GetMetaData(id uint32, objectType enums.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
 	if w.IsWindows() {
 		return w.windows.GetMetaData(id, objectType, dataType, metaData)
 	}
 	return w.syscall.GetMetaData(id, objectType, dataType, metaData)
 }
 
-func (w *Warpper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
+func (w *Warpper) SetPedMetaData(id uint32, pedDataType enums.PedDataType, data int64, metaData uint64) {
 	if w.IsWindows() {
 		w.windows.SetPedMetaData(id, pedDataType, data, metaData)
 		return
@@ -151,7 +151,7 @@ func (w *Warpper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data i
 	w.syscall.SetPedMetaData(id, pedDataType, data, metaData)
 }
 
-func (w *Warpper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data int64) {
+func (w *Warpper) SetBlipData(id uint32, blipDataType enums.BlipDataType, data int64) {
 	if w.IsWindows() {
 		w.windows.SetBlipData(id, blipDataType, data)
 		return
@@ -159,7 +159,7 @@ func (w *Warpper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data in
 	w.syscall.SetBlipData(id, blipDataType, data)
 }
 
-func (w *Warpper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
+func (w *Warpper) SetBlipMetaData(id uint32, blipDataType enums.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
 	if w.IsWindows() {
 		w.windows.SetBlipMetaData(id, blipDataType, data, metaData, strData, r, g, b, a)
 		return
@@ -167,7 +167,7 @@ func (w *Warpper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, dat
 	w.syscall.SetBlipMetaData(id, blipDataType, data, metaData, strData, r, g, b, a)
 }
 
-func (w *Warpper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data int64) {
+func (w *Warpper) SetVehicleData(id uint32, vehicleDataType enums.VehicleDataType, data int64) {
 	if w.IsWindows() {
 		w.windows.SetVehicleData(id, vehicleDataType, data)
 		return
@@ -175,7 +175,7 @@ func (w *Warpper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType
 	w.syscall.SetVehicleData(id, vehicleDataType, data)
 }
 
-func (w *Warpper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
+func (w *Warpper) SetVehicleMetaData(id uint32, vehicleDataType enums.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
 	if w.IsWindows() {
 		w.windows.SetVehicleMetaData(id, vehicleDataType, data, metaData, strData, l, r, t, b)
 		return
@@ -183,7 +183,7 @@ func (w *Warpper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleData
 	w.syscall.SetVehicleMetaData(id, vehicleDataType, data, metaData, strData, l, r, t, b)
 }
 
-func (w *Warpper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataType, data int64, metaData uint64) {
+func (w *Warpper) SetPlayerMetaData(id uint32, playerDataType enums.PlayerDataType, data int64, metaData uint64) {
 	if w.IsWindows() {
 		w.windows.SetPlayerMetaData(id, playerDataType, data, metaData)
 		return
@@ -191,7 +191,7 @@ func (w *Warpper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataTyp
 	w.syscall.SetPlayerMetaData(id, playerDataType, data, metaData)
 }
 
-func (w *Warpper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDataType, model uint32, data int64, metaData uint64) {
+func (w *Warpper) SetPlayerMetaModelData(id uint32, playerDataType enums.PlayerDataType, model uint32, data int64, metaData uint64) {
 	if w.IsWindows() {
 		w.windows.SetPlayerMetaModelData(id, playerDataType, model, data, metaData)
 		return
@@ -199,7 +199,7 @@ func (w *Warpper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDa
 	w.syscall.SetPlayerMetaModelData(id, playerDataType, model, data, metaData)
 }
 
-func (w *Warpper) SetPlayerHeadData(id uint32, playerDataType enum.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
+func (w *Warpper) SetPlayerHeadData(id uint32, playerDataType enums.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
 	if w.IsWindows() {
 		w.windows.SetPlayerHeadData(id, playerDataType, shape1, shape2, shape3, skin1, skin2, skin3, shapeMix, skinMix, thirdMix)
 		return
@@ -207,7 +207,7 @@ func (w *Warpper) SetPlayerHeadData(id uint32, playerDataType enum.PlayerDataTyp
 	w.syscall.SetPlayerHeadData(id, playerDataType, shape1, shape2, shape3, skin1, skin2, skin3, shapeMix, skinMix, thirdMix)
 }
 
-func (w *Warpper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, data int64) {
+func (w *Warpper) SetPlayerData(id uint32, playerDataType enums.PlayerDataType, data int64) {
 	if w.IsWindows() {
 		w.windows.SetPlayerData(id, playerDataType, data)
 		return
@@ -215,7 +215,7 @@ func (w *Warpper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, d
 	w.syscall.SetPlayerData(id, playerDataType, data)
 }
 
-func (w *Warpper) GetEntityData(id uint32, dataType enum.ObjectType, networkDataType enum.EntityDataType) (uintptr, func()) {
+func (w *Warpper) GetEntityData(id uint32, dataType enums.ObjectType, networkDataType enums.EntityDataType) (uintptr, func()) {
 	if w.IsWindows() {
 		ret, freeEntityDataFunc := w.windows.GetEntityData(id, uint8(dataType), uint8(networkDataType))
 		return ret, freeEntityDataFunc
@@ -224,7 +224,7 @@ func (w *Warpper) GetEntityData(id uint32, dataType enum.ObjectType, networkData
 	return ret, freeEntityDataFunc
 }
 
-func (w *Warpper) SetEntityData(id uint32, dataType enum.ObjectType, entityDataType enum.EntityDataType, entityType enum.ObjectType, data uint64, metaData uint32, attachData string) {
+func (w *Warpper) SetEntityData(id uint32, dataType enums.ObjectType, entityDataType enums.EntityDataType, entityType enums.ObjectType, data uint64, metaData uint32, attachData string) {
 	if w.IsWindows() {
 		w.windows.SetEntityData(id, uint8(dataType), uint8(entityDataType), uint8(entityType), data, metaData, attachData)
 		return
@@ -232,7 +232,7 @@ func (w *Warpper) SetEntityData(id uint32, dataType enum.ObjectType, entityDataT
 	w.syscall.SetEntityData(id, uint8(dataType), uint8(entityDataType), uint8(entityType), data, metaData, attachData)
 }
 
-func (w *Warpper) SetNetworkData(id uint32, dataType enum.ObjectType, networkDataType enum.NetworkDataType, keysData, valuesData string) {
+func (w *Warpper) SetNetworkData(id uint32, dataType enums.ObjectType, networkDataType enums.NetworkDataType, keysData, valuesData string) {
 	if w.IsWindows() {
 		w.windows.SetNetworkData(id, uint8(dataType), uint8(networkDataType), keysData, valuesData)
 		return

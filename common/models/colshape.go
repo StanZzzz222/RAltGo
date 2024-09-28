@@ -4,7 +4,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
 	"sync"
 )
@@ -38,13 +38,13 @@ func (c *IColshape) NewIColshape(id uint32, colshapeType uint32, position *entit
 		position:     position,
 		dimension:    hash_enums.DefaultDimension,
 		datas:        &sync.Map{},
-		NetworkData:  NewNetworkData(id, enum.Colshape),
+		NetworkData:  NewNetworkData(id, enums.Colshape),
 	}
 }
 
 func (c *IColshape) SetDimension(dimension int32) {
 	c.dimension = dimension
-	w.SetColshapeData(c.id, enum.ColshapeDimension, int64(dimension), 0)
+	w.SetColshapeData(c.id, enums.ColshapeDimension, int64(dimension), 0)
 }
 
 func (c *IColshape) SetPlayersOnly(playersOnly bool) {
@@ -53,17 +53,17 @@ func (c *IColshape) SetPlayersOnly(playersOnly bool) {
 	if playersOnly {
 		value = 1
 	}
-	w.SetColshapeData(c.id, enum.ColshapePlayersOnly, int64(value), 0)
+	w.SetColshapeData(c.id, enums.ColshapePlayersOnly, int64(value), 0)
 }
 
 func (c *IColshape) SetPosition(position *entities.Vector3) {
 	c.position = position
 	posData, posMetaData := int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
-	w.SetColshapeData(c.id, enum.ColshapePosition, posData, posMetaData)
+	w.SetColshapeData(c.id, enums.ColshapePosition, posData, posMetaData)
 }
 
 func (c *IColshape) Destroy() {
-	w.SetColshapeData(c.id, enum.ColshapeDestory, 0, 0)
+	w.SetColshapeData(c.id, enums.ColshapeDestory, 0, 0)
 	pools.DestroyColshape(c)
 }
 

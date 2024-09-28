@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
 	"os"
@@ -37,7 +37,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.Player,
+					"type":  enums.Player,
 				})
 				continue
 			case reflect.TypeOf((*IVehicle)(nil)).Elem():
@@ -48,7 +48,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.Vehicle,
+					"type":  enums.Vehicle,
 				})
 				continue
 			case reflect.TypeOf((*IBlip)(nil)).Elem():
@@ -59,7 +59,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.Vehicle,
+					"type":  enums.Vehicle,
 				})
 				continue
 			case reflect.TypeOf((*IPed)(nil)).Elem():
@@ -70,7 +70,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.Vehicle,
+					"type":  enums.Vehicle,
 				})
 				continue
 			case reflect.TypeOf((*IColshape)(nil)).Elem():
@@ -81,7 +81,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.Colshape,
+					"type":  enums.Colshape,
 				})
 				continue
 			case reflect.TypeOf((*IObject)(nil)).Elem():
@@ -92,7 +92,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.Object,
+					"type":  enums.Object,
 				})
 				continue
 			case reflect.TypeOf((*ICheckpoint)(nil)).Elem():
@@ -103,7 +103,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.CheckPoint,
+					"type":  enums.CheckPoint,
 				})
 				continue
 			case reflect.TypeOf((*IMarker)(nil)).Elem():
@@ -114,7 +114,7 @@ func (mv *MValues) Dump() string {
 				}
 				obj = append(obj, map[string]any{
 					"value": param.GetId(),
-					"type":  enum.Marker,
+					"type":  enums.Marker,
 				})
 				continue
 			case reflect.TypeOf((*entities.Vector3)(nil)).Elem():

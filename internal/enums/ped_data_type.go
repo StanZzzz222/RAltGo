@@ -1,4 +1,4 @@
-package enum
+package enums
 
 /*
    Create by zyx

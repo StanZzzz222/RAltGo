@@ -3,7 +3,7 @@ package models
 import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
 	"reflect"
 	"sync"
@@ -78,7 +78,7 @@ func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot 
 		attached:      false,
 		datas:         &sync.Map{},
 		players:       &sync.Map{},
-		NetworkData:   NewNetworkData(id, enum.Blip),
+		NetworkData:   NewNetworkData(id, enums.Blip),
 	}
 }
 
@@ -130,7 +130,7 @@ func (b *IBlip) GetPlayers() []*IPlayer {
 	return nil
 }
 func (b *IBlip) GetGxtName() string {
-	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.BlipCategory))
+	ret, freeDataResultFunc := w.GetData(b.id, enums.Blip, uint8(enums.BlipCategory))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -139,7 +139,7 @@ func (b *IBlip) GetGxtName() string {
 	return ""
 }
 func (b *IBlip) GetCategory() uint32 {
-	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.BlipCategory))
+	ret, freeDataResultFunc := w.GetData(b.id, enums.Blip, uint8(enums.BlipCategory))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -148,7 +148,7 @@ func (b *IBlip) GetCategory() uint32 {
 	return 0
 }
 func (b *IBlip) GetRot() float32 {
-	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.BlipRotation))
+	ret, freeDataResultFunc := w.GetData(b.id, enums.Blip, uint8(enums.BlipRotation))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -157,7 +157,7 @@ func (b *IBlip) GetRot() float32 {
 	return 0
 }
 func (b *IBlip) GetPosition() *entities.Vector3 {
-	ret, freeDataResultFunc := w.GetData(b.id, enum.Blip, uint8(enum.BlipPosition))
+	ret, freeDataResultFunc := w.GetData(b.id, enums.Blip, uint8(enums.BlipPosition))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -168,17 +168,17 @@ func (b *IBlip) GetPosition() *entities.Vector3 {
 
 func (b *IBlip) SetSprite(spriteId uint32) {
 	b.spriteId = spriteId
-	w.SetBlipData(b.id, enum.BlipSprite, int64(spriteId))
+	w.SetBlipData(b.id, enums.BlipSprite, int64(spriteId))
 }
 
 func (b *IBlip) SetColor(color uint32) {
 	b.color = color
-	w.SetBlipData(b.id, enum.BlipColor, int64(color))
+	w.SetBlipData(b.id, enums.BlipColor, int64(color))
 }
 
 func (b *IBlip) SetRGBAColor(rgbaColor *entities.Rgba) {
 	b.rgbaColor = rgbaColor
-	w.SetBlipMetaData(b.id, enum.BlipRgbaColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
+	w.SetBlipMetaData(b.id, enums.BlipRgbaColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
 }
 
 func (b *IBlip) SetVisible(visible bool) {
@@ -187,17 +187,17 @@ func (b *IBlip) SetVisible(visible bool) {
 	if visible {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipVisible, int64(value))
+	w.SetBlipData(b.id, enums.BlipVisible, int64(value))
 }
 
 func (b *IBlip) SetDisplay(display uint32) {
 	b.display = display
-	w.SetBlipData(b.id, enum.BlipDisplay, int64(display))
+	w.SetBlipData(b.id, enums.BlipDisplay, int64(display))
 }
 
 func (b *IBlip) SetAlpha(alpha uint32) {
 	b.alpha = alpha
-	w.SetBlipData(b.id, enum.BlipAlpha, int64(alpha))
+	w.SetBlipData(b.id, enums.BlipAlpha, int64(alpha))
 }
 
 func (b *IBlip) SetFriendly(friendly bool) {
@@ -206,7 +206,7 @@ func (b *IBlip) SetFriendly(friendly bool) {
 	if friendly {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipFriendly, int64(value))
+	w.SetBlipData(b.id, enums.BlipFriendly, int64(value))
 }
 
 func (b *IBlip) SetHighDetail(highDetail bool) {
@@ -215,7 +215,7 @@ func (b *IBlip) SetHighDetail(highDetail bool) {
 	if highDetail {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipHighDetail, int64(value))
+	w.SetBlipData(b.id, enums.BlipHighDetail, int64(value))
 }
 
 func (b *IBlip) SetMissionCreator(missionCreator bool) {
@@ -224,7 +224,7 @@ func (b *IBlip) SetMissionCreator(missionCreator bool) {
 	if missionCreator {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipMissionCreator, int64(value))
+	w.SetBlipData(b.id, enums.BlipMissionCreator, int64(value))
 }
 
 func (b *IBlip) SetShortRange(shortRange bool) {
@@ -233,7 +233,7 @@ func (b *IBlip) SetShortRange(shortRange bool) {
 	if shortRange {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipShortRange, int64(value))
+	w.SetBlipData(b.id, enums.BlipShortRange, int64(value))
 }
 
 func (b *IBlip) SetBright(bright bool) {
@@ -242,7 +242,7 @@ func (b *IBlip) SetBright(bright bool) {
 	if bright {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipBright, int64(value))
+	w.SetBlipData(b.id, enums.BlipBright, int64(value))
 }
 
 func (b *IBlip) SetCrewIndicatorVisible(crewIndicatorVisible bool) {
@@ -251,22 +251,22 @@ func (b *IBlip) SetCrewIndicatorVisible(crewIndicatorVisible bool) {
 	if crewIndicatorVisible {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipCrewIndicatorVisible, int64(value))
+	w.SetBlipData(b.id, enums.BlipCrewIndicatorVisible, int64(value))
 }
 
 func (b *IBlip) SetCategory(category uint32) {
 	b.category = category
-	w.SetBlipData(b.id, enum.BlipCategory, int64(category))
+	w.SetBlipData(b.id, enums.BlipCategory, int64(category))
 }
 
 func (b *IBlip) SetFlashInterval(flashInterval uint32) {
 	b.flashInterval = flashInterval
-	w.SetBlipData(b.id, enum.BlipFlashInterval, int64(flashInterval))
+	w.SetBlipData(b.id, enums.BlipFlashInterval, int64(flashInterval))
 }
 
 func (b *IBlip) SetFlashTimer(flashTimer uint32) {
 	b.flashTimer = flashTimer
-	w.SetBlipData(b.id, enum.BlipFlashTimer, int64(flashTimer))
+	w.SetBlipData(b.id, enums.BlipFlashTimer, int64(flashTimer))
 }
 
 func (b *IBlip) SetFlashes(flashes bool) {
@@ -275,7 +275,7 @@ func (b *IBlip) SetFlashes(flashes bool) {
 	if flashes {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipFlashes, int64(value))
+	w.SetBlipData(b.id, enums.BlipFlashes, int64(value))
 }
 
 func (b *IBlip) SetFlashesAlternate(flashesAlternate bool) {
@@ -284,7 +284,7 @@ func (b *IBlip) SetFlashesAlternate(flashesAlternate bool) {
 	if flashesAlternate {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipFlashesAlternate, int64(value))
+	w.SetBlipData(b.id, enums.BlipFlashesAlternate, int64(value))
 }
 
 func (b *IBlip) SetGlobal(global bool) {
@@ -293,7 +293,7 @@ func (b *IBlip) SetGlobal(global bool) {
 	if global {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipGlobal, int64(value))
+	w.SetBlipData(b.id, enums.BlipGlobal, int64(value))
 }
 
 func (b *IBlip) SetSomePlayers(players []*IPlayer) {
@@ -328,7 +328,7 @@ func (b *IBlip) AddTargetPlayer(player *IPlayer) {
 			b.SetGlobal(false)
 		}
 		b.players.Store(player.id, player)
-		w.SetBlipData(b.id, enum.BlipAddTargetPlayer, int64(player.id))
+		w.SetBlipData(b.id, enums.BlipAddTargetPlayer, int64(player.id))
 	}
 }
 
@@ -336,7 +336,7 @@ func (b *IBlip) RemoveTargetPlayer(player *IPlayer) {
 	if !b.global && !b.checkInPlayers(player) {
 		if !b.checkInPlayers(player) {
 			b.players.Delete(player.id)
-			w.SetBlipData(b.id, enum.BlipRemoveTargetPlayer, int64(player.id))
+			w.SetBlipData(b.id, enums.BlipRemoveTargetPlayer, int64(player.id))
 		}
 	}
 }
@@ -347,7 +347,7 @@ func (b *IBlip) SetMinimalOnEdge(minimalOnEdge bool) {
 	if minimalOnEdge {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipMinimalOnEdge, int64(value))
+	w.SetBlipData(b.id, enums.BlipMinimalOnEdge, int64(value))
 }
 
 func (b *IBlip) SetRoute(route bool) {
@@ -356,7 +356,7 @@ func (b *IBlip) SetRoute(route bool) {
 	if route {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipRoute, int64(value))
+	w.SetBlipData(b.id, enums.BlipRoute, int64(value))
 }
 
 func (b *IBlip) SetPulse(pulse bool) {
@@ -365,7 +365,7 @@ func (b *IBlip) SetPulse(pulse bool) {
 	if pulse {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipPulse, int64(value))
+	w.SetBlipData(b.id, enums.BlipPulse, int64(value))
 }
 
 func (b *IBlip) SetHiddenOnLegend(hiddenOnLegend bool) {
@@ -374,7 +374,7 @@ func (b *IBlip) SetHiddenOnLegend(hiddenOnLegend bool) {
 	if hiddenOnLegend {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipHiddenOnLegend, int64(value))
+	w.SetBlipData(b.id, enums.BlipHiddenOnLegend, int64(value))
 }
 
 func (b *IBlip) SetOutlineIndicatorVisible(outlineIndicatorVisible bool) {
@@ -383,12 +383,12 @@ func (b *IBlip) SetOutlineIndicatorVisible(outlineIndicatorVisible bool) {
 	if outlineIndicatorVisible {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipOutlineIndicatorVisible, int64(value))
+	w.SetBlipData(b.id, enums.BlipOutlineIndicatorVisible, int64(value))
 }
 
 func (b *IBlip) SetRot(rot float32) {
 	b.rot = rot
-	w.SetBlipData(b.id, enum.BlipRotation, int64(math.Float64bits(float64(rot))))
+	w.SetBlipData(b.id, enums.BlipRotation, int64(math.Float64bits(float64(rot))))
 }
 
 func (b *IBlip) SetShrinked(shrinked bool) {
@@ -397,7 +397,7 @@ func (b *IBlip) SetShrinked(shrinked bool) {
 	if shrinked {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipShrinked, int64(value))
+	w.SetBlipData(b.id, enums.BlipShrinked, int64(value))
 }
 
 func (b *IBlip) SetShowCone(showCone bool) {
@@ -406,7 +406,7 @@ func (b *IBlip) SetShowCone(showCone bool) {
 	if showCone {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipShowCone, int64(value))
+	w.SetBlipData(b.id, enums.BlipShowCone, int64(value))
 }
 
 func (b *IBlip) SetTickVisible(tickVisible bool) {
@@ -415,7 +415,7 @@ func (b *IBlip) SetTickVisible(tickVisible bool) {
 	if tickVisible {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipTickVisible, int64(value))
+	w.SetBlipData(b.id, enums.BlipTickVisible, int64(value))
 }
 
 func (b *IBlip) SetUseHeightIndicatorOnEdge(useHeightIndicatorOnEdge bool) {
@@ -424,22 +424,22 @@ func (b *IBlip) SetUseHeightIndicatorOnEdge(useHeightIndicatorOnEdge bool) {
 	if useHeightIndicatorOnEdge {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipUseHeightIndicatorOnEdge, int64(value))
+	w.SetBlipData(b.id, enums.BlipUseHeightIndicatorOnEdge, int64(value))
 }
 
 func (b *IBlip) SetPosition(position *entities.Vector3) {
 	b.position = position
-	w.SetBlipMetaData(b.id, enum.BlipPosition, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32, "", 0, 0, 0, 0)
+	w.SetBlipMetaData(b.id, enums.BlipPosition, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32, "", 0, 0, 0, 0)
 }
 
 func (b *IBlip) SetName(name string) {
 	b.name = name
-	w.SetBlipMetaData(b.id, enum.BlipName, 0, 0, name, 0, 0, 0, 0)
+	w.SetBlipMetaData(b.id, enums.BlipName, 0, 0, name, 0, 0, 0, 0)
 }
 
 func (b *IBlip) SetRouteColor(rgbaColor *entities.Rgba) {
 	b.routeColor = rgbaColor
-	w.SetBlipMetaData(b.id, enum.BlipRouteColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
+	w.SetBlipMetaData(b.id, enums.BlipRouteColor, 0, 0, "", rgbaColor.R, rgbaColor.G, rgbaColor.B, rgbaColor.A)
 }
 
 func (b *IBlip) SetHeadingIndicatorVisible(headingIndicatorVisible bool) {
@@ -448,7 +448,7 @@ func (b *IBlip) SetHeadingIndicatorVisible(headingIndicatorVisible bool) {
 	if headingIndicatorVisible {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipHeadingIndicatorVisible, int64(value))
+	w.SetBlipData(b.id, enums.BlipHeadingIndicatorVisible, int64(value))
 }
 
 func (b *IBlip) SetShortHeightThreshold(shortHeightThreshold bool) {
@@ -457,31 +457,31 @@ func (b *IBlip) SetShortHeightThreshold(shortHeightThreshold bool) {
 	if shortHeightThreshold {
 		value = 1
 	}
-	w.SetBlipData(b.id, enum.BlipShortHeightThreshold, int64(value))
+	w.SetBlipData(b.id, enums.BlipShortHeightThreshold, int64(value))
 }
 
 func (b *IBlip) SetNumber(number int32) {
 	b.number = number
-	w.SetBlipData(b.id, enum.BlipNumber, int64(number))
+	w.SetBlipData(b.id, enums.BlipNumber, int64(number))
 }
 
 func (b *IBlip) SetType(blipType blip_type.BlipType) {
 	b.blipType = blipType
-	w.SetBlipData(b.id, enum.BlipType, int64(blipType))
+	w.SetBlipData(b.id, enums.BlipType, int64(blipType))
 }
 
 func (b *IBlip) SetGxtName(gxtName string) {
 	b.gxtName = gxtName
-	w.SetBlipMetaData(b.id, enum.BlipGxtName, 0, 0, gxtName, 0, 0, 0, 0)
+	w.SetBlipMetaData(b.id, enums.BlipGxtName, 0, 0, gxtName, 0, 0, 0, 0)
 }
 
 func (b *IBlip) SetScale(scale *entities.Vector3) {
 	b.scale = scale
-	w.SetBlipMetaData(b.id, enum.BlipScale, int64(math.Float32bits(scale.X))|(int64(math.Float32bits(scale.Y))<<32), 0, "", 0, 0, 0, 0)
+	w.SetBlipMetaData(b.id, enums.BlipScale, int64(math.Float32bits(scale.X))|(int64(math.Float32bits(scale.Y))<<32), 0, "", 0, 0, 0, 0)
 }
 
 func (b *IBlip) Destroy() {
-	w.SetBlipData(b.id, enum.BlipDestroy, int64(0))
+	w.SetBlipData(b.id, enums.BlipDestroy, int64(0))
 	pools.DestroyBlip(b)
 }
 
@@ -541,9 +541,9 @@ func (b *IBlip) checkInPlayers(player *IPlayer) bool {
 	return flag
 }
 
-func (b *IBlip) checkAttachToSupport(targetEntity any) (bool, enum.ObjectType, uint32) {
+func (b *IBlip) checkAttachToSupport(targetEntity any) (bool, enums.ObjectType, uint32) {
 	var res = false
-	var entityType = enum.ObjectType(0)
+	var entityType = enums.ObjectType(0)
 	var id uint32 = 0
 	t := reflect.TypeOf(targetEntity)
 	if t.Kind() == reflect.Ptr {
@@ -551,22 +551,22 @@ func (b *IBlip) checkAttachToSupport(targetEntity any) (bool, enum.ObjectType, u
 		switch elemType {
 		case reflect.TypeOf((*IPlayer)(nil)).Elem():
 			res = true
-			entityType = enum.Player
+			entityType = enums.Player
 			id = targetEntity.(*IPlayer).GetId()
 			break
 		case reflect.TypeOf((*IVehicle)(nil)).Elem():
 			res = true
-			entityType = enum.Vehicle
+			entityType = enums.Vehicle
 			id = targetEntity.(*IVehicle).GetId()
 			break
 		case reflect.TypeOf((*IPed)(nil)).Elem():
 			res = true
-			entityType = enum.Ped
+			entityType = enums.Ped
 			id = targetEntity.(*IPed).GetId()
 			break
 		case reflect.TypeOf((*IObject)(nil)).Elem():
 			res = true
-			entityType = enum.Object
+			entityType = enums.Object
 			id = targetEntity.(*IObject).GetId()
 			break
 		}

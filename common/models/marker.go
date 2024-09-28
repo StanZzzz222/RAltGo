@@ -4,7 +4,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/marker_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
 	"sync"
 )
@@ -44,7 +44,7 @@ func (m *IMarker) GetColor() *entities.Rgba              { return m.color }
 func (m *IMarker) GetDir() *entities.Vector3             { return m.dir }
 func (m *IMarker) GetScale() *entities.Vector3           { return m.scale }
 func (m *IMarker) GetTarget() *IPlayer {
-	ret, freeDataResultFunc := w.GetData(m.id, enum.Marker, uint8(enum.MarkerTarget))
+	ret, freeDataResultFunc := w.GetData(m.id, enums.Marker, uint8(enums.MarkerTarget))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -69,13 +69,13 @@ func (m *IMarker) NewIMarker(id uint32, markerType uint8, position *entities.Vec
 		scale:       nil,
 		color:       nil,
 		datas:       &sync.Map{},
-		NetworkData: NewNetworkData(id, enum.Marker),
+		NetworkData: NewNetworkData(id, enums.Marker),
 	}
 }
 
 func (m *IMarker) SetDimension(dimension int32) {
 	m.dimension = dimension
-	w.SetMarkerData(m.id, enum.MarkerDimension, int64(dimension), 0, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerDimension, int64(dimension), 0, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetVisible(visible bool) {
@@ -84,12 +84,12 @@ func (m *IMarker) SetVisible(visible bool) {
 	if visible {
 		value = 1
 	}
-	w.SetMarkerData(m.id, enum.MarkerVisible, int64(value), 0, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerVisible, int64(value), 0, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetColor(color *entities.Rgba) {
 	m.color = color
-	w.SetMarkerData(m.id, enum.MarkerColor, 0, 0, color.R, color.G, color.B, color.A)
+	w.SetMarkerData(m.id, enums.MarkerColor, 0, 0, color.R, color.G, color.B, color.A)
 }
 
 func (m *IMarker) SetBobUpDown(bobUpDown bool) {
@@ -98,7 +98,7 @@ func (m *IMarker) SetBobUpDown(bobUpDown bool) {
 	if bobUpDown {
 		value = 1
 	}
-	w.SetMarkerData(m.id, enum.MarkerBobUpDown, int64(value), 0, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerBobUpDown, int64(value), 0, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetFaceCamera(faceCamera bool) {
@@ -107,7 +107,7 @@ func (m *IMarker) SetFaceCamera(faceCamera bool) {
 	if faceCamera {
 		value = 1
 	}
-	w.SetMarkerData(m.id, enum.MarkerFaceCamera, int64(value), 0, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerFaceCamera, int64(value), 0, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetRotating(rotating bool) {
@@ -116,40 +116,40 @@ func (m *IMarker) SetRotating(rotating bool) {
 	if rotating {
 		value = 1
 	}
-	w.SetMarkerData(m.id, enum.MarkerRotating, int64(value), 0, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerRotating, int64(value), 0, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetMarkerType(markerType marker_type.MarkerType) {
 	m.markerType = markerType
-	w.SetMarkerData(m.id, enum.MarkerType, int64(markerType), 0, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerType, int64(markerType), 0, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetDir(dir *entities.Vector3) {
 	m.dir = dir
 	posData, posMetaData := int64(math.Float32bits(dir.X))|(int64(math.Float32bits(dir.Y))<<32), uint64(math.Float32bits(dir.Z))<<32
-	w.SetMarkerData(m.id, enum.MarkerDir, posData, posMetaData, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerDir, posData, posMetaData, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetScale(scale *entities.Vector3) {
 	m.scale = scale
 	posData, posMetaData := int64(math.Float32bits(scale.X))|(int64(math.Float32bits(scale.Y))<<32), uint64(math.Float32bits(scale.Z))<<32
-	w.SetMarkerData(m.id, enum.MarkerScale, posData, posMetaData, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerScale, posData, posMetaData, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetPosition(position *entities.Vector3) {
 	m.position = position
 	posData, posMetaData := int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
-	w.SetMarkerData(m.id, enum.MarkerPosition, posData, posMetaData, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerPosition, posData, posMetaData, 0, 0, 0, 0)
 }
 
 func (m *IMarker) SetRotation(rotation *entities.Vector3) {
 	m.rotation = rotation
 	rotData, rotMetaData := int64(math.Float32bits(rotation.X))|(int64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32
-	w.SetMarkerData(m.id, enum.MarkerRotation, rotData, rotMetaData, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerRotation, rotData, rotMetaData, 0, 0, 0, 0)
 }
 
 func (m *IMarker) Destroy() {
-	w.SetMarkerData(m.id, enum.MarkerDestory, int64(0), 0, 0, 0, 0, 0)
+	w.SetMarkerData(m.id, enums.MarkerDestory, int64(0), 0, 0, 0, 0, 0)
 	pools.DestroyMarker(m)
 }
 

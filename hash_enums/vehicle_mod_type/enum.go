@@ -3,7 +3,7 @@ package vehicle_mod_type
 /*
    Create by zyx
    Date Time: 2024/9/24
-   File: enum.go
+   File: enums.go
 */
 
 //go:generate stringer -type=VehicleModType

@@ -8,7 +8,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
@@ -198,20 +198,20 @@ func onConsoleCommand(cNamePtr, cArgsPtr uintptr) {
 func onNetOwnerChange(objectType uint8, entityId, oldNetOwnerId, newNetOwnerId uint32) {
 	defer panicRecover()
 	pools := models.GetPools()
-	switch enum.ObjectType(objectType) {
-	case enum.Player:
+	switch enums.ObjectType(objectType) {
+	case enums.Player:
 		entity, oldNetOwner, newNetOwner := pools.GetPlayer(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
 		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break
-	case enum.Vehicle:
+	case enums.Vehicle:
 		entity, oldNetOwner, newNetOwner := pools.GetVehicle(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
 		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break
-	case enum.Ped:
+	case enums.Ped:
 		entity, oldNetOwner, newNetOwner := pools.GetPed(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
 		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break
-	case enum.Object:
+	case enums.Object:
 		entity, oldNetOwner, newNetOwner := pools.GetObject(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
 		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break

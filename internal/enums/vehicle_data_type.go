@@ -1,4 +1,4 @@
-package enum
+package enums
 
 /*
    Create by zyx
@@ -45,4 +45,28 @@ const (
 	VehicleDashboardColor
 	VehicleWindowTint
 	VehicleDriver
+	VehicleHybridExtraActive
+	VehicleHybridExtraState
+	VehicleManualEngineControl
+	VehicleLivery
+	VehicleNumberplateIndex
+	VehicleRoofClosed
+	VehicleRoofLivery
+	VehicleScriptMaxSpeed
+	VehicleSirenActive
+	VehicleSpecialDarkness
+	VehicleSpecialLightDamaged
+	VehicleTireSmokeColor
+	VehicleWeaponCapacity
+	VehicleWheelBurst
+	VehicleWheelDetached
+	VehicleWheelFixed
+	VehicleWheelHasTire
+	VehicleWheelOnFire
+	VehicleWindowOpened
+	VehicleWindowDamaged
+	VehiclePrimaryColorRgb
+	VehicleSecondColorRgb
+	VehicleBodyAdditionalHealth
+	VehicleWheels
 )

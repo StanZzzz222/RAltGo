@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"reflect"
 )
@@ -17,17 +17,17 @@ type SyncId uint16
 
 type EntityData struct {
 	entityId         uint32
-	entityObjectType enum.ObjectType
+	entityObjectType enums.ObjectType
 }
 
-func NewEntityData(id uint32, objectType enum.ObjectType) *EntityData {
+func NewEntityData(id uint32, objectType enums.ObjectType) *EntityData {
 	return &EntityData{id, objectType}
 }
 
 func (e *EntityData) GetNetOwner() *IPlayer {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.NetOwner)
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.NetOwner)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -43,8 +43,8 @@ func (e *EntityData) GetNetOwner() *IPlayer {
 
 func (e *EntityData) GetSyncId() SyncId {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.SyncId)
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.SyncId)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -59,8 +59,8 @@ func (e *EntityData) GetSyncId() SyncId {
 
 func (e *EntityData) GetStreamed() bool {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.Streamed)
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.Streamed)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -75,8 +75,8 @@ func (e *EntityData) GetStreamed() bool {
 
 func (e *EntityData) GetStreamingDistance() uint32 {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enum.Streamed)
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
+		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.Streamed)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -91,12 +91,12 @@ func (e *EntityData) GetStreamingDistance() uint32 {
 
 func (e *EntityData) SetNetOwner(owner *IPlayer, disableMigration bool) {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
 		value := 0
 		if disableMigration {
 			value = 1
 		}
-		w.SetEntityData(e.entityId, e.entityObjectType, enum.NetOwner, 0, uint64(owner.GetId()), uint32(value), "")
+		w.SetEntityData(e.entityId, e.entityObjectType, enums.NetOwner, 0, uint64(owner.GetId()), uint32(value), "")
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the SetNetOwner method", e.entityObjectType.String())
 		break
@@ -105,12 +105,12 @@ func (e *EntityData) SetNetOwner(owner *IPlayer, disableMigration bool) {
 
 func (e *EntityData) SetStreamed(streamed bool) {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
 		value := 0
 		if streamed {
 			value = 1
 		}
-		w.SetEntityData(e.entityId, e.entityObjectType, enum.Streamed, 0, uint64(value), 0, "")
+		w.SetEntityData(e.entityId, e.entityObjectType, enums.Streamed, 0, uint64(value), 0, "")
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the SetStreamed method", e.entityObjectType.String())
 		break
@@ -119,8 +119,8 @@ func (e *EntityData) SetStreamed(streamed bool) {
 
 func (e *EntityData) SetStreamingDistance(streamingDistance uint32) {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		w.SetEntityData(e.entityId, e.entityObjectType, enum.StreamingDistance, 0, 0, streamingDistance, "")
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
+		w.SetEntityData(e.entityId, e.entityObjectType, enums.StreamingDistance, 0, 0, streamingDistance, "")
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the SetStreamingDistance method", e.entityObjectType.String())
 		break
@@ -129,8 +129,8 @@ func (e *EntityData) SetStreamingDistance(streamingDistance uint32) {
 
 func (e *EntityData) Detach() {
 	switch e.entityObjectType {
-	case enum.Player, enum.Vehicle, enum.Ped, enum.Object:
-		w.SetEntityData(e.entityId, e.entityObjectType, enum.Detach, 0, 0, 0, "")
+	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
+		w.SetEntityData(e.entityId, e.entityObjectType, enums.Detach, 0, 0, 0, "")
 	default:
 		logger.LogWarnf("ObjectType: %v does not support the Detach method", e.entityObjectType.String())
 		break
@@ -139,7 +139,7 @@ func (e *EntityData) Detach() {
 
 func (e *EntityData) AttachToEntityBoneName(targetEntity any, bone *AttachToEntityBoneName) {
 	if ok, entityType, id := checkSupport(targetEntity); ok {
-		w.SetEntityData(e.entityId, e.entityObjectType, enum.AttachToEntityBoneName, entityType, uint64(id), 0, bone.Dump())
+		w.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneName, entityType, uint64(id), 0, bone.Dump())
 		return
 	}
 	logger.LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())
@@ -147,15 +147,15 @@ func (e *EntityData) AttachToEntityBoneName(targetEntity any, bone *AttachToEnti
 
 func (e *EntityData) AttachToEntityBoneIndex(targetEntity any, boneIndex *AttachToEntityBoneIndex) {
 	if ok, entityType, id := checkSupport(targetEntity); ok {
-		w.SetEntityData(e.entityId, e.entityObjectType, enum.AttachToEntityBoneIndex, entityType, uint64(id), 0, boneIndex.Dump())
+		w.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneIndex, entityType, uint64(id), 0, boneIndex.Dump())
 		return
 	}
 	logger.LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())
 }
 
-func checkSupport(targetEntity any) (bool, enum.ObjectType, uint32) {
+func checkSupport(targetEntity any) (bool, enums.ObjectType, uint32) {
 	var res = false
-	var entityType = enum.ObjectType(0)
+	var entityType = enums.ObjectType(0)
 	var id uint32 = 0
 	t := reflect.TypeOf(targetEntity)
 	if t.Kind() == reflect.Ptr {
@@ -163,22 +163,22 @@ func checkSupport(targetEntity any) (bool, enum.ObjectType, uint32) {
 		switch elemType {
 		case reflect.TypeOf((*IPlayer)(nil)).Elem():
 			res = true
-			entityType = enum.Player
+			entityType = enums.Player
 			id = targetEntity.(*IPlayer).GetId()
 			break
 		case reflect.TypeOf((*IVehicle)(nil)).Elem():
 			res = true
-			entityType = enum.Vehicle
+			entityType = enums.Vehicle
 			id = targetEntity.(*IVehicle).GetId()
 			break
 		case reflect.TypeOf((*IPed)(nil)).Elem():
 			res = true
-			entityType = enum.Ped
+			entityType = enums.Ped
 			id = targetEntity.(*IPed).GetId()
 			break
 		case reflect.TypeOf((*IObject)(nil)).Elem():
 			res = true
-			entityType = enum.Object
+			entityType = enums.Object
 			id = targetEntity.(*IObject).GetId()
 			break
 		}

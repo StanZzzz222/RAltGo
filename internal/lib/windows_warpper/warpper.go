@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"golang.org/x/sys/windows"
 	"math"
@@ -122,7 +122,7 @@ func (w *WindowsWarrper) ModuleMain(altVersion, core, resourceName, resourceHand
 	return ret != 0
 }
 
-func (w *WindowsWarrper) SetPedData(id uint32, pedDataType enum.PedDataType, data int64) {
+func (w *WindowsWarrper) SetPedData(id uint32, pedDataType enums.PedDataType, data int64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -130,7 +130,7 @@ func (w *WindowsWarrper) SetPedData(id uint32, pedDataType enum.PedDataType, dat
 	}
 }
 
-func (w *WindowsWarrper) SetCheckpointData(id uint32, checkpointDataType enum.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
+func (w *WindowsWarrper) SetCheckpointData(id uint32, checkpointDataType enums.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
 	_, _, err := setCheckpointDataProc.Call(uintptr(id), uintptr(checkpointDataType), uintptr(data), uintptr(metaData), uintptr(math.Float32bits(otherData)), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set checkpoint data failed: %v", err.Error())
@@ -138,7 +138,7 @@ func (w *WindowsWarrper) SetCheckpointData(id uint32, checkpointDataType enum.Ch
 	}
 }
 
-func (w *WindowsWarrper) SetMarkerData(id uint32, markerDataType enum.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
+func (w *WindowsWarrper) SetMarkerData(id uint32, markerDataType enums.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
 	_, _, err := setMarkerDataProc.Call(uintptr(id), uintptr(markerDataType), uintptr(data), uintptr(metaData), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set marker data failed: %v", err.Error())
@@ -146,7 +146,7 @@ func (w *WindowsWarrper) SetMarkerData(id uint32, markerDataType enum.MarkerData
 	}
 }
 
-func (w *WindowsWarrper) SetObjectData(id uint32, objectDataType enum.ObjectDataType, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetObjectData(id uint32, objectDataType enums.ObjectDataType, data int64, metaData uint64) {
 	_, _, err := setObjectDataProc.Call(uintptr(id), uintptr(objectDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set object data failed: %v", err.Error())
@@ -154,7 +154,7 @@ func (w *WindowsWarrper) SetObjectData(id uint32, objectDataType enum.ObjectData
 	}
 }
 
-func (w *WindowsWarrper) SetColshapeData(id uint32, colshapeDataType enum.ColshapeDataType, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetColshapeData(id uint32, colshapeDataType enums.ColshapeDataType, data int64, metaData uint64) {
 	_, _, err := setColshapeDataProc.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set colshape data failed: %v", err.Error())
@@ -204,7 +204,7 @@ func (w *WindowsWarrper) OnClientEvent(eventName string, eventArgsDump string) {
 	}
 }
 
-func (w *WindowsWarrper) GetData(id uint32, objectType enum.ObjectType, dataType uint8) (uintptr, func()) {
+func (w *WindowsWarrper) GetData(id uint32, objectType enums.ObjectType, dataType uint8) (uintptr, func()) {
 	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("get data failed: %v", err.Error())
@@ -218,7 +218,7 @@ func (w *WindowsWarrper) GetData(id uint32, objectType enum.ObjectType, dataType
 	return ret, freeDataResultFunc
 }
 
-func (w *WindowsWarrper) GetMetaData(id uint32, objectType enum.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
+func (w *WindowsWarrper) GetMetaData(id uint32, objectType enums.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
 	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("get meta data failed: %v", err.Error())
@@ -232,7 +232,7 @@ func (w *WindowsWarrper) GetMetaData(id uint32, objectType enum.ObjectType, data
 	return ret, freeDataResultFunc
 }
 
-func (w *WindowsWarrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetPedMetaData(id uint32, pedDataType enums.PedDataType, data int64, metaData uint64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -240,7 +240,7 @@ func (w *WindowsWarrper) SetPedMetaData(id uint32, pedDataType enum.PedDataType,
 	}
 }
 
-func (w *WindowsWarrper) SetBlipData(id uint32, blipDataType enum.BlipDataType, data int64) {
+func (w *WindowsWarrper) SetBlipData(id uint32, blipDataType enums.BlipDataType, data int64) {
 	_, _, err := setBlipDataProc.Call(uintptr(id), uintptr(blipDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set blip data failed: %v", err.Error())
@@ -248,7 +248,7 @@ func (w *WindowsWarrper) SetBlipData(id uint32, blipDataType enum.BlipDataType, 
 	}
 }
 
-func (w *WindowsWarrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
+func (w *WindowsWarrper) SetBlipMetaData(id uint32, blipDataType enums.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -262,7 +262,7 @@ func (w *WindowsWarrper) SetBlipMetaData(id uint32, blipDataType enum.BlipDataTy
 	}
 }
 
-func (w *WindowsWarrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleDataType, data int64) {
+func (w *WindowsWarrper) SetVehicleData(id uint32, vehicleDataType enums.VehicleDataType, data int64) {
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set vehicle_hash data failed: %v", err.Error())
@@ -270,7 +270,7 @@ func (w *WindowsWarrper) SetVehicleData(id uint32, vehicleDataType enum.VehicleD
 	}
 }
 
-func (w *WindowsWarrper) SetVehicleMetaData(id uint32, vehicleDataType enum.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
+func (w *WindowsWarrper) SetVehicleMetaData(id uint32, vehicleDataType enums.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -284,7 +284,7 @@ func (w *WindowsWarrper) SetVehicleMetaData(id uint32, vehicleDataType enum.Vehi
 	}
 }
 
-func (w *WindowsWarrper) SetPlayerMetaData(id uint32, playerDataType enum.PlayerDataType, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetPlayerMetaData(id uint32, playerDataType enums.PlayerDataType, data int64, metaData uint64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -292,7 +292,7 @@ func (w *WindowsWarrper) SetPlayerMetaData(id uint32, playerDataType enum.Player
 	}
 }
 
-func (w *WindowsWarrper) SetPlayerMetaModelData(id uint32, playerDataType enum.PlayerDataType, model uint32, data int64, metaData uint64) {
+func (w *WindowsWarrper) SetPlayerMetaModelData(id uint32, playerDataType enums.PlayerDataType, model uint32, data int64, metaData uint64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(model), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -342,7 +342,7 @@ func (w *WindowsWarrper) SetNetworkData(id uint32, dataType, networkDataType uin
 	}
 }
 
-func (w *WindowsWarrper) SetPlayerData(id uint32, playerDataType enum.PlayerDataType, data int64) {
+func (w *WindowsWarrper) SetPlayerData(id uint32, playerDataType enums.PlayerDataType, data int64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player data failed: %v", err.Error())
@@ -350,7 +350,7 @@ func (w *WindowsWarrper) SetPlayerData(id uint32, playerDataType enum.PlayerData
 	}
 }
 
-func (w *WindowsWarrper) SetPlayerHeadData(id uint32, playerDataType enum.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
+func (w *WindowsWarrper) SetPlayerHeadData(id uint32, playerDataType enums.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
 	_, _, err := setPayerHeadDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(shape1), uintptr(shape2), uintptr(shape3), uintptr(skin1), uintptr(skin2), uintptr(skin3), uintptr(math.Float32bits(shapeMix)), uintptr(math.Float32bits(skinMix)), uintptr(math.Float32bits(thirdMix)))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player head data failed: %v", err.Error())

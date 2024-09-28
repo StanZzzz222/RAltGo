@@ -3,7 +3,7 @@ package models
 import (
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
-	"github.com/StanZzzz222/RAltGo/internal/enum"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
 	"sync"
 )
@@ -34,7 +34,7 @@ func (o *IObject) GetModel() uint32           { return o.model }
 func (o *IObject) GetAlpha() uint8            { return o.alpha }
 func (o *IObject) GetTextureVariation() uint8 { return o.textureVariation }
 func (o *IObject) GetLodDistance() uint16 {
-	ret, freeDataResultFunc := w.GetData(o.id, enum.Object, uint8(enum.ObjectLodDistance))
+	ret, freeDataResultFunc := w.GetData(o.id, enums.Object, uint8(enums.ObjectLodDistance))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -43,7 +43,7 @@ func (o *IObject) GetLodDistance() uint16 {
 	return 0
 }
 func (o *IObject) GetPosition() *entities.Vector3 {
-	ret, freeDataResultFunc := w.GetData(o.id, enum.Object, uint8(enum.ObjectPosition))
+	ret, freeDataResultFunc := w.GetData(o.id, enums.Object, uint8(enums.ObjectPosition))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -52,7 +52,7 @@ func (o *IObject) GetPosition() *entities.Vector3 {
 	return nil
 }
 func (o *IObject) GetRotation() *entities.Vector3 {
-	ret, freeDataResultFunc := w.GetData(o.id, enum.Object, uint8(enum.ObjectRotation))
+	ret, freeDataResultFunc := w.GetData(o.id, enums.Object, uint8(enums.ObjectRotation))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -69,14 +69,14 @@ func (o *IObject) NewIObject(id, model uint32, position, rotation *entities.Vect
 		textureVariation: 0,
 		datas:            &sync.Map{},
 		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
-		NetworkData:      NewNetworkData(id, enum.Object),
-		EntityData:       NewEntityData(id, enum.Object),
+		NetworkData:      NewNetworkData(id, enums.Object),
+		EntityData:       NewEntityData(id, enums.Object),
 	}
 }
 
 func (o *IObject) SetDimension(dimension int32) {
 	o.dimension = dimension
-	w.SetObjectData(o.id, enum.ObjectDimension, int64(dimension), 0)
+	w.SetObjectData(o.id, enums.ObjectDimension, int64(dimension), 0)
 }
 
 func (o *IObject) SetVisible(visible bool) {
@@ -85,21 +85,21 @@ func (o *IObject) SetVisible(visible bool) {
 	if visible {
 		value = 1
 	}
-	w.SetObjectData(o.id, enum.ObjectVisible, int64(value), 0)
+	w.SetObjectData(o.id, enums.ObjectVisible, int64(value), 0)
 }
 
 func (o *IObject) SetAlpha(alpha uint8) {
 	o.alpha = alpha
-	w.SetObjectData(o.id, enum.ObjectAlpha, int64(alpha), 0)
+	w.SetObjectData(o.id, enums.ObjectAlpha, int64(alpha), 0)
 }
 
 func (o *IObject) SetLodDistance(lodDistance uint16) {
-	w.SetObjectData(o.id, enum.ObjectLodDistance, int64(lodDistance), 0)
+	w.SetObjectData(o.id, enums.ObjectLodDistance, int64(lodDistance), 0)
 }
 
 func (o *IObject) SetTextureVariation(textureVariation uint8) {
 	o.textureVariation = textureVariation
-	w.SetObjectData(o.id, enum.ObjectTextureVariation, int64(textureVariation), 0)
+	w.SetObjectData(o.id, enums.ObjectTextureVariation, int64(textureVariation), 0)
 }
 
 func (o *IObject) SetFrozen(frozen bool) {
@@ -108,7 +108,7 @@ func (o *IObject) SetFrozen(frozen bool) {
 	if frozen {
 		value = 1
 	}
-	w.SetObjectData(o.id, enum.ObjectFrozen, int64(value), 0)
+	w.SetObjectData(o.id, enums.ObjectFrozen, int64(value), 0)
 }
 
 func (o *IObject) SetCollision(collision bool) {
@@ -117,23 +117,23 @@ func (o *IObject) SetCollision(collision bool) {
 	if collision {
 		value = 1
 	}
-	w.SetObjectData(o.id, enum.ObjectCollision, int64(value), 0)
+	w.SetObjectData(o.id, enums.ObjectCollision, int64(value), 0)
 }
 
 func (o *IObject) SetPosition(position *entities.Vector3) {
 	o.position = position
 	posData, posMetaData := int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
-	w.SetObjectData(o.id, enum.ObjectPosition, posData, posMetaData)
+	w.SetObjectData(o.id, enums.ObjectPosition, posData, posMetaData)
 }
 
 func (o *IObject) SetRotation(rotation *entities.Vector3) {
 	o.rotation = rotation
 	rotData, rotMetaData := int64(math.Float32bits(rotation.X))|(int64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32
-	w.SetObjectData(o.id, enum.ObjectRotation, rotData, rotMetaData)
+	w.SetObjectData(o.id, enums.ObjectRotation, rotData, rotMetaData)
 }
 
 func (o *IObject) Destroy() {
-	w.SetObjectData(o.id, enum.ObjectDestory, int64(0), 0)
+	w.SetObjectData(o.id, enums.ObjectDestory, int64(0), 0)
 	pools.DestroyObject(o)
 }
 

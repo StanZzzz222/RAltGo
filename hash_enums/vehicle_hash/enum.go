@@ -3,7 +3,7 @@ package vehicle_hash
 /*
    Create by zyx
    Date Time: 2024/9/9
-   File: enum.go
+   File: enums.go
 */
 
 // Extend: coreclr-module - VehicleModel
