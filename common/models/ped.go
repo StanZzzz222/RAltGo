@@ -18,41 +18,35 @@ import (
 */
 
 type IPed struct {
-	id                uint32
-	model             ped_hash.ModelHash
-	health            uint16
-	armour            uint16
-	maxHealth         uint16
-	currentWeapon     weapon_hash.ModelHash
-	streamingDistance uint32
-	streamed          bool
-	datas             *sync.Map
+	id            uint32
+	model         ped_hash.ModelHash
+	health        uint16
+	armour        uint16
+	maxHealth     uint16
+	currentWeapon weapon_hash.ModelHash
+	datas         *sync.Map
 	*BaseObject
 	*NetworkData
 	*EntityData
 }
 
-func (p *IPed) NewIPed(id uint32, model uint32, position, rotation *entities.Vector3, streamingDistance uint32, streamed bool) *IPed {
+func (p *IPed) NewIPed(id, model uint32, position, rotation *entities.Vector3) *IPed {
 	return &IPed{
-		id:                id,
-		model:             ped_hash.ModelHash(model),
-		currentWeapon:     weapon_hash.Fist,
-		armour:            0,
-		maxHealth:         200,
-		streamingDistance: streamingDistance,
-		streamed:          streamed,
-		datas:             &sync.Map{},
-		BaseObject:        NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
-		NetworkData:       NewNetworkData(id, enum.Ped),
-		EntityData:        NewEntityData(id, enum.Ped),
+		id:            id,
+		model:         ped_hash.ModelHash(model),
+		currentWeapon: weapon_hash.Fist,
+		armour:        0,
+		maxHealth:     200,
+		datas:         &sync.Map{},
+		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
+		NetworkData:   NewNetworkData(id, enum.Ped),
+		EntityData:    NewEntityData(id, enum.Ped),
 	}
 }
 
 func (p *IPed) GetId() uint32                           { return p.id }
 func (p *IPed) GetModel() ped_hash.ModelHash            { return p.model }
 func (p *IPed) GetCurrentWeapon() weapon_hash.ModelHash { return p.currentWeapon }
-func (p *IPed) GetStreamingDistance() uint32            { return p.streamingDistance }
-func (p *IPed) GetStreamed() bool                       { return p.streamed }
 func (p *IPed) GetMaxHealth() uint16                    { return p.maxHealth }
 func (p *IPed) GetDimension() int32                     { return p.dimension }
 func (p *IPed) GetFrozen() bool                         { return p.frozen }

@@ -15,28 +15,24 @@ import (
 */
 
 type IObject struct {
-	id                uint32
-	model             uint32
-	alpha             uint8
-	textureVariation  uint8
-	streamingDistance uint32
-	streamed          bool
-	datas             *sync.Map
+	id               uint32
+	model            uint32
+	alpha            uint8
+	textureVariation uint8
+	datas            *sync.Map
 	*BaseObject
 	*NetworkData
 	*EntityData
 }
 
-func (o *IObject) GetId() uint32                { return o.id }
-func (o *IObject) GetDimension() int32          { return o.dimension }
-func (o *IObject) GetVisible() bool             { return o.visible }
-func (o *IObject) GetFrozen() bool              { return o.frozen }
-func (o *IObject) GetCollision() bool           { return o.collision }
-func (o *IObject) GetModel() uint32             { return o.model }
-func (o *IObject) GetAlpha() uint8              { return o.alpha }
-func (o *IObject) GetTextureVariation() uint8   { return o.textureVariation }
-func (o *IObject) GetStreamingDistance() uint32 { return o.streamingDistance }
-func (o *IObject) GetStreamed() bool            { return o.streamed }
+func (o *IObject) GetId() uint32              { return o.id }
+func (o *IObject) GetDimension() int32        { return o.dimension }
+func (o *IObject) GetVisible() bool           { return o.visible }
+func (o *IObject) GetFrozen() bool            { return o.frozen }
+func (o *IObject) GetCollision() bool         { return o.collision }
+func (o *IObject) GetModel() uint32           { return o.model }
+func (o *IObject) GetAlpha() uint8            { return o.alpha }
+func (o *IObject) GetTextureVariation() uint8 { return o.textureVariation }
 func (o *IObject) GetLodDistance() uint16 {
 	ret, freeDataResultFunc := w.GetData(o.id, enum.Object, uint8(enum.ObjectLodDistance))
 	cDataResult := entities.ConverCDataResult(ret)
