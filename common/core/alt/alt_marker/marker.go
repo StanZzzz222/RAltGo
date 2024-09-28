@@ -1,4 +1,4 @@
-package alt
+package alt_marker
 
 import (
 	"github.com/StanZzzz222/RAltGo/common/models"

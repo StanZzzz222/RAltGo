@@ -1,4 +1,4 @@
-package alt
+package alt_checkpoint
 
 import (
 	"github.com/StanZzzz222/RAltGo/common/models"

@@ -1,13 +1,13 @@
 package models
 
 import (
-	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
+	"strings"
 	"sync"
 )
 
@@ -144,7 +144,7 @@ func (p *IPed) SetCurrentWeapon(currentWeapon weapon_hash.ModelHash) {
 }
 
 func (p *IPed) SetCurrentWeaponByName(model string) {
-	modelHash := weapon_hash.ModelHash(common.Hash(model))
+	modelHash := weapon_hash.ModelHash(Hash(model))
 	p.currentWeapon = modelHash
 	w.SetPedData(p.id, enums.PedCurrentWeapon, int64(modelHash))
 }
@@ -195,4 +195,19 @@ func (p *IPed) GetDatas() []any {
 		return true
 	})
 	return datas
+}
+
+func Hash(model string) uint32 {
+	k := strings.ToLower(model)
+	var h uint32
+	var i int
+	for i = 0; i < len(k); i++ {
+		h += uint32(k[i])
+		h += h << 10
+		h ^= h >> 6
+	}
+	h += h << 3
+	h ^= h >> 11
+	h += h << 15
+	return h
 }

@@ -1,4 +1,4 @@
-package alt
+package alt_timers
 
 import (
 	"github.com/StanZzzz222/RAltGo/internal/lib"

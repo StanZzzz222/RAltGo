@@ -1,7 +1,7 @@
 package scheduler
 
 import (
-	"github.com/StanZzzz222/RAltGo/common/alt"
+	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_timers"
 	"sync"
 	"time"
 )
@@ -30,7 +30,7 @@ func (s *Scheduler) AddTask(task func()) {
 }
 
 func (s *Scheduler) Run() {
-	alt.SetTimeout(time.Microsecond*10, func() {
+	alt_timers.SetTimeout(time.Microsecond*10, func() {
 		for _, task := range s.tasks {
 			task()
 		}

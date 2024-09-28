@@ -1,7 +1,7 @@
 package alt_events
 
 import (
-	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
+	"github.com/StanZzzz222/RAltGo/common/core/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"

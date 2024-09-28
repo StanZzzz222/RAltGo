@@ -1,6 +1,8 @@
 package alt
 
-import "github.com/StanZzzz222/RAltGo/common/alt/alt_events"
+import (
+	"github.com/StanZzzz222/RAltGo/common/core/alt_events"
+)
 
 /*
    Create by zyx

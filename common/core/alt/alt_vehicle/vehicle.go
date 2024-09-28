@@ -1,4 +1,4 @@
-package alt
+package alt_vehicle
 
 import "C"
 import (

@@ -1,4 +1,4 @@
-package alt
+package alt_ped
 
 import (
 	"github.com/StanZzzz222/RAltGo/common"
