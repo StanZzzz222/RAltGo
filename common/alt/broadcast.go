@@ -1,4 +1,4 @@
-package broadcast
+package alt
 
 import "github.com/StanZzzz222/RAltGo/common/alt/alt_events"
 

@@ -3,8 +3,8 @@ package models
 import (
 	"fmt"
 	"github.com/StanZzzz222/RAltGo/common"
+	"github.com/StanZzzz222/RAltGo/common/alt"
 	"github.com/StanZzzz222/RAltGo/common/alt/scheduler"
-	"github.com/StanZzzz222/RAltGo/common/alt/timers"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
@@ -360,7 +360,7 @@ func (p *IPlayer) SetPositionRotation(position, rotation *entities.Vector3) {
 }
 
 func (p *IPlayer) SetIntoVehicle(vehicle *IVehicle, seat uint8) {
-	timers.SetTimeout(time.Millisecond*30, func() {
+	alt.SetTimeout(time.Millisecond*30, func() {
 		w.SetPlayerMetaData(p.id, enum.PlayerInVehicle, int64(vehicle.id), uint64(seat))
 	})
 }

@@ -1,4 +1,4 @@
-package object
+package alt
 
 import (
 	"github.com/StanZzzz222/RAltGo/common"
