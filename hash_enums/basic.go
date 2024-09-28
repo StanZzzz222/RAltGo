@@ -11,3 +11,4 @@ import "math"
 const DefaultDimension int32 = 0
 const GlobalDimension int32 = math.MinInt32
 const MaxHealth = 8191
+const DriverSeat = 1

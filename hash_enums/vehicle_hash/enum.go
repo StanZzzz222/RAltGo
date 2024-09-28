@@ -10,11 +10,6 @@ package vehicle_hash
 
 //go:generate stringer -type=ModelHash
 type ModelHash uint32
-type Seat uint8
-
-const (
-	Driver Seat = 1
-)
 
 const (
 	Chimera         ModelHash = 6774487
