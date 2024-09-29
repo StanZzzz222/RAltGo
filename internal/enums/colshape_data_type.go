@@ -13,4 +13,7 @@ const (
 	ColshapePlayersOnly
 	ColshapePosition
 	ColshapeDestory
+	ColshapeIsPointIn
+	ColshapeIsEntityIn
+	ColshapeIsEntityIdIn
 )

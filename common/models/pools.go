@@ -11,26 +11,30 @@ import "sync"
 var pools = newPools()
 
 type Pools struct {
-	blips       *sync.Map
-	vehicles    *sync.Map
-	players     *sync.Map
-	peds        *sync.Map
-	colshapes   *sync.Map
-	checkpoints *sync.Map
-	markers     *sync.Map
-	objects     *sync.Map
+	blips               *sync.Map
+	vehicles            *sync.Map
+	players             *sync.Map
+	peds                *sync.Map
+	colshapes           *sync.Map
+	checkpoints         *sync.Map
+	markers             *sync.Map
+	objects             *sync.Map
+	virtualEntityGroups *sync.Map
+	virtualEntitys      *sync.Map
 }
 
 func newPools() *Pools {
 	return &Pools{
-		blips:       &sync.Map{},
-		vehicles:    &sync.Map{},
-		players:     &sync.Map{},
-		peds:        &sync.Map{},
-		colshapes:   &sync.Map{},
-		checkpoints: &sync.Map{},
-		markers:     &sync.Map{},
-		objects:     &sync.Map{},
+		blips:               &sync.Map{},
+		vehicles:            &sync.Map{},
+		players:             &sync.Map{},
+		peds:                &sync.Map{},
+		colshapes:           &sync.Map{},
+		checkpoints:         &sync.Map{},
+		markers:             &sync.Map{},
+		objects:             &sync.Map{},
+		virtualEntityGroups: &sync.Map{},
+		virtualEntitys:      &sync.Map{},
 	}
 }
 
@@ -82,6 +86,18 @@ func (p *Pools) PutObject(object *IObject) {
 	}
 }
 
+func (p *Pools) PutVirtualEntityGroup(virtualEntityGroup *IVirtualEntityGroup) {
+	if _, ok := p.virtualEntityGroups.Load(virtualEntityGroup.GetId()); !ok {
+		p.virtualEntityGroups.Store(virtualEntityGroup.GetId(), virtualEntityGroup)
+	}
+}
+
+func (p *Pools) PutVirtualEntity(virtualEntity *IVirtualEntity) {
+	if _, ok := p.virtualEntitys.Load(virtualEntity.GetId()); !ok {
+		p.virtualEntitys.Store(virtualEntity.GetId(), virtualEntity)
+	}
+}
+
 func (p *Pools) DestroyBlip(blip *IBlip) {
 	if _, ok := p.blips.Load((*blip).GetId()); ok {
 		p.blips.Delete((*blip).GetId())
@@ -127,6 +143,18 @@ func (p *Pools) DestroyMarker(marker *IMarker) {
 func (p *Pools) DestroyObject(object *IObject) {
 	if _, ok := p.objects.Load((*object).GetId()); ok {
 		p.objects.Delete((*object).GetId())
+	}
+}
+
+func (p *Pools) DestroyVirtualEntityGroup(virtualEntityGroup *IVirtualEntityGroup) {
+	if _, ok := p.virtualEntityGroups.Load((*virtualEntityGroup).GetId()); ok {
+		p.virtualEntityGroups.Delete((*virtualEntityGroup).GetId())
+	}
+}
+
+func (p *Pools) DestroyVirtualEntity(virtualEntity *IVirtualEntity) {
+	if _, ok := p.virtualEntitys.Load((*virtualEntity).GetId()); ok {
+		p.virtualEntitys.Delete((*virtualEntity).GetId())
 	}
 }
 
@@ -186,6 +214,20 @@ func (p *Pools) GetObject(id uint32) *IObject {
 	return nil
 }
 
+func (p *Pools) GetVirtualEntityGroup(id uint32) *IVirtualEntityGroup {
+	if value, ok := p.virtualEntityGroups.Load(id); ok {
+		return value.(*IVirtualEntityGroup)
+	}
+	return nil
+}
+
+func (p *Pools) GetVirtualEntity(id uint32) *IVirtualEntity {
+	if value, ok := p.virtualEntitys.Load(id); ok {
+		return value.(*IVirtualEntity)
+	}
+	return nil
+}
+
 func (p *Pools) GetVehiclePools() *sync.Map {
 	return p.vehicles
 }
@@ -216,6 +258,14 @@ func (p *Pools) GetMarkerPools() *sync.Map {
 
 func (p *Pools) GetObjectPools() *sync.Map {
 	return p.objects
+}
+
+func (p *Pools) GetVirtualEntityGroupPools() *sync.Map {
+	return p.virtualEntityGroups
+}
+
+func (p *Pools) GetVirtualEntityPools() *sync.Map {
+	return p.virtualEntitys
 }
 
 func GetPools() *Pools {

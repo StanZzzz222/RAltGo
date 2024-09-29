@@ -16,33 +16,13 @@ import (
 type NetworkData struct {
 	networdId            uint32
 	networkObjectType    enums.ObjectType
-	metaData             *sync.Map
+	datas                *sync.Map
 	syncedMetaData       *sync.Map
 	streamSyncedMetaData *sync.Map
 }
 
 func NewNetworkData(id uint32, objectType enums.ObjectType) *NetworkData {
 	return &NetworkData{id, objectType, &sync.Map{}, &sync.Map{}, &sync.Map{}}
-}
-
-func (n *NetworkData) SetMetaData(key string, value any) {
-	var warpper = lib.GetWarpper()
-	n.metaData.Store(key, value)
-	mvalues := NewMValues(value)
-	warpper.SetNetworkData(n.networdId, n.networkObjectType, enums.NetworkMeta, key, mvalues.Dump())
-}
-
-func (n *NetworkData) GetMetaData(key string) any {
-	value, ok := n.metaData.Load(key)
-	if ok {
-		return value
-	}
-	return nil
-}
-
-func (n *NetworkData) HasMetaData(key string) bool {
-	_, ok := n.metaData.Load(key)
-	return ok
 }
 
 func (n *NetworkData) SetSyncedMetaData(key string, value any) {
@@ -90,4 +70,47 @@ func (n *NetworkData) GetStreamSyncedMetaData(key string) any {
 func (n *NetworkData) HasStreamSyncedMetaData(key string) bool {
 	_, ok := n.streamSyncedMetaData.Load(key)
 	return ok
+}
+
+func (n *NetworkData) SetData(key string, value any) {
+	n.datas.Store(key, value)
+}
+
+func (n *NetworkData) DelData(key string) {
+	_, ok := n.datas.Load(key)
+	if ok {
+		n.datas.Delete(key)
+	}
+}
+
+func (n *NetworkData) DelAllData() {
+	n.datas.Range(func(key, value any) bool {
+		n.datas.Delete(key)
+		return true
+	})
+}
+
+func (n *NetworkData) HasData(key string) bool {
+	_, ok := n.datas.Load(key)
+	if ok {
+		return true
+	}
+	return false
+}
+
+func (n *NetworkData) GetData(key string) any {
+	value, ok := n.datas.Load(key)
+	if ok {
+		return value
+	}
+	return value
+}
+
+func (n *NetworkData) GetDatas() []any {
+	var datas []any
+	n.datas.Range(func(key, value any) bool {
+		datas = append(datas, key)
+		return true
+	})
+	return datas
 }

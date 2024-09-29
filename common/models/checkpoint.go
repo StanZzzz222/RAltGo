@@ -6,7 +6,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
-	"sync"
 )
 
 /*
@@ -27,7 +26,6 @@ type ICheckpoint struct {
 	nextPosition   *entities.Vector3
 	color          *entities.Rgba
 	iconColor      *entities.Rgba
-	datas          *sync.Map
 	*NetworkData
 	*EntityData
 }
@@ -57,7 +55,6 @@ func (c *ICheckpoint) NewICheckPoint(id uint32, checkPointType uint8, position *
 		nextPosition:   nil,
 		color:          nil,
 		iconColor:      nil,
-		datas:          &sync.Map{},
 		NetworkData:    NewNetworkData(id, enums.CheckPoint),
 		EntityData:     NewEntityData(id, enums.CheckPoint),
 	}
@@ -126,47 +123,4 @@ func (c *ICheckpoint) SetIconColor(iconColor *entities.Rgba) {
 func (c *ICheckpoint) Destroy() {
 	w.SetCheckpointData(c.id, enums.CheckpointDestory, 0, 0, 0, 0, 0, 0, 0)
 	pools.DestroyCheckpoint(c)
-}
-
-func (c *ICheckpoint) SetData(key string, value any) {
-	c.datas.Store(key, value)
-}
-
-func (c *ICheckpoint) DelData(key string) {
-	_, ok := c.datas.Load(key)
-	if ok {
-		c.datas.Delete(key)
-	}
-}
-
-func (c *ICheckpoint) DelAllData() {
-	c.datas.Range(func(key, value any) bool {
-		c.datas.Delete(key)
-		return true
-	})
-}
-
-func (c *ICheckpoint) HasData(key string) bool {
-	_, ok := c.datas.Load(key)
-	if ok {
-		return true
-	}
-	return false
-}
-
-func (c *ICheckpoint) GetData(key string) any {
-	value, ok := c.datas.Load(key)
-	if ok {
-		return value
-	}
-	return value
-}
-
-func (c *ICheckpoint) GetDatas() []any {
-	var datas []any
-	c.datas.Range(func(key, value any) bool {
-		datas = append(datas, key)
-		return true
-	})
-	return datas
 }

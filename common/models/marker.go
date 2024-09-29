@@ -6,7 +6,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
-	"sync"
 )
 
 /*
@@ -28,7 +27,6 @@ type IMarker struct {
 	dir        *entities.Vector3
 	scale      *entities.Vector3
 	color      *entities.Rgba
-	datas      *sync.Map
 	*NetworkData
 }
 
@@ -68,7 +66,6 @@ func (m *IMarker) NewIMarker(id uint32, markerType uint8, position *entities.Vec
 		dir:         nil,
 		scale:       nil,
 		color:       nil,
-		datas:       &sync.Map{},
 		NetworkData: NewNetworkData(id, enums.Marker),
 	}
 }
@@ -151,47 +148,4 @@ func (m *IMarker) SetRotation(rotation *entities.Vector3) {
 func (m *IMarker) Destroy() {
 	w.SetMarkerData(m.id, enums.MarkerDestory, int64(0), 0, 0, 0, 0, 0)
 	pools.DestroyMarker(m)
-}
-
-func (m *IMarker) SetData(key string, value any) {
-	m.datas.Store(key, value)
-}
-
-func (m *IMarker) DelData(key string) {
-	_, ok := m.datas.Load(key)
-	if ok {
-		m.datas.Delete(key)
-	}
-}
-
-func (m *IMarker) DelAllData() {
-	m.datas.Range(func(key, value any) bool {
-		m.datas.Delete(key)
-		return true
-	})
-}
-
-func (m *IMarker) HasData(key string) bool {
-	_, ok := m.datas.Load(key)
-	if ok {
-		return true
-	}
-	return false
-}
-
-func (m *IMarker) GetData(key string) any {
-	value, ok := m.datas.Load(key)
-	if ok {
-		return value
-	}
-	return value
-}
-
-func (m *IMarker) GetDatas() []any {
-	var datas []any
-	m.datas.Range(func(key, value any) bool {
-		datas = append(datas, key)
-		return true
-	})
-	return datas
 }

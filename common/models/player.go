@@ -13,7 +13,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
 	"net"
-	"sync"
 	"time"
 )
 
@@ -43,7 +42,6 @@ type IPlayer struct {
 	currentWeapon      weapon_hash.ModelHash
 	invincible         bool
 	time               time.Time
-	datas              *sync.Map
 	*BaseObject
 	*NetworkData
 	*EntityData
@@ -62,7 +60,6 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 		currentWeapon: weapon_hash.Fist,
 		armour:        0,
 		maxHealth:     200,
-		datas:         &sync.Map{},
 		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 		NetworkData:   NewNetworkData(id, enums.Player),
 		EntityData:    NewEntityData(id, enums.Player),
@@ -453,47 +450,4 @@ func (p *IPlayer) SetHeadBlendPaletteColor(id, r, g, b uint8) {
 
 func (p *IPlayer) SendBroadcastMessage(message string) {
 	p.Emit("chat:message", "", message)
-}
-
-func (p *IPlayer) SetData(key string, value any) {
-	p.datas.Store(key, value)
-}
-
-func (p *IPlayer) DelData(key string) {
-	_, ok := p.datas.Load(key)
-	if ok {
-		p.datas.Delete(key)
-	}
-}
-
-func (p *IPlayer) DelAllData() {
-	p.datas.Range(func(key, value any) bool {
-		p.datas.Delete(key)
-		return true
-	})
-}
-
-func (p *IPlayer) HasData(key string) bool {
-	_, ok := p.datas.Load(key)
-	if ok {
-		return true
-	}
-	return false
-}
-
-func (p *IPlayer) GetData(key string) any {
-	value, ok := p.datas.Load(key)
-	if ok {
-		return value
-	}
-	return value
-}
-
-func (p *IPlayer) GetDatas() []any {
-	var datas []any
-	p.datas.Range(func(key, value any) bool {
-		datas = append(datas, key)
-		return true
-	})
-	return datas
 }

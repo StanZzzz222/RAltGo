@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/blip_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
@@ -25,6 +26,7 @@ type IBlip struct {
 	flashInterval            uint32
 	flashTimer               uint32
 	display                  uint32
+	dimension                int32
 	number                   int32
 	rot                      float32
 	visible                  bool
@@ -56,7 +58,6 @@ type IBlip struct {
 	position                 *entities.Vector3
 	scale                    *entities.Vector3
 	players                  *sync.Map
-	datas                    *sync.Map
 	*NetworkData
 }
 
@@ -76,7 +77,7 @@ func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot 
 		display:       2,
 		visible:       true,
 		attached:      false,
-		datas:         &sync.Map{},
+		dimension:     hash_enums.DefaultDimension,
 		players:       &sync.Map{},
 		NetworkData:   NewNetworkData(id, enums.Blip),
 	}
@@ -117,6 +118,7 @@ func (b *IBlip) GetRouteColor() *entities.Rgba     { return b.routeColor }
 func (b *IBlip) GetRgbaColor() *entities.Rgba      { return b.rgbaColor }
 func (b *IBlip) GetScale() *entities.Vector3       { return b.scale }
 func (b *IBlip) GetNumber() int32                  { return b.number }
+func (b *IBlip) GetDimension() int32               { return b.dimension }
 func (b *IBlip) GetPlayers() []*IPlayer {
 	if b.global {
 		var players = make([]*IPlayer, 0)
@@ -193,6 +195,11 @@ func (b *IBlip) SetVisible(visible bool) {
 func (b *IBlip) SetDisplay(display uint32) {
 	b.display = display
 	w.SetBlipData(b.id, enums.BlipDisplay, int64(display))
+}
+
+func (b *IBlip) SetDimension(dimension int32) {
+	b.dimension = dimension
+	w.SetBlipData(b.id, enums.BlipDimension, int64(dimension))
 }
 
 func (b *IBlip) SetAlpha(alpha uint32) {
@@ -483,49 +490,6 @@ func (b *IBlip) SetScale(scale *entities.Vector3) {
 func (b *IBlip) Destroy() {
 	w.SetBlipData(b.id, enums.BlipDestroy, int64(0))
 	pools.DestroyBlip(b)
-}
-
-func (b *IBlip) SetData(key string, value any) {
-	b.datas.Store(key, value)
-}
-
-func (b *IBlip) DelData(key string) {
-	_, ok := b.datas.Load(key)
-	if ok {
-		b.datas.Delete(key)
-	}
-}
-
-func (b *IBlip) DelAllData() {
-	b.datas.Range(func(key, value any) bool {
-		b.datas.Delete(key)
-		return true
-	})
-}
-
-func (b *IBlip) HasData(key string) bool {
-	_, ok := b.datas.Load(key)
-	if ok {
-		return true
-	}
-	return false
-}
-
-func (b *IBlip) GetData(key string) any {
-	value, ok := b.datas.Load(key)
-	if ok {
-		return value
-	}
-	return value
-}
-
-func (b *IBlip) GetDatas() []any {
-	var datas []any
-	b.datas.Range(func(key, value any) bool {
-		datas = append(datas, key)
-		return true
-	})
-	return datas
 }
 
 func (b *IBlip) checkInPlayers(player *IPlayer) bool {

@@ -34,7 +34,10 @@ var freeColshapeProc *syscall.Proc
 var freeCheckpointProc *syscall.Proc
 var freeMarkerProc *syscall.Proc
 var freeObjectProc *syscall.Proc
+var freeVirtualEntityGroupProc *syscall.Proc
+var freeVirtualEntityProc *syscall.Proc
 var freeDataResultProc *syscall.Proc
+var setVirtualEntityDataProc *syscall.Proc
 var setColshapeDataProc *syscall.Proc
 var setCheckpointDataProc *syscall.Proc
 var setMarkerDataProc *syscall.Proc
@@ -45,6 +48,8 @@ var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
 var setPayerHeadDataProc *syscall.Proc
 var setPedDataProc *syscall.Proc
+var createVirtualEntityGroupProc *syscall.Proc
+var createVirtualEntityProc *syscall.Proc
 var createObjectProc *syscall.Proc
 var createMarkerProc *syscall.Proc
 var createCheckPointProc *syscall.Proc
@@ -55,6 +60,7 @@ var createColshapeProc *syscall.Proc
 var createPolygonColshapeProc *syscall.Proc
 var setEntityDataProc *syscall.Proc
 var getEntityDataProc *syscall.Proc
+var getColshapeDataProc *syscall.Proc
 var getDataProc *syscall.Proc
 var emitProc *syscall.Proc
 var emitAllPlayerProc *syscall.Proc
@@ -85,8 +91,11 @@ func init() {
 		freeCheckpointProc = dll.MustFindProc("free_checkpoint")
 		freeMarkerProc = dll.MustFindProc("free_marker")
 		freeObjectProc = dll.MustFindProc("free_object")
+		freeVirtualEntityGroupProc = dll.MustFindProc("free_virtual_entity_group")
+		freeVirtualEntityProc = dll.MustFindProc("free_virtual_entity")
 		freeDataResultProc = dll.MustFindProc("free_data_result")
 		setNetworkDataProc = dll.MustFindProc("set_network_data")
+		setVirtualEntityDataProc = dll.MustFindProc("set_virtual_entity_data")
 		setPedDataProc = dll.MustFindProc("set_ped_data")
 		setPlayerDataProc = dll.MustFindProc("set_player_data")
 		setPayerHeadDataProc = dll.MustFindProc("set_player_head_data")
@@ -97,6 +106,8 @@ func init() {
 		setMarkerDataProc = dll.MustFindProc("set_marker_data")
 		setObjectDataProc = dll.MustFindProc("set_object_data")
 		createMarkerProc = dll.MustFindProc("create_marker")
+		createVirtualEntityGroupProc = dll.MustFindProc("create_virtual_entity_group")
+		createVirtualEntityProc = dll.MustFindProc("create_virtual_entity")
 		createObjectProc = dll.MustFindProc("create_object")
 		createCheckPointProc = dll.MustFindProc("create_checkpoint")
 		createVehicleProc = dll.MustFindProc("create_vehicle")
@@ -106,6 +117,7 @@ func init() {
 		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
 		getEntityDataProc = dll.MustFindProc("get_entity_data")
 		setEntityDataProc = dll.MustFindProc("set_entity_data")
+		getColshapeDataProc = dll.MustFindProc("get_colshape_data")
 		getDataProc = dll.MustFindProc("get_data")
 		emitProc = dll.MustFindProc("emit")
 		emitAllPlayerProc = dll.MustFindProc("emit_all")
@@ -120,6 +132,14 @@ func (w *SyscallWarrper) ModuleMain(altVersion, core, resourceName, resourceHand
 		os.Exit(-1)
 	}
 	return ret != 0
+}
+
+func (w *SyscallWarrper) SetVirtualEntityData(id uint32, virtualEntityDataType enums.VirtualEntityDataType, data int64, metaData uint64) {
+	_, _, err := setVirtualEntityDataProc.Call(uintptr(id), uintptr(virtualEntityDataType), uintptr(data), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("set virtual entity data failed: %v", err.Error())
+		return
+	}
 }
 
 func (w *SyscallWarrper) SetPedData(id uint32, pedDataType enums.PedDataType, data int64) {
@@ -202,6 +222,20 @@ func (w *SyscallWarrper) OnClientEvent(eventName string, eventArgsDump string) {
 		logger.LogErrorf("on client event failed: %v", err.Error())
 		return
 	}
+}
+
+func (w *SyscallWarrper) GetColshapeData(id uint32, objectType enums.ObjectType, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
+	ret, _, err := getColshapeDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(entityType), uintptr(data), uintptr(metaData))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get colshape data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeDataResult(ret)
+		}
+	}
+	return ret, freeDataResultFunc
 }
 
 func (w *SyscallWarrper) GetData(id uint32, objectType enums.ObjectType, dataType uint8) (uintptr, func()) {
@@ -352,6 +386,34 @@ func (w *SyscallWarrper) SetPlayerData(id uint32, playerDataType enums.PlayerDat
 		logger.LogErrorf("set player data failed: %v", err.Error())
 		return
 	}
+}
+
+func (w *SyscallWarrper) CreateVirtualEntityGroup(maxEntitiesInStream uint32) (uintptr, func()) {
+	ret, _, err := createVirtualEntityGroupProc.Call(uintptr(maxEntitiesInStream))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create virtual entity group failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeVirtualEntityGroup(ret)
+		}
+	}
+	return ret, freePtrFunc
+}
+
+func (w *SyscallWarrper) CreateVirtualEntity(groupId uint32, posData, metaData uint64, streamingDistance uint32) (uintptr, func()) {
+	ret, _, err := createVirtualEntityProc.Call(uintptr(groupId), uintptr(posData), uintptr(metaData), uintptr(streamingDistance))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.LogErrorf("create virtual entity group failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeVirtualEntityGroup(ret)
+		}
+	}
+	return ret, freePtrFunc
 }
 
 func (w *SyscallWarrper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {
@@ -547,6 +609,22 @@ func (w *SyscallWarrper) FreeObject(ptr uintptr) {
 	_, _, err := freeObjectProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("free object failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) FreeVirtualEntityGroup(ptr uintptr) {
+	_, _, err := freeVirtualEntityGroupProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free virtual entity group failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) FreeVirtualEntity(ptr uintptr) {
+	_, _, err := freeVirtualEntityProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("free virtual entity failed: %v", err.Error())
 		return
 	}
 }

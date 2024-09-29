@@ -5,7 +5,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
-	"sync"
 )
 
 /*
@@ -19,7 +18,6 @@ type IObject struct {
 	model            uint32
 	alpha            uint8
 	textureVariation uint8
-	datas            *sync.Map
 	*BaseObject
 	*NetworkData
 	*EntityData
@@ -67,7 +65,6 @@ func (o *IObject) NewIObject(id, model uint32, position, rotation *entities.Vect
 		model:            model,
 		alpha:            255,
 		textureVariation: 0,
-		datas:            &sync.Map{},
 		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 		NetworkData:      NewNetworkData(id, enums.Object),
 		EntityData:       NewEntityData(id, enums.Object),
@@ -135,47 +132,4 @@ func (o *IObject) SetRotation(rotation *entities.Vector3) {
 func (o *IObject) Destroy() {
 	w.SetObjectData(o.id, enums.ObjectDestory, int64(0), 0)
 	pools.DestroyObject(o)
-}
-
-func (o *IObject) SetData(key string, value any) {
-	o.datas.Store(key, value)
-}
-
-func (o *IObject) DelData(key string) {
-	_, ok := o.datas.Load(key)
-	if ok {
-		o.datas.Delete(key)
-	}
-}
-
-func (o *IObject) DelAllData() {
-	o.datas.Range(func(key, value any) bool {
-		o.datas.Delete(key)
-		return true
-	})
-}
-
-func (o *IObject) HasData(key string) bool {
-	_, ok := o.datas.Load(key)
-	if ok {
-		return true
-	}
-	return false
-}
-
-func (o *IObject) GetData(key string) any {
-	value, ok := o.datas.Load(key)
-	if ok {
-		return value
-	}
-	return value
-}
-
-func (o *IObject) GetDatas() []any {
-	var datas []any
-	o.datas.Range(func(key, value any) bool {
-		datas = append(datas, key)
-		return true
-	})
-	return datas
 }

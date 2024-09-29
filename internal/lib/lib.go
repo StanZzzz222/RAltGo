@@ -73,6 +73,14 @@ func (w *Warpper) SetPedData(id uint32, pedDataType enums.PedDataType, data int6
 	w.syscall.SetPedData(id, pedDataType, data)
 }
 
+func (w *Warpper) SetVirtualEntityData(id uint32, virtualEntityDataType enums.VirtualEntityDataType, data int64, metaData uint64) {
+	if w.IsWindows() {
+		w.windows.SetVirtualEntityData(id, virtualEntityDataType, data, metaData)
+		return
+	}
+	w.syscall.SetVirtualEntityData(id, virtualEntityDataType, data, metaData)
+}
+
 func (w *Warpper) SetColshapeData(id uint32, colshapeDataType enums.ColshapeDataType, data int64, metaData uint64) {
 	if w.IsWindows() {
 		w.windows.SetColshapeData(id, colshapeDataType, data, metaData)
@@ -127,6 +135,13 @@ func (w *Warpper) OnClientEvent(eventName string, eventArgsDump string) {
 		return
 	}
 	w.syscall.OnClientEvent(eventName, eventArgsDump)
+}
+
+func (w *Warpper) GetColshapeData(id uint32, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
+	if w.IsWindows() {
+		return w.windows.GetColshapeData(id, enums.Colshape, dataType, entityType, data, metaData)
+	}
+	return w.syscall.GetColshapeData(id, enums.Colshape, dataType, entityType, data, metaData)
 }
 
 func (w *Warpper) GetData(id uint32, objectType enums.ObjectType, dataType uint8) (uintptr, func()) {
@@ -238,6 +253,20 @@ func (w *Warpper) SetNetworkData(id uint32, dataType enums.ObjectType, networkDa
 		return
 	}
 	w.syscall.SetNetworkData(id, uint8(dataType), uint8(networkDataType), keysData, valuesData)
+}
+
+func (w *Warpper) CreateVirtualEntityGroup(maxEntitiesInStream uint32) (uintptr, func()) {
+	if w.IsWindows() {
+		return w.windows.CreateVirtualEntityGroup(maxEntitiesInStream)
+	}
+	return w.syscall.CreateVirtualEntityGroup(maxEntitiesInStream)
+}
+
+func (w *Warpper) CreateVirtualEntity(groupId uint32, posData, posMetaData uint64, streamingDistance uint32) (uintptr, func()) {
+	if w.IsWindows() {
+		return w.windows.CreateVirtualEntity(groupId, posData, posMetaData, streamingDistance)
+	}
+	return w.syscall.CreateVirtualEntity(groupId, posData, posMetaData, streamingDistance)
 }
 
 func (w *Warpper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {

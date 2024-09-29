@@ -6,6 +6,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
+	"reflect"
 	"sync"
 )
 
@@ -30,6 +31,35 @@ func (c *IColshape) GetColshapeType() colshape_type.ColshapeType { return c.cols
 func (c *IColshape) GetPosition() *entities.Vector3              { return c.position }
 func (c *IColshape) GetPlayersOnly() bool                        { return c.playersOnly }
 func (c *IColshape) GetDimension() int32                         { return c.dimension }
+func (c *IColshape) IsEntityIdIn(syncId SyncId) bool {
+	ret, freeDataResultFunc := w.GetColshapeData(c.id, enums.ColshapeIsEntityIdIn, 0, 0, uint64(syncId))
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (c *IColshape) IsPointIn(position *entities.Vector3) bool {
+	ret, freeDataResultFunc := w.GetColshapeData(c.id, enums.ColshapeIsPointIn, 0, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.BoolVal
+	}
+	return false
+}
+func (c *IColshape) IsEntityIn(entity any) bool {
+	if res, entityType, id := checkEntity(entity); res {
+		ret, freeDataResultFunc := w.GetColshapeData(c.id, enums.ColshapeIsEntityIn, entityType, int64(id), 0)
+		cDataResult := entities.ConverCDataResult(ret)
+		if cDataResult != nil {
+			freeDataResultFunc()
+			return cDataResult.BoolVal
+		}
+	}
+	return false
+}
 
 func (c *IColshape) NewIColshape(id uint32, colshapeType uint32, position *entities.Vector3) *IColshape {
 	return &IColshape{
@@ -108,4 +138,42 @@ func (c *IColshape) GetDatas() []any {
 		return true
 	})
 	return datas
+}
+
+func checkEntity(targetEntity any) (bool, enums.ObjectType, uint32) {
+	var res = false
+	var entityType = enums.ObjectType(0)
+	var id uint32 = 0
+	t := reflect.TypeOf(targetEntity)
+	if t.Kind() == reflect.Ptr {
+		elemType := t.Elem()
+		switch elemType {
+		case reflect.TypeOf((*IPlayer)(nil)).Elem():
+			res = true
+			entityType = enums.Player
+			id = targetEntity.(*IPlayer).GetId()
+			break
+		case reflect.TypeOf((*IVehicle)(nil)).Elem():
+			res = true
+			entityType = enums.Vehicle
+			id = targetEntity.(*IVehicle).GetId()
+			break
+		case reflect.TypeOf((*IBlip)(nil)).Elem():
+			res = true
+			entityType = enums.Ped
+			id = targetEntity.(*IBlip).GetId()
+			break
+		case reflect.TypeOf((*IPed)(nil)).Elem():
+			res = true
+			entityType = enums.Ped
+			id = targetEntity.(*IPed).GetId()
+			break
+		case reflect.TypeOf((*IObject)(nil)).Elem():
+			res = true
+			entityType = enums.Object
+			id = targetEntity.(*IObject).GetId()
+			break
+		}
+	}
+	return res, entityType, id
 }

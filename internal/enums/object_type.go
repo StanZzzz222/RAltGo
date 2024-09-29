@@ -18,4 +18,6 @@ const (
 	Object
 	CheckPoint
 	Marker
+	VirtualEntityGroup
+	VirtualEntity
 )

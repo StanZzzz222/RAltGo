@@ -1,14 +1,13 @@
 package models
 
 import (
+	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/ped_hash"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"math"
-	"strings"
-	"sync"
 )
 
 /*
@@ -24,7 +23,6 @@ type IPed struct {
 	armour        uint16
 	maxHealth     uint16
 	currentWeapon weapon_hash.ModelHash
-	datas         *sync.Map
 	*BaseObject
 	*NetworkData
 	*EntityData
@@ -37,7 +35,6 @@ func (p *IPed) NewIPed(id, model uint32, position, rotation *entities.Vector3) *
 		currentWeapon: weapon_hash.Fist,
 		armour:        0,
 		maxHealth:     200,
-		datas:         &sync.Map{},
 		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 		NetworkData:   NewNetworkData(id, enums.Ped),
 		EntityData:    NewEntityData(id, enums.Ped),
@@ -144,7 +141,7 @@ func (p *IPed) SetCurrentWeapon(currentWeapon weapon_hash.ModelHash) {
 }
 
 func (p *IPed) SetCurrentWeaponByName(model string) {
-	modelHash := weapon_hash.ModelHash(Hash(model))
+	modelHash := weapon_hash.ModelHash(common.Hash(model))
 	p.currentWeapon = modelHash
 	w.SetPedData(p.id, enums.PedCurrentWeapon, int64(modelHash))
 }
@@ -152,62 +149,4 @@ func (p *IPed) SetCurrentWeaponByName(model string) {
 func (p *IPed) Destroy() {
 	w.SetPedData(p.id, enums.PedDestroy, int64(0))
 	pools.DestroyPed(p)
-}
-
-func (p *IPed) SetData(key string, value any) {
-	p.datas.Store(key, value)
-}
-
-func (p *IPed) DelData(key string) {
-	_, ok := p.datas.Load(key)
-	if ok {
-		p.datas.Delete(key)
-	}
-}
-
-func (p *IPed) DelAllData() {
-	p.datas.Range(func(key, value any) bool {
-		p.datas.Delete(key)
-		return true
-	})
-}
-
-func (p *IPed) HasData(key string) bool {
-	_, ok := p.datas.Load(key)
-	if ok {
-		return true
-	}
-	return false
-}
-
-func (p *IPed) GetData(key string) any {
-	value, ok := p.datas.Load(key)
-	if ok {
-		return value
-	}
-	return value
-}
-
-func (p *IPed) GetDatas() []any {
-	var datas []any
-	p.datas.Range(func(key, value any) bool {
-		datas = append(datas, key)
-		return true
-	})
-	return datas
-}
-
-func Hash(model string) uint32 {
-	k := strings.ToLower(model)
-	var h uint32
-	var i int
-	for i = 0; i < len(k); i++ {
-		h += uint32(k[i])
-		h += h << 10
-		h ^= h >> 6
-	}
-	h += h << 3
-	h ^= h >> 11
-	h += h << 15
-	return h
 }
