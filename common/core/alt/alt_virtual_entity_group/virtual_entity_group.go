@@ -1,4 +1,4 @@
-package alt_vehicle
+package alt_virtual_entity_group
 
 import "C"
 import (
