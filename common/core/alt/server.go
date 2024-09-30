@@ -74,7 +74,7 @@ type ServerConfig struct {
 func GetServerConfig() *ServerConfig {
 	var serverConfig *ServerConfig
 	if _, err := toml.DecodeFile("./server.toml", &serverConfig); err != nil {
-		logger.LogErrorf("Read server.toml falied, %v", err.Error())
+		logger.Logger().LogErrorf("Read server.toml falied, %v", err.Error())
 		return nil
 	}
 	return serverConfig

@@ -61,11 +61,11 @@ func TriggerLocalCommand(name string, args ...any) {
 		name = name[1:]
 	}
 	if !checkZeroEventArgs(args) {
-		logger.LogError("TriggerLocalCommand: should not be zero parameters")
+		logger.Logger().LogError("TriggerLocalCommand: should not be zero parameters")
 		return
 	}
 	if !checkFirstEventArgs(args[0]) {
-		logger.LogError("TriggerLocalCommand: The first parameter should be *models.IPlayer")
+		logger.Logger().LogError("TriggerLocalCommand: The first parameter should be *models.IPlayer")
 		return
 	}
 	groups.Range(func(key, value any) bool {

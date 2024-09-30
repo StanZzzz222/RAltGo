@@ -54,7 +54,7 @@ func (n *NetworkData) SetStreamSyncedMetaData(key string, value any) {
 		warpper.SetNetworkData(n.networdId, n.networkObjectType, enums.NetworkStreamSyncedMeta, key, mvalues.Dump())
 		break
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the SetStreamSyncedMetaData method", n.networkObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the SetStreamSyncedMetaData method", n.networkObjectType.String())
 		break
 	}
 }

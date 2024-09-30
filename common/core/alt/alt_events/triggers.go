@@ -178,7 +178,7 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 	var result []any
 	err := json.Unmarshal([]byte(eventArgs), &args)
 	if err != nil {
-		logger.LogErrorf("EventArgsParse falied, %v", err.Error())
+		logger.Logger().LogErrorf("EventArgsParse falied, %v", err.Error())
 		return args
 	}
 	if len(args) != 0 {
@@ -222,7 +222,7 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 					result = append(result, b)
 					continue
 				default:
-					logger.LogErrorf("EventArgsParse falied, Unknow ObjectType: %v", argType)
+					logger.Logger().LogErrorf("EventArgsParse falied, Unknow ObjectType: %v", argType)
 					return result
 				}
 			} else {

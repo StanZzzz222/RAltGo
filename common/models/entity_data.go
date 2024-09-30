@@ -35,7 +35,7 @@ func (e *EntityData) GetNetOwner() *IPlayer {
 		}
 		return nil
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the GetNetOwner method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the GetNetOwner method", e.entityObjectType.String())
 		break
 	}
 	return nil
@@ -51,7 +51,7 @@ func (e *EntityData) GetSyncId() SyncId {
 			return SyncId(res.U32Val)
 		}
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the GetNetOwner method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the GetNetOwner method", e.entityObjectType.String())
 		break
 	}
 	return SyncId(0)
@@ -67,7 +67,7 @@ func (e *EntityData) GetStreamed() bool {
 			return res.BoolVal
 		}
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the GetStreamed method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the GetStreamed method", e.entityObjectType.String())
 		break
 	}
 	return false
@@ -83,7 +83,7 @@ func (e *EntityData) GetStreamingDistance() uint32 {
 			return res.U32Val
 		}
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the GetStreamingDistance method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the GetStreamingDistance method", e.entityObjectType.String())
 		break
 	}
 	return 0
@@ -98,7 +98,7 @@ func (e *EntityData) SetNetOwner(owner *IPlayer, disableMigration bool) {
 		}
 		w.SetEntityData(e.entityId, e.entityObjectType, enums.NetOwner, 0, uint64(owner.GetId()), uint32(value), "")
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the SetNetOwner method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the SetNetOwner method", e.entityObjectType.String())
 		break
 	}
 }
@@ -112,7 +112,7 @@ func (e *EntityData) SetStreamed(streamed bool) {
 		}
 		w.SetEntityData(e.entityId, e.entityObjectType, enums.Streamed, 0, uint64(value), 0, "")
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the SetStreamed method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the SetStreamed method", e.entityObjectType.String())
 		break
 	}
 }
@@ -122,7 +122,7 @@ func (e *EntityData) SetStreamingDistance(streamingDistance uint32) {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
 		w.SetEntityData(e.entityId, e.entityObjectType, enums.StreamingDistance, 0, 0, streamingDistance, "")
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the SetStreamingDistance method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the SetStreamingDistance method", e.entityObjectType.String())
 		break
 	}
 }
@@ -132,7 +132,7 @@ func (e *EntityData) Detach() {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
 		w.SetEntityData(e.entityId, e.entityObjectType, enums.Detach, 0, 0, 0, "")
 	default:
-		logger.LogWarnf("ObjectType: %v does not support the Detach method", e.entityObjectType.String())
+		logger.Logger().LogWarnf("ObjectType: %v does not support the Detach method", e.entityObjectType.String())
 		break
 	}
 }
@@ -142,7 +142,7 @@ func (e *EntityData) AttachToEntityBoneName(targetEntity any, bone *AttachToEnti
 		w.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneName, entityType, uint64(id), 0, bone.Dump())
 		return
 	}
-	logger.LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())
+	logger.Logger().LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())
 }
 
 func (e *EntityData) AttachToEntityBoneIndex(targetEntity any, boneIndex *AttachToEntityBoneIndex) {
@@ -150,7 +150,7 @@ func (e *EntityData) AttachToEntityBoneIndex(targetEntity any, boneIndex *Attach
 		w.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneIndex, entityType, uint64(id), 0, boneIndex.Dump())
 		return
 	}
-	logger.LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())
+	logger.Logger().LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())
 }
 
 func checkSupport(targetEntity any) (bool, enums.ObjectType, uint32) {

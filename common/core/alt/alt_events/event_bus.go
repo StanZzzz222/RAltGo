@@ -126,11 +126,11 @@ func (bus *EventBus) OnClientEvent(eventName string, callback any) {
 	t := reflect.TypeOf(callback)
 	if t.Kind() == reflect.Func {
 		if !checkZeroEventArgs(callback) {
-			logger.LogError("OnClientEvent: should not be zero parameters")
+			logger.Logger().LogError("OnClientEvent: should not be zero parameters")
 			return
 		}
 		if !checkFirstEventArgs(callback) {
-			logger.LogError("OnClientEvent: The first parameter should be *models.IPlayer")
+			logger.Logger().LogError("OnClientEvent: The first parameter should be *models.IPlayer")
 			return
 		}
 		bus.onClientEvents.Store(eventName, callback)
@@ -142,7 +142,7 @@ func (bus *EventBus) OnClientEvent(eventName string, callback any) {
 		s.Run()
 		return
 	}
-	logger.LogErrorf("OnClientEvent: unknown callback type: %v", t.Name())
+	logger.Logger().LogErrorf("OnClientEvent: unknown callback type: %v", t.Name())
 }
 
 func (bus *EventBus) OnLocalEvent(eventName string, callback any) {
@@ -151,7 +151,7 @@ func (bus *EventBus) OnLocalEvent(eventName string, callback any) {
 		bus.onLocalEvents.Store(eventName, callback)
 		return
 	}
-	logger.LogErrorf("OnLocalEvent: unknown callback type: %v", t.Name())
+	logger.Logger().LogErrorf("OnLocalEvent: unknown callback type: %v", t.Name())
 }
 
 func checkZeroEventArgs(callback any) bool {
@@ -226,7 +226,7 @@ func dumpEventArgs(callback any) []byte {
 	}
 	dumpBytes, err := json.Marshal(&obj)
 	if err != nil {
-		logger.LogErrorf("Dump event args falied, %v", err.Error())
+		logger.Logger().LogErrorf("Dump event args falied, %v", err.Error())
 		return []byte("")
 	}
 	return dumpBytes

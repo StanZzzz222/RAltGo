@@ -32,7 +32,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*IPlayer)(nil)).Elem():
 				param, ok := arg.(*IPlayer)
 				if !ok {
-					logger.LogErrorf("Invalid type for Player: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Player: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -43,7 +43,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*IVehicle)(nil)).Elem():
 				param, ok := arg.(*IVehicle)
 				if !ok {
-					logger.LogErrorf("Invalid type for Vehicle: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Vehicle: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -54,7 +54,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*IBlip)(nil)).Elem():
 				param, ok := arg.(*IBlip)
 				if !ok {
-					logger.LogErrorf("Invalid type for Blip: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Blip: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -65,7 +65,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*IPed)(nil)).Elem():
 				param, ok := arg.(*IPed)
 				if !ok {
-					logger.LogErrorf("Invalid type for Ped: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Ped: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -76,7 +76,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*IColshape)(nil)).Elem():
 				param, ok := arg.(*IColshape)
 				if !ok {
-					logger.LogErrorf("Invalid type for Colshape: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Colshape: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -87,7 +87,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*IObject)(nil)).Elem():
 				param, ok := arg.(*IObject)
 				if !ok {
-					logger.LogErrorf("Invalid type for Object: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Object: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -98,7 +98,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*ICheckpoint)(nil)).Elem():
 				param, ok := arg.(*ICheckpoint)
 				if !ok {
-					logger.LogErrorf("Invalid type for Checkpoint: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Checkpoint: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -109,7 +109,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*IMarker)(nil)).Elem():
 				param, ok := arg.(*IMarker)
 				if !ok {
-					logger.LogErrorf("Invalid type for Marker: %v", param.GetId())
+					logger.Logger().LogErrorf("Invalid type for Marker: %v", param.GetId())
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -120,7 +120,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*entities.Vector3)(nil)).Elem():
 				param, ok := arg.(*entities.Vector3)
 				if !ok {
-					logger.LogErrorf("Invalid type for Vector3: %v", param)
+					logger.Logger().LogErrorf("Invalid type for Vector3: %v", param)
 					continue
 				}
 				if param.Z == 0 {
@@ -138,7 +138,7 @@ func (mv *MValues) Dump() string {
 			case reflect.TypeOf((*entities.Rgba)(nil)).Elem():
 				param, ok := arg.(*entities.Rgba)
 				if !ok {
-					logger.LogErrorf("Invalid type for RGBA: %v", param)
+					logger.Logger().LogErrorf("Invalid type for RGBA: %v", param)
 					continue
 				}
 				obj = append(obj, map[string]any{
@@ -166,13 +166,13 @@ func (mv *MValues) Dump() string {
 			})
 			continue
 		default:
-			logger.LogErrorf("Unknow MValue type: %v", t.Kind().String())
+			logger.Logger().LogErrorf("Unknow MValue type: %v", t.Kind().String())
 			os.Exit(1)
 		}
 	}
 	dumpBytes, err := json.Marshal(&obj)
 	if err != nil {
-		logger.LogErrorf("Dump mvalues falied, %v", err.Error())
+		logger.Logger().LogErrorf("Dump mvalues falied, %v", err.Error())
 		return ""
 	}
 	return string(dumpBytes)
