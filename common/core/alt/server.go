@@ -73,11 +73,10 @@ type ServerConfig struct {
 
 func GetServerConfig() *ServerConfig {
 	var w = lib.GetWarpper()
-	ret, freePtrFunc := w.GetServerConfigData()
+	ret := w.GetServerConfigData()
 	if ret != 0 {
 		var serverConfig *ServerConfig
 		data := w.PtrMarshalGoString(ret)
-		defer freePtrFunc()
 		err := json.Unmarshal([]byte(data), &serverConfig)
 		if err != nil {
 			logger.LogErrorf("Get ServerConfig falied, error: %v", err.Error())

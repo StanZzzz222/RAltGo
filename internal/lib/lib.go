@@ -151,7 +151,7 @@ func (w *Warpper) GetServerData(getType enums.ServerDataType, data uint32) (uint
 	return w.syscall.GetServerData(int32(getType), data)
 }
 
-func (w *Warpper) GetServerConfigData() (uintptr, func()) {
+func (w *Warpper) GetServerConfigData() uintptr {
 	if w.IsWindows() {
 		return w.windows.GetServerConfigData()
 	}

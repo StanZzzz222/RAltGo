@@ -262,18 +262,13 @@ func (w *WindowsWarrper) GetServerData(getType int32, data uint32) (uintptr, fun
 	return ret, freeDataResultFunc
 }
 
-func (w *WindowsWarrper) GetServerConfigData() (uintptr, func()) {
+func (w *WindowsWarrper) GetServerConfigData() uintptr {
 	ret, _, err := getServerConfigDataProc.Call()
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("get server config data failed: %v", err.Error())
-		return 0, func() {}
+		return 0
 	}
-	freePtrDataResultFunc := func() {
-		if ret != 0 {
-			w.Free(ret)
-		}
-	}
-	return ret, freePtrDataResultFunc
+	return ret
 }
 
 func (w *WindowsWarrper) GetColshapeData(id uint32, objectType enums.ObjectType, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
