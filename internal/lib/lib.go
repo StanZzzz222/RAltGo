@@ -151,13 +151,6 @@ func (w *Warpper) GetServerData(getType enums.ServerDataType, data uint32) (uint
 	return w.syscall.GetServerData(int32(getType), data)
 }
 
-func (w *Warpper) GetServerConfigData() uintptr {
-	if w.IsWindows() {
-		return w.windows.GetServerConfigData()
-	}
-	return w.syscall.GetServerConfigData()
-}
-
 func (w *Warpper) GetColshapeData(id uint32, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
 	if w.IsWindows() {
 		return w.windows.GetColshapeData(id, enums.Colshape, dataType, entityType, data, metaData)

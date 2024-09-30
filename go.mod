@@ -3,6 +3,7 @@ module github.com/StanZzzz222/RAltGo
 go 1.22
 
 require (
+	github.com/BurntSushi/toml v1.4.0
 	github.com/gammazero/deque v0.2.1
 	github.com/goccy/go-json v0.10.3
 	github.com/gookit/color v1.5.4

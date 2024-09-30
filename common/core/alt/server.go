@@ -1,6 +1,7 @@
 package alt
 
 import (
+	"github.com/BurntSushi/toml"
 	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/core/pools"
@@ -11,7 +12,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
-	"github.com/goccy/go-json"
 )
 
 /*
@@ -29,62 +29,55 @@ const (
 )
 
 type ServerConfig struct {
-	Modules                    []string `json:"modules"`
-	Resources                  []string `json:"resources"`
-	Name                       string   `json:"name"`
-	Host                       string   `json:"host"`
-	Port                       int32    `json:"port"`
-	Players                    int32    `json:"players"`
-	Password                   string   `json:"password"`
-	Announce                   bool     `json:"announce"`
-	Token                      string   `json:"token"`
-	Gamemode                   string   `json:"gamemode"`
-	Website                    string   `json:"website"`
-	Language                   string   `json:"language"`
-	Description                string   `json:"description"`
-	Debug                      bool     `json:"debug"`
-	StreamingDistance          float64  `json:"streaming_distance"`
-	MigrationDistance          float64  `json:"migration_distance"`
-	Timeout                    float64  `json:"timeout"`
-	AnnounceRetryErrorDelay    int32    `json:"announce_retry_error_delay"`
-	AnnounceRetryErrorAttempts int32    `json:"announce_retry_error_attempts"`
-	DuplicatePlayers           int32    `json:"duplicate_players"`
-	MapBoundsMinX              float64  `json:"map_bounds_min_x"`
-	MapBoundsMinY              float64  `json:"map_bounds_min_y"`
-	MapBoundsMaxX              float64  `json:"map_bounds_max_x"`
-	MapBoundsMaxY              float64  `json:"map_bounds_max_y"`
-	MapCellAreaSize            float64  `json:"map_cell_area_size"`
-	ColShapeTickRate           int32    `json:"col_shape_tick_rate"`
-	LogStreams                 []string `json:"log_streams"`
-	EntityWorkerCount          int32    `json:"entity_worker_count"`
-	Tags                       []string `json:"tags"`
-	ConnectionQueue            bool     `json:"connection_queue"`
-	UseEarlyAuth               bool     `json:"use_early_auth"`
-	EarlyAuthURL               string   `json:"early_auth_url"`
-	UseCDN                     bool     `json:"use_cdn"`
-	CDNURL                     string   `json:"cdn_url"`
-	SendPlayerNames            bool     `json:"send_player_names"`
-	SpawnAfterConnect          bool     `json:"spawn_after_connect"`
-	//WorldProfiler              *map[string]any `json:"world_profiler"`
-	//JsModule                   *map[string]any `json:"js_module"`
-	//CsharpModule               *map[string]any `json:"csharp_module"`
-	//Voice                      *map[string]any `json:"voice"`
+	Modules                    []string       `toml:"modules"`
+	Resources                  []string       `toml:"resources"`
+	Name                       string         `toml:"name"`
+	Host                       string         `toml:"host"`
+	Port                       int32          `toml:"port"`
+	Players                    int32          `toml:"players"`
+	Password                   string         `toml:"password"`
+	Announce                   bool           `toml:"announce"`
+	Token                      string         `toml:"token"`
+	Gamemode                   string         `toml:"gamemode"`
+	Website                    string         `toml:"website"`
+	Language                   string         `toml:"language"`
+	Description                string         `toml:"description"`
+	Debug                      bool           `toml:"debug"`
+	StreamingDistance          float64        `toml:"streaming_distance"`
+	MigrationDistance          float64        `toml:"migration_distance"`
+	Timeout                    float64        `toml:"timeout"`
+	AnnounceRetryErrorDelay    int32          `toml:"announce_retry_error_delay"`
+	AnnounceRetryErrorAttempts int32          `toml:"announce_retry_error_attempts"`
+	DuplicatePlayers           int32          `toml:"duplicate_players"`
+	MapBoundsMinX              float64        `toml:"map_bounds_min_x"`
+	MapBoundsMinY              float64        `toml:"map_bounds_min_y"`
+	MapBoundsMaxX              float64        `toml:"map_bounds_max_x"`
+	MapBoundsMaxY              float64        `toml:"map_bounds_max_y"`
+	MapCellAreaSize            float64        `toml:"map_cell_area_size"`
+	ColShapeTickRate           int32          `toml:"col_shape_tick_rate"`
+	LogStreams                 []string       `toml:"log_streams"`
+	EntityWorkerCount          int32          `toml:"entity_worker_count"`
+	Tags                       []string       `toml:"tags"`
+	ConnectionQueue            bool           `toml:"connection_queue"`
+	UseEarlyAuth               bool           `toml:"use_early_auth"`
+	EarlyAuthURL               string         `toml:"early_auth_url"`
+	UseCDN                     bool           `toml:"use_cdn"`
+	CDNURL                     string         `toml:"cdn_url"`
+	SendPlayerNames            bool           `toml:"send_player_names"`
+	SpawnAfterConnect          bool           `toml:"spawn_after_connect"`
+	WorldProfiler              map[string]any `toml:"world_profiler"`
+	JsModule                   map[string]any `toml:"js_module"`
+	CsharpModule               map[string]any `toml:"csharp_module"`
+	Voice                      map[string]any `toml:"voice"`
 }
 
 func GetServerConfig() *ServerConfig {
-	var w = lib.GetWarpper()
-	ret := w.GetServerConfigData()
-	if ret != 0 {
-		var serverConfig *ServerConfig
-		data := w.PtrMarshalGoString(ret)
-		err := json.Unmarshal([]byte(data), &serverConfig)
-		if err != nil {
-			logger.LogErrorf("Get ServerConfig falied, error: %v", err.Error())
-			return nil
-		}
-		return serverConfig
+	var serverConfig *ServerConfig
+	if _, err := toml.DecodeFile("./server.toml", &serverConfig); err != nil {
+		logger.LogErrorf("Read server.toml falied, %v", err.Error())
+		return nil
 	}
-	return nil
+	return serverConfig
 }
 
 func SendBroadcast(message string) {

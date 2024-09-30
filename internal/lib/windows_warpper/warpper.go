@@ -65,7 +65,6 @@ var createColshapeProc *windows.Proc
 var createPolygonColshapeProc *windows.Proc
 var getEntityDataProc *windows.Proc
 var getServerDataProc *windows.Proc
-var getServerConfigDataProc *windows.Proc
 var getColshapeDataProc *windows.Proc
 var getDataProc *windows.Proc
 
@@ -120,7 +119,6 @@ func init() {
 		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
 		getEntityDataProc = dll.MustFindProc("get_entity_data")
 		setEntityDataProc = dll.MustFindProc("set_entity_data")
-		getServerConfigDataProc = dll.MustFindProc("get_server_config_data")
 		getColshapeDataProc = dll.MustFindProc("get_colshape_data")
 		getDataProc = dll.MustFindProc("get_data")
 		emitProc = dll.MustFindProc("emit")
@@ -260,15 +258,6 @@ func (w *WindowsWarrper) GetServerData(getType int32, data uint32) (uintptr, fun
 		}
 	}
 	return ret, freeDataResultFunc
-}
-
-func (w *WindowsWarrper) GetServerConfigData() uintptr {
-	ret, _, err := getServerConfigDataProc.Call()
-	if err != nil && err.Error() != "The operation completed successfully." {
-		logger.LogErrorf("get server config data failed: %v", err.Error())
-		return 0
-	}
-	return ret
 }
 
 func (w *WindowsWarrper) GetColshapeData(id uint32, objectType enums.ObjectType, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
