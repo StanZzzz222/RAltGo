@@ -3,7 +3,6 @@ package logger
 import (
 	"fmt"
 	"github.com/gookit/color"
-	"sync/atomic"
 	"time"
 )
 
@@ -22,7 +21,6 @@ type RAltLogger struct {
 }
 
 var (
-	initState   = &atomic.Bool{}
 	successChan chan string
 	infoChan    chan string
 	warningChan chan string
@@ -30,41 +28,40 @@ var (
 	printlnChan chan string
 )
 
-func Logger() *RAltLogger {
-	if !initState.Load() {
-		successChan = make(chan string)
-		infoChan = make(chan string)
-		warningChan = make(chan string)
-		errorChan = make(chan string)
-		printlnChan = make(chan string)
-		initState.Store(true)
-		go func() {
-			for {
-				select {
-				case msg := <-successChan:
-					currentTime := time.Now().Format("15:04:05")
-					color.Print(fmt.Sprintf("[%v]  ", currentTime))
-					color.Rgb(40, 225, 119, false).Println(msg)
-				case msg := <-infoChan:
-					currentTime := time.Now().Format("15:04:05")
-					color.Print(fmt.Sprintf("[%v]  ", currentTime))
-					color.Rgb(49, 122, 221, false).Println(msg)
-				case msg := <-warningChan:
-					currentTime := time.Now().Format("15:04:05")
-					color.Print(fmt.Sprintf("[%v]  ", currentTime))
-					color.Rgb(255, 153, 0, false).Println(msg)
-				case msg := <-errorChan:
-					currentTime := time.Now().Format("15:04:05")
-					color.Print(fmt.Sprintf("[%v]  ", currentTime))
-					color.Rgb(227, 80, 13, false).Println(msg)
-				case msg := <-printlnChan:
-					currentTime := time.Now().Format("15:04:05")
-					color.Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
-				}
+func init() {
+	successChan = make(chan string)
+	infoChan = make(chan string)
+	warningChan = make(chan string)
+	errorChan = make(chan string)
+	printlnChan = make(chan string)
+	go func() {
+		for {
+			select {
+			case msg := <-successChan:
+				currentTime := time.Now().Format("15:04:05")
+				color.Print(fmt.Sprintf("[%v]  ", currentTime))
+				color.Rgb(40, 225, 119, false).Println(msg)
+			case msg := <-infoChan:
+				currentTime := time.Now().Format("15:04:05")
+				color.Print(fmt.Sprintf("[%v]  ", currentTime))
+				color.Rgb(49, 122, 221, false).Println(msg)
+			case msg := <-warningChan:
+				currentTime := time.Now().Format("15:04:05")
+				color.Print(fmt.Sprintf("[%v]  ", currentTime))
+				color.Rgb(255, 153, 0, false).Println(msg)
+			case msg := <-errorChan:
+				currentTime := time.Now().Format("15:04:05")
+				color.Print(fmt.Sprintf("[%v]  ", currentTime))
+				color.Rgb(227, 80, 13, false).Println(msg)
+			case msg := <-printlnChan:
+				currentTime := time.Now().Format("15:04:05")
+				color.Println(fmt.Sprintf("[%v]  %v", currentTime, msg))
 			}
-		}()
-		return &RAltLogger{successChan, infoChan, warningChan, errorChan, printlnChan}
-	}
+		}
+	}()
+}
+
+func Logger() *RAltLogger {
 	return &RAltLogger{successChan, infoChan, warningChan, errorChan, printlnChan}
 }
 
