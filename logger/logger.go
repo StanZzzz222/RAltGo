@@ -21,19 +21,14 @@ type RAltLogger struct {
 }
 
 var (
-	successChan chan string
-	infoChan    chan string
-	warningChan chan string
-	errorChan   chan string
-	printlnChan chan string
+	successChan = make(chan string)
+	infoChan    = make(chan string)
+	warningChan = make(chan string)
+	errorChan   = make(chan string)
+	printlnChan = make(chan string)
 )
 
 func init() {
-	successChan = make(chan string)
-	infoChan = make(chan string)
-	warningChan = make(chan string)
-	errorChan = make(chan string)
-	printlnChan = make(chan string)
 	go func() {
 		for {
 			select {
