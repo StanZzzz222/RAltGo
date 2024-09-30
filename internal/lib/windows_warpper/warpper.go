@@ -122,6 +122,7 @@ func init() {
 		setEntityDataProc = dll.MustFindProc("set_entity_data")
 		getColshapeDataProc = dll.MustFindProc("get_colshape_data")
 		getDataProc = dll.MustFindProc("get_data")
+		getServerDataProc = dll.MustFindProc("get_server_data")
 		emitProc = dll.MustFindProc("emit")
 		emitAllPlayerProc = dll.MustFindProc("emit_all")
 		onClientEventProc = dll.MustFindProc("on_client_event")
