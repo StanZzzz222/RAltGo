@@ -24,6 +24,9 @@ import (
 
 var dllPath string
 var dll *syscall.DLL
+var emitProc *syscall.Proc
+var emitAllPlayerProc *syscall.Proc
+var onClientEventProc *syscall.Proc
 var freeProc *syscall.Proc
 var mainProc *syscall.Proc
 var freePlayerProc *syscall.Proc
@@ -46,25 +49,25 @@ var setVehicleDataProc *syscall.Proc
 var setNetworkDataProc *syscall.Proc
 var setBlipDataProc *syscall.Proc
 var setPlayerDataProc *syscall.Proc
-var setPayerHeadDataProc *syscall.Proc
+var setPlayerHeadDataProc *syscall.Proc
 var setPedDataProc *syscall.Proc
+var setServerDataProc *syscall.Proc
+var setEntityDataProc *syscall.Proc
 var createVirtualEntityGroupProc *syscall.Proc
 var createVirtualEntityProc *syscall.Proc
 var createObjectProc *syscall.Proc
 var createMarkerProc *syscall.Proc
-var createCheckPointProc *syscall.Proc
+var createCheckpointProc *syscall.Proc
 var createVehicleProc *syscall.Proc
 var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
 var createColshapeProc *syscall.Proc
 var createPolygonColshapeProc *syscall.Proc
-var setEntityDataProc *syscall.Proc
 var getEntityDataProc *syscall.Proc
+var getServerDataProc *syscall.Proc
+var getServerConfigDataProc *syscall.Proc
 var getColshapeDataProc *syscall.Proc
 var getDataProc *syscall.Proc
-var emitProc *syscall.Proc
-var emitAllPlayerProc *syscall.Proc
-var onClientEventProc *syscall.Proc
 
 type SyscallWarrper struct{}
 
@@ -98,7 +101,7 @@ func init() {
 		setVirtualEntityDataProc = dll.MustFindProc("set_virtual_entity_data")
 		setPedDataProc = dll.MustFindProc("set_ped_data")
 		setPlayerDataProc = dll.MustFindProc("set_player_data")
-		setPayerHeadDataProc = dll.MustFindProc("set_player_head_data")
+		setPlayerHeadDataProc = dll.MustFindProc("set_player_head_data")
 		setVehicleDataProc = dll.MustFindProc("set_vehicle_data")
 		setBlipDataProc = dll.MustFindProc("set_blip_data")
 		setColshapeDataProc = dll.MustFindProc("set_colshape_data")
@@ -109,7 +112,7 @@ func init() {
 		createVirtualEntityGroupProc = dll.MustFindProc("create_virtual_entity_group")
 		createVirtualEntityProc = dll.MustFindProc("create_virtual_entity")
 		createObjectProc = dll.MustFindProc("create_object")
-		createCheckPointProc = dll.MustFindProc("create_checkpoint")
+		createCheckpointProc = dll.MustFindProc("create_checkpoint")
 		createVehicleProc = dll.MustFindProc("create_vehicle")
 		createBlipProc = dll.MustFindProc("create_blip")
 		createPedProc = dll.MustFindProc("create_ped")
@@ -117,6 +120,8 @@ func init() {
 		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
 		getEntityDataProc = dll.MustFindProc("get_entity_data")
 		setEntityDataProc = dll.MustFindProc("set_entity_data")
+		getServerDataProc = dll.MustFindProc("get_server_data")
+		getServerConfigDataProc = dll.MustFindProc("get_server_config_data")
 		getColshapeDataProc = dll.MustFindProc("get_colshape_data")
 		getDataProc = dll.MustFindProc("get_data")
 		emitProc = dll.MustFindProc("emit")
@@ -222,6 +227,54 @@ func (w *SyscallWarrper) OnClientEvent(eventName string, eventArgsDump string) {
 		logger.LogErrorf("on client event failed: %v", err.Error())
 		return
 	}
+}
+
+func (w *SyscallWarrper) SetServerData(setType int32, data int64, strData string) (uintptr, func()) {
+	var strDataPtr uintptr
+	var freeDataCStringFunc func()
+	if len(strData) >= 0 {
+		strDataPtr, freeDataCStringFunc = w.GoStringMarshalPtr(strData)
+		defer freeDataCStringFunc()
+	}
+	ret, _, err := setServerDataProc.Call(uintptr(setType), uintptr(data), strDataPtr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get server data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeDataResult(ret)
+		}
+	}
+	return ret, freeDataResultFunc
+}
+
+func (w *SyscallWarrper) GetServerData(getType int32, data uint32) (uintptr, func()) {
+	ret, _, err := getServerDataProc.Call(uintptr(getType), uintptr(data))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get server data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freeDataResultFunc := func() {
+		if ret != 0 {
+			w.FreeDataResult(ret)
+		}
+	}
+	return ret, freeDataResultFunc
+}
+
+func (w *SyscallWarrper) GetServerConfigData() (uintptr, func()) {
+	ret, _, err := getServerConfigDataProc.Call()
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.LogErrorf("get server config data failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrDataResultFunc := func() {
+		if ret != 0 {
+			w.Free(ret)
+		}
+	}
+	return ret, freePtrDataResultFunc
 }
 
 func (w *SyscallWarrper) GetColshapeData(id uint32, objectType enums.ObjectType, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
@@ -335,7 +388,7 @@ func (w *SyscallWarrper) SetPlayerMetaModelData(id uint32, playerDataType enums.
 }
 
 func (w *SyscallWarrper) SetPlayerHeadData(id uint32, playerDataType enums.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
-	_, _, err := setPayerHeadDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(shape1), uintptr(shape2), uintptr(shape3), uintptr(skin1), uintptr(skin2), uintptr(skin3), uintptr(math.Float32bits(shapeMix)), uintptr(math.Float32bits(skinMix)), uintptr(math.Float32bits(thirdMix)))
+	_, _, err := setPlayerHeadDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(shape1), uintptr(shape2), uintptr(shape3), uintptr(skin1), uintptr(skin2), uintptr(skin3), uintptr(math.Float32bits(shapeMix)), uintptr(math.Float32bits(skinMix)), uintptr(math.Float32bits(thirdMix)))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.LogErrorf("set player head data failed: %v", err.Error())
 		return
@@ -417,7 +470,7 @@ func (w *SyscallWarrper) CreateVirtualEntity(groupId uint32, posData, metaData u
 }
 
 func (w *SyscallWarrper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {
-	ret, _, err := createCheckPointProc.Call(uintptr(checkPointType), uintptr(posData), uintptr(posMetaData), uintptr(math.Float32bits(radius)), uintptr(math.Float32bits(height)), uintptr(r), uintptr(g), uintptr(b), uintptr(a), uintptr(streamingDistance))
+	ret, _, err := createCheckpointProc.Call(uintptr(checkPointType), uintptr(posData), uintptr(posMetaData), uintptr(math.Float32bits(radius)), uintptr(math.Float32bits(height)), uintptr(r), uintptr(g), uintptr(b), uintptr(a), uintptr(streamingDistance))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.LogErrorf("create checkpoint failed: %v", err.Error())
 		return 0, func() {}
