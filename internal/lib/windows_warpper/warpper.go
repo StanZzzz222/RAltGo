@@ -118,6 +118,7 @@ func init() {
 		createColshapeProc = dll.MustFindProc("create_colshape")
 		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
 		getEntityDataProc = dll.MustFindProc("get_entity_data")
+		setServerDataProc = dll.MustFindProc("set_server_data")
 		setEntityDataProc = dll.MustFindProc("set_entity_data")
 		getColshapeDataProc = dll.MustFindProc("get_colshape_data")
 		getDataProc = dll.MustFindProc("get_data")
