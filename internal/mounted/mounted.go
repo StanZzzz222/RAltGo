@@ -30,7 +30,7 @@ func Mounted() {}
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	logger.LogInfo(":: Go module Initialize mounting...")
+	logger.Logger().LogInfo(":: Go module Initialize mounting...")
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
 }
 
@@ -447,7 +447,7 @@ func panicRecover() {
 	if r := recover(); r != nil {
 		var stackBuf [4096]byte
 		stackSize := runtime.Stack(stackBuf[:], false)
-		logger.LogErrorf("Panic recovered: %v", r)
-		logger.LogErrorf("StackTrace: %s", stackBuf[:stackSize])
+		logger.Logger().LogErrorf("Panic recovered: %v", r)
+		logger.Logger().LogErrorf("StackTrace: %s", stackBuf[:stackSize])
 	}
 }
