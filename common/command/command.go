@@ -299,6 +299,9 @@ func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any)
 }
 
 func checkZeroEventArgs(args ...any) bool {
+	if arr, ok := args[0].([]any); ok && len(arr) == 0 {
+		return false
+	}
 	return len(args) != 0
 }
 
