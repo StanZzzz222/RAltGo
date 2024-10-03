@@ -9,6 +9,8 @@ typedef struct {
     const char *name;
     const char *ip;
     const char *auth_token;
+    const char *social_name;
+    uint64_t social_id;
     uint64_t hwid_hash;
     uint64_t hwid_ex_hash;
     const Vector3 *position;

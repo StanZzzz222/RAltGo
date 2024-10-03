@@ -103,7 +103,7 @@ func onPlayerConnect(cPtr uintptr) {
 			pools := models.GetPools()
 			pools.PutPlayer(player)
 		}()
-		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 		alt_events2.Triggers().TriggerOnPlayerConnect(player)
 	}
 }
@@ -123,7 +123,7 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 			pools.DestroyPlayer(player)
 		}()
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 		}
 		alt_events2.Triggers().TriggerOnPlayerDisconnect(p, reason)
 	}
@@ -145,7 +145,7 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			w.FreeVehicle(cvPtr)
 		}()
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
 		if v == nil {
@@ -172,7 +172,7 @@ func onEnteringVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			w.FreeVehicle(cvPtr)
 		}()
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
 		if v == nil {
@@ -230,7 +230,7 @@ func onPlayerSpawn(cPtr uintptr) {
 		p := models.GetPools().GetPlayer(cPlayer.ID)
 		defer w.FreePlayer(cPtr)
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
 		alt_events2.Triggers().TriggerOnPlayerSpawn(p)
@@ -247,7 +247,7 @@ func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
 		p := models.GetPools().GetPlayer(cPlayer.ID)
 		defer w.FreePlayer(cPtr)
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
 		alt_events2.Triggers().TriggerOnPlayerInteriorChange(p, oldInterior, newInterior)
@@ -264,7 +264,7 @@ func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
 		p := models.GetPools().GetPlayer(cPlayer.ID)
 		defer w.FreePlayer(cPtr)
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
 		alt_events2.Triggers().TriggerOnPlayerDimensionChange(p, oldDimension, newDimension)
@@ -287,7 +287,7 @@ func onChangeVehicleSeat(cPtr, cvPtr uintptr, oldSeat, newSeat uint8) {
 			w.FreeVehicle(cvPtr)
 		}()
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
 		if v == nil {
@@ -314,7 +314,7 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			w.FreeVehicle(cvPtr)
 		}()
 		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
 		if v == nil {
@@ -351,7 +351,7 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 			p := models.GetPools().GetPlayer(cPlayer.ID)
 			c := models.GetPools().GetColshape(cColshape.ID)
 			if p == nil {
-				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 				models.GetPools().PutPlayer(p)
 			}
 			if c == nil {
@@ -405,7 +405,7 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 			p := models.GetPools().GetPlayer(cPlayer.ID)
 			c := models.GetPools().GetColshape(cColshape.ID)
 			if p == nil {
-				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 				models.GetPools().PutPlayer(p)
 			}
 			if c == nil {

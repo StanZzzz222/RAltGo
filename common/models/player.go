@@ -28,6 +28,8 @@ type IPlayer struct {
 	gameName           string
 	ip                 *net.IP
 	authToken          string
+	socialName         string
+	socialId           uint64
 	hwIdHash           uint64
 	hwIdExHash         uint64
 	model              ped_hash.ModelHash
@@ -47,7 +49,7 @@ type IPlayer struct {
 	*EntityData
 }
 
-func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hwIdExHash uint64, position, rotation *entities.Vector3) *IPlayer {
+func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken, socialName string, socialId, hwIdHash, hwIdExHash uint64, position, rotation *entities.Vector3) *IPlayer {
 	ipParse := net.ParseIP(ip)
 	return &IPlayer{
 		id:            id,
@@ -55,6 +57,8 @@ func (p *IPlayer) NewIPlayer(id uint32, name, ip, authToken string, hwIdHash, hw
 		gameName:      name,
 		ip:            &ipParse,
 		authToken:     authToken,
+		socialName:    socialName,
+		socialId:      socialId,
 		hwIdHash:      hwIdHash,
 		hwIdExHash:    hwIdExHash,
 		currentWeapon: weapon_hash.Fist,
@@ -77,6 +81,8 @@ func (p *IPlayer) GetDimension() int32                     { return p.dimension 
 func (p *IPlayer) GetFrozen() bool                         { return p.frozen }
 func (p *IPlayer) GetCollision() bool                      { return p.collision }
 func (p *IPlayer) GetInvincible() bool                     { return p.invincible }
+func (p *IPlayer) GetHwIdHash() uint64                     { return p.hwIdHash }
+func (p *IPlayer) GetHwIdExHash() uint64                   { return p.hwIdExHash }
 func (p *IPlayer) GetGameName() string                     { return p.gameName }
 func (p *IPlayer) GetHealth() uint16 {
 	ret, freeDataResultFunc := w.GetData(p.id, enums.Player, uint8(enums.PlayerHealth))

@@ -22,6 +22,8 @@ type CPlayer struct {
 	Name       string
 	IP         string
 	AuthToken  string
+	SocialName string
+	SocialID   uint64
 	HWIDHash   uint64
 	HWIDExHash uint64
 	Position   *Vector3
@@ -39,6 +41,8 @@ func ConvertCPlayer(cPtr uintptr) *CPlayer {
 		Name:       w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.name))),
 		IP:         w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.ip))),
 		AuthToken:  w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.auth_token))),
+		SocialName: w.PtrMarshalGoString(uintptr(unsafe.Pointer(cPlayer.social_name))),
+		SocialID:   uint64(cPlayer.social_id),
 		HWIDHash:   uint64(cPlayer.hwid_hash),
 		HWIDExHash: uint64(cPlayer.hwid_ex_hash),
 		Position:   (*Vector3)(unsafe.Pointer(cPlayer.position)),
