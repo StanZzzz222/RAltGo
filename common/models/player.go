@@ -83,6 +83,8 @@ func (p *IPlayer) GetCollision() bool                      { return p.collision 
 func (p *IPlayer) GetInvincible() bool                     { return p.invincible }
 func (p *IPlayer) GetHwIdHash() uint64                     { return p.hwIdHash }
 func (p *IPlayer) GetHwIdExHash() uint64                   { return p.hwIdExHash }
+func (p *IPlayer) GetSocialId() uint64                     { return p.socialId }
+func (p *IPlayer) GetSocialName() string                   { return p.socialName }
 func (p *IPlayer) GetGameName() string                     { return p.gameName }
 func (p *IPlayer) GetHealth() uint16 {
 	ret, freeDataResultFunc := w.GetData(p.id, enums.Player, uint8(enums.PlayerHealth))
