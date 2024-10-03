@@ -37,14 +37,14 @@
 1. Blip - 绝大部分已完成
 2. Player - 绝大部分已完成
 3. Vehicle - 绝大部分已完成
-4. Ped - 绝大部分已完成
-5. Colshape - 绝大部分已完成
-6. Checkpoint - 绝大部分已完成
-7. Marker- 绝大部分已完成
-8. Object - 绝大部分已完成
-9. Pools - 已完全实现上方所有对象的存储与管理
-10. VisualEntity - 待实现中
-11. VirtualEntityGroup - 待实现中
+4. Ped - 已完成
+5. Colshape - 已完成
+6. Checkpoint - 已完成
+7. Marker- 已完成
+8. Object - 已完成
+9. VisualEntity - 已完成
+10. VirtualEntityGroup - 已完成
+11. Pools - 已完全实现上方所有对象的存储与管理
 12. VoiceChannel - 待实现中
 13. ConnectionInfo - 待实现中
 .... TODO: 剩下的待实现的对象，以及模块完成后的真正优化

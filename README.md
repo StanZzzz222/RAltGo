@@ -37,16 +37,16 @@ Object:
 1. Blip - Mostly done
 2. Player - Mostly done
 3. Vehicle - Mostly done
-4. Ped - Mostly done
-5. Colshape - Mostly done
-6. Checkpoint - Mostly done
-7. Marker- Mostly done
-8. Object - Mostly done
-9. Pools - The object pool has implemented all the above objects
-10. VisualEntity - To be implemented
-11. VirtualEntityGroup - To be implemented
+4. Ped - Done √
+5. Colshape - Done √
+6. Checkpoint - Done √
+7. Marker- Done √
+8. Object - Done √
+9. VisualEntity - Done √
+10. VirtualEntityGroup - Done √
+11. Pools - The object pool has implemented all the above objects
 12. VoiceChannel - To be implemented
-13. ConnectionInfo - To be implemented
+12. ConnectionInfo - To be implemented
 .... TODO: The remaining objects to be implemented, 
 .... and the real optimization after the module is completed
 
