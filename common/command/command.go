@@ -146,7 +146,7 @@ func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any)
 			triggerCommand(command, player, args...)
 		}
 	} else {
-		alt_events.Triggers().TriggerOnCommandError(player, false, "", "")
+		alt_events.Triggers().TriggerOnCommandError(player, false, name, "")
 	}
 }
 
