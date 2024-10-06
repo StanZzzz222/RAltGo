@@ -3,7 +3,7 @@ package mounted
 import "C"
 import (
 	"github.com/StanZzzz222/RAltGo/common/command"
-	alt_events2 "github.com/StanZzzz222/RAltGo/common/core/alt/alt_events"
+	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/core/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
@@ -39,7 +39,7 @@ func onStart() {
 	defer panicRecover()
 	s := scheduler.NewScheduler()
 	s.AddTask(func() {
-		alt_events2.Events().OnClientEvent("chat:message", func(player *models.IPlayer, message string) {
+		alt_events.Events().OnClientEvent("chat:message", func(player *models.IPlayer, message string) {
 			if message[0] == '/' {
 				s = scheduler.NewScheduler()
 				args := strings.Split(message, " ")
@@ -72,23 +72,23 @@ func onStart() {
 				s.Run()
 				return
 			}
-			alt_events2.Triggers().TriggerOnChatMessage(player, message)
+			alt_events.Triggers().TriggerOnChatMessage(player, message)
 		})
 	})
 	s.Run()
-	alt_events2.Triggers().TriggerOnStart()
+	alt_events.Triggers().TriggerOnStart()
 }
 
 //export onServerStarted
 func onServerStarted() {
 	defer panicRecover()
-	alt_events2.Triggers().TriggerOnServerStarted()
+	alt_events.Triggers().TriggerOnServerStarted()
 }
 
 //export onStop
 func onStop() {
 	defer panicRecover()
-	alt_events2.Triggers().TriggerOnStop()
+	alt_events.Triggers().TriggerOnStop()
 }
 
 //export onPlayerConnect
@@ -104,7 +104,7 @@ func onPlayerConnect(cPtr uintptr) {
 			pools.PutPlayer(player)
 		}()
 		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		alt_events2.Triggers().TriggerOnPlayerConnect(player)
+		alt_events.Triggers().TriggerOnPlayerConnect(player)
 	}
 }
 
@@ -125,7 +125,7 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 		if p == nil {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 		}
-		alt_events2.Triggers().TriggerOnPlayerDisconnect(p, reason)
+		alt_events.Triggers().TriggerOnPlayerDisconnect(p, reason)
 	}
 }
 
@@ -152,7 +152,7 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 			models.GetPools().PutVehicle(veh)
 		}
-		alt_events2.Triggers().TriggerOnEnterVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnEnterVehicle(p, v, seat)
 	}
 }
 
@@ -179,7 +179,7 @@ func onEnteringVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 			models.GetPools().PutVehicle(veh)
 		}
-		alt_events2.Triggers().TriggerOnEnteringVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnEnteringVehicle(p, v, seat)
 	}
 }
 
@@ -191,7 +191,7 @@ func onConsoleCommand(cNamePtr, cArgsPtr uintptr) {
 	sName := w.PtrMarshalGoString(cNamePtr)
 	sArgs := w.PtrMarshalGoString(cArgsPtr)
 	_ = json.Unmarshal([]byte(sArgs), &args)
-	alt_events2.Triggers().TriggerOnConsoleCommand(sName, args)
+	alt_events.Triggers().TriggerOnConsoleCommand(sName, args)
 }
 
 //export onNetOwnerChange
@@ -201,19 +201,19 @@ func onNetOwnerChange(objectType uint8, entityId, oldNetOwnerId, newNetOwnerId u
 	switch enums.ObjectType(objectType) {
 	case enums.Player:
 		entity, oldNetOwner, newNetOwner := pools.GetPlayer(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events2.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break
 	case enums.Vehicle:
 		entity, oldNetOwner, newNetOwner := pools.GetVehicle(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events2.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break
 	case enums.Ped:
 		entity, oldNetOwner, newNetOwner := pools.GetPed(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events2.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break
 	case enums.Object:
 		entity, oldNetOwner, newNetOwner := pools.GetObject(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events2.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
 		break
 	default:
 		break
@@ -233,7 +233,7 @@ func onPlayerSpawn(cPtr uintptr) {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
-		alt_events2.Triggers().TriggerOnPlayerSpawn(p)
+		alt_events.Triggers().TriggerOnPlayerSpawn(p)
 	}
 }
 
@@ -250,7 +250,7 @@ func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
-		alt_events2.Triggers().TriggerOnPlayerInteriorChange(p, oldInterior, newInterior)
+		alt_events.Triggers().TriggerOnPlayerInteriorChange(p, oldInterior, newInterior)
 	}
 }
 
@@ -267,7 +267,7 @@ func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
 			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 			models.GetPools().PutPlayer(p)
 		}
-		alt_events2.Triggers().TriggerOnPlayerDimensionChange(p, oldDimension, newDimension)
+		alt_events.Triggers().TriggerOnPlayerDimensionChange(p, oldDimension, newDimension)
 	}
 }
 
@@ -294,7 +294,7 @@ func onChangeVehicleSeat(cPtr, cvPtr uintptr, oldSeat, newSeat uint8) {
 			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 			models.GetPools().PutVehicle(veh)
 		}
-		alt_events2.Triggers().TriggerOnChangeVehicleSeat(p, v, oldSeat, newSeat)
+		alt_events.Triggers().TriggerOnChangeVehicleSeat(p, v, oldSeat, newSeat)
 	}
 }
 
@@ -321,7 +321,7 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
 			models.GetPools().PutVehicle(veh)
 		}
-		alt_events2.Triggers().TriggerOnLeaveVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnLeaveVehicle(p, v, seat)
 	}
 }
 
@@ -358,7 +358,7 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
 				models.GetPools().PutColshape(c)
 			}
-			alt_events2.Triggers().TriggerOnEnterColshape(colshapeEntityType, p, nil, c)
+			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, p, nil, c)
 		}
 		break
 	case colshape_entity_type.Vehicle:
@@ -373,7 +373,7 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
 				models.GetPools().PutColshape(c)
 			}
-			alt_events2.Triggers().TriggerOnEnterColshape(colshapeEntityType, nil, v, c)
+			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, nil, v, c)
 		}
 		break
 	}
@@ -412,7 +412,7 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
 				models.GetPools().PutColshape(c)
 			}
-			alt_events2.Triggers().TriggerOnLeaveColshape(colshapeEntityType, p, nil, c)
+			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, p, nil, c)
 		}
 		break
 	case colshape_entity_type.Vehicle:
@@ -427,7 +427,7 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
 				models.GetPools().PutColshape(c)
 			}
-			alt_events2.Triggers().TriggerOnLeaveColshape(colshapeEntityType, nil, v, c)
+			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, nil, v, c)
 		}
 		break
 	}
@@ -440,7 +440,7 @@ func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
 	p := models.GetPools().GetPlayer(cPlayerId)
 	eventName := w.PtrMarshalGoString(cEventNamePtr)
 	eventArgs := w.PtrMarshalGoString(cEventArgsPtr)
-	alt_events2.Triggers().TriggerOnClientEvent(p, eventName, eventArgs)
+	alt_events.Triggers().TriggerOnClientEvent(p, eventName, eventArgs)
 }
 
 func panicRecover() {

@@ -139,17 +139,22 @@ func (t *EventBusTrigger) TriggerOnPlayerDimensionChange(player *models.IPlayer,
 func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName, eventArgs string) {
 	if callback, ok := eventBus.onClientEvents.Load(eventName); ok {
 		callbackValue := reflect.ValueOf(callback)
+		callbackType := reflect.TypeOf(callback)
 		args := t.EventArgsParse(eventArgs)
-		inputs := make([]reflect.Value, 0)
-		inputs = append(inputs, reflect.ValueOf(player))
-		if len(args) == 0 {
+		if callbackType.NumIn() == len(args)+1 {
+			inputs := make([]reflect.Value, 0)
+			inputs = append(inputs, reflect.ValueOf(player))
+			if len(args) == 0 {
+				callbackValue.Call(inputs)
+				return
+			}
+			for _, arg := range args {
+				inputs = append(inputs, reflect.ValueOf(arg))
+			}
 			callbackValue.Call(inputs)
-			return
+		} else {
+			logger.Logger().LogErrorf("ClientEvent trigger falied, expected: %v | received: %v", callbackType.NumIn(), len(args))
 		}
-		for _, arg := range args {
-			inputs = append(inputs, reflect.ValueOf(arg))
-		}
-		callbackValue.Call(inputs)
 	}
 }
 
