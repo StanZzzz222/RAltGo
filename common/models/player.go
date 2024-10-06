@@ -436,6 +436,10 @@ func (p *IPlayer) ClearTasks() {
 	w.SetPlayerData(p.id, enums.PlayerClearTasks, int64(0))
 }
 
+func (p *IPlayer) Kick(reason string) {
+	w.SetServerData(enums.KickPlayer, int64(p.GetId()), reason)
+}
+
 func (p *IPlayer) ResetHeadBlendData() {
 	w.SetPlayerData(p.id, enums.PlayerResetHeadBlendData, int64(0))
 }

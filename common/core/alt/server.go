@@ -20,14 +20,6 @@ import (
    File: server.go
 */
 
-type VoiceConnectionState = uint
-
-const (
-	Disconnected VoiceConnectionState = iota
-	Connecting
-	Connected
-)
-
 type ServerConfig struct {
 	Modules                    []string       `toml:"modules"`
 	Resources                  []string       `toml:"resources"`
@@ -321,13 +313,13 @@ func GetSyncSendThreadCount() uint8 {
 	return 0
 }
 
-func GetVoiceConnectionState() VoiceConnectionState {
+func GetVoiceConnectionState() enums.VoiceConnectionState {
 	var w = lib.GetWarpper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerVoiceConnectionState, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
-		return VoiceConnectionState(cDataResult.U8Val)
+		return enums.VoiceConnectionState(cDataResult.U8Val)
 	}
 	return 0
 }
