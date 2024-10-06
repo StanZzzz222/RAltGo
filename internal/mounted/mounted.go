@@ -95,18 +95,18 @@ func onStop() {
 func onPlayerConnect(cPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
+		p := models.GetPools().GetPlayer(cPlayer.ID)
 		defer func() {
 			w.FreePlayer(cPtr)
 			pools := models.GetPools()
-			if pools.GetPlayer(player.GetId()) == nil {
-				pools.PutPlayer(player)
-			}
+			pools.PutPlayer(p)
 		}()
-		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		alt_events.Triggers().TriggerOnPlayerConnect(player)
+		if p == nil {
+			p = p.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+		}
+		alt_events.Triggers().TriggerOnPlayerConnect(p)
 	}
 }
 
