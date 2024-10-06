@@ -33,9 +33,9 @@ type Command struct {
 	desc     string
 }
 type ExportCommand struct {
-	name   string
-	greedy bool
-	desc   string
+	Name   string
+	Greedy bool
+	Desc   string
 }
 
 func NewCommandGroup(name string) *Group {
@@ -155,9 +155,9 @@ func (g *Group) ExportCommands() []*ExportCommand {
 	g.commands.Range(func(key, value any) bool {
 		command := value.(*Command)
 		exportCommands = append(exportCommands, &ExportCommand{
-			name:   command.name,
-			greedy: command.greedy,
-			desc:   command.desc,
+			Name:   command.name,
+			Greedy: command.greedy,
+			Desc:   command.desc,
 		})
 		return true
 	})
