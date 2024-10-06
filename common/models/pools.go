@@ -1,6 +1,8 @@
 package models
 
-import "sync"
+import (
+	"sync"
+)
 
 /*
    Create by zyx
@@ -39,63 +41,43 @@ func newPools() *Pools {
 }
 
 func (p *Pools) PutBlip(blip *IBlip) {
-	if _, ok := p.blips.Load(blip.GetId()); !ok {
-		p.blips.Store(blip.GetId(), blip)
-	}
+	p.blips.Store(blip.GetId(), blip)
 }
 
 func (p *Pools) PutPlayer(player *IPlayer) {
-	if _, ok := p.players.Load(player.GetId()); !ok {
-		p.players.Store(player.GetId(), player)
-	}
+	p.players.Store(player.GetId(), player)
 }
 
 func (p *Pools) PutVehicle(vehicle *IVehicle) {
-	if _, ok := p.vehicles.Load(vehicle.GetId()); !ok {
-		p.vehicles.Store(vehicle.GetId(), vehicle)
-	}
+	p.vehicles.Store(vehicle.GetId(), vehicle)
 }
 
 func (p *Pools) PutPed(ped *IPed) {
-	if _, ok := p.peds.Load(ped.GetId()); !ok {
-		p.peds.Store(ped.GetId(), ped)
-	}
+	p.peds.Store(ped.GetId(), ped)
 }
 
 func (p *Pools) PutColshape(colshape *IColshape) {
-	if _, ok := p.colshapes.Load(colshape.GetId()); !ok {
-		p.colshapes.Store(colshape.GetId(), colshape)
-	}
+	p.colshapes.Store(colshape.GetId(), colshape)
 }
 
 func (p *Pools) PutCheckpoint(checkpoint *ICheckpoint) {
-	if _, ok := p.checkpoints.Load(checkpoint.GetId()); !ok {
-		p.checkpoints.Store(checkpoint.GetId(), checkpoint)
-	}
+	p.checkpoints.Store(checkpoint.GetId(), checkpoint)
 }
 
 func (p *Pools) PutMarker(marker *IMarker) {
-	if _, ok := p.markers.Load(marker.GetId()); !ok {
-		p.markers.Store(marker.GetId(), marker)
-	}
+	p.markers.Store(marker.GetId(), marker)
 }
 
 func (p *Pools) PutObject(object *IObject) {
-	if _, ok := p.objects.Load(object.GetId()); !ok {
-		p.objects.Store(object.GetId(), object)
-	}
+	p.objects.Store(object.GetId(), object)
 }
 
 func (p *Pools) PutVirtualEntityGroup(virtualEntityGroup *IVirtualEntityGroup) {
-	if _, ok := p.virtualEntityGroups.Load(virtualEntityGroup.GetId()); !ok {
-		p.virtualEntityGroups.Store(virtualEntityGroup.GetId(), virtualEntityGroup)
-	}
+	p.virtualEntityGroups.Store(virtualEntityGroup.GetId(), virtualEntityGroup)
 }
 
 func (p *Pools) PutVirtualEntity(virtualEntity *IVirtualEntity) {
-	if _, ok := p.virtualEntitys.Load(virtualEntity.GetId()); !ok {
-		p.virtualEntitys.Store(virtualEntity.GetId(), virtualEntity)
-	}
+	p.virtualEntitys.Store(virtualEntity.GetId(), virtualEntity)
 }
 
 func (p *Pools) DestroyBlip(blip *IBlip) {

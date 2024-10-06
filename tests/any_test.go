@@ -18,7 +18,7 @@ import (
 
 func TestAny(t *testing.T) {
 	var p = &models.IPlayer{}
-	p = p.NewIPlayer(1, "test", "127.0.0.1", "test", 1, 1, common.NewVector3(0, 0, 0), common.NewVector3(0, 0, 0))
+	p = p.NewIPlayer(1, "test", "127.0.0.1", "test", "test", 1, 1, 1, common.NewVector3(0, 0, 0), common.NewVector3(0, 0, 0))
 	models.GetPools().PutPlayer(p)
 	getP := pools.GetAnyEntity[models.IPlayer](p.GetId())
 	fmt.Println(getP.GetName())

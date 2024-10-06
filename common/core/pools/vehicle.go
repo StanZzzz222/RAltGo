@@ -1,6 +1,8 @@
 package pools
 
-import "github.com/StanZzzz222/RAltGo/common/models"
+import (
+	"github.com/StanZzzz222/RAltGo/common/models"
+)
 
 /*
    Create by zyx

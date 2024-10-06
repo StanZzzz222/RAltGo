@@ -30,7 +30,6 @@ func Mounted() {}
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	logger.Logger().LogInfo(":: Go module Initialize mounting...")
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
 }
 
@@ -95,18 +94,13 @@ func onStop() {
 func onPlayerConnect(cPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
+	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
-		defer func() {
-			w.FreePlayer(cPtr)
-			pools := models.GetPools()
-			pools.PutPlayer(p)
-		}()
-		if p == nil {
-			p = p.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		}
-		alt_events.Triggers().TriggerOnPlayerConnect(p)
+		defer w.FreePlayer(cPtr)
+		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+		models.GetPools().PutPlayer(player)
+		alt_events.Triggers().TriggerOnPlayerConnect(player)
 	}
 }
 
@@ -114,20 +108,13 @@ func onPlayerConnect(cPtr uintptr) {
 func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
+		defer w.FreePlayer(cPtr)
 		p := models.GetPools().GetPlayer(cPlayer.ID)
 		reason := w.PtrMarshalGoString(cReasonPtr)
-		defer func() {
-			w.FreePlayer(cPtr)
-			pools := models.GetPools()
-			pools.DestroyPlayer(player)
-		}()
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-		}
 		alt_events.Triggers().TriggerOnPlayerDisconnect(p, reason)
+		models.GetPools().DestroyPlayer(p)
 	}
 }
 
@@ -135,26 +122,14 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
-	var veh = &models.IVehicle{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
-		v := models.GetPools().GetVehicle(cVehicle.ID)
 		defer func() {
 			w.FreePlayer(cPtr)
 			w.FreeVehicle(cvPtr)
 		}()
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
-		}
-		if v == nil {
-			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			models.GetPools().PutVehicle(veh)
-		}
-		alt_events.Triggers().TriggerOnEnterVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnEnterVehicle(models.GetPools().GetPlayer(cPlayer.ID), models.GetPools().GetVehicle(cVehicle.ID), seat)
 	}
 }
 
@@ -162,26 +137,14 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 func onEnteringVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
-	var veh = &models.IVehicle{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
-		v := models.GetPools().GetVehicle(cVehicle.ID)
 		defer func() {
 			w.FreePlayer(cPtr)
 			w.FreeVehicle(cvPtr)
 		}()
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
-		}
-		if v == nil {
-			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			models.GetPools().PutVehicle(veh)
-		}
-		alt_events.Triggers().TriggerOnEnteringVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnEnteringVehicle(models.GetPools().GetPlayer(cPlayer.ID), models.GetPools().GetVehicle(cVehicle.ID), seat)
 	}
 }
 
@@ -190,10 +153,9 @@ func onConsoleCommand(cNamePtr, cArgsPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
 	var args []string
-	sName := w.PtrMarshalGoString(cNamePtr)
 	sArgs := w.PtrMarshalGoString(cArgsPtr)
 	_ = json.Unmarshal([]byte(sArgs), &args)
-	alt_events.Triggers().TriggerOnConsoleCommand(sName, args)
+	alt_events.Triggers().TriggerOnConsoleCommand(w.PtrMarshalGoString(cNamePtr), args)
 }
 
 //export onNetOwnerChange
@@ -202,20 +164,16 @@ func onNetOwnerChange(objectType uint8, entityId, oldNetOwnerId, newNetOwnerId u
 	pools := models.GetPools()
 	switch enums.ObjectType(objectType) {
 	case enums.Player:
-		entity, oldNetOwner, newNetOwner := pools.GetPlayer(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(pools.GetPlayer(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId))
 		break
 	case enums.Vehicle:
-		entity, oldNetOwner, newNetOwner := pools.GetVehicle(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(pools.GetVehicle(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId))
 		break
 	case enums.Ped:
-		entity, oldNetOwner, newNetOwner := pools.GetPed(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(pools.GetPed(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId))
 		break
 	case enums.Object:
-		entity, oldNetOwner, newNetOwner := pools.GetObject(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId)
-		alt_events.Triggers().TriggerOnNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		alt_events.Triggers().TriggerOnNetOwnerChange(pools.GetObject(entityId), pools.GetPlayer(oldNetOwnerId), pools.GetPlayer(newNetOwnerId))
 		break
 	default:
 		break
@@ -226,16 +184,10 @@ func onNetOwnerChange(objectType uint8, entityId, oldNetOwnerId, newNetOwnerId u
 func onPlayerSpawn(cPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
 		defer w.FreePlayer(cPtr)
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
-		}
-		alt_events.Triggers().TriggerOnPlayerSpawn(p)
+		alt_events.Triggers().TriggerOnPlayerSpawn(models.GetPools().GetPlayer(cPlayer.ID))
 	}
 }
 
@@ -243,16 +195,10 @@ func onPlayerSpawn(cPtr uintptr) {
 func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
 		defer w.FreePlayer(cPtr)
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
-		}
-		alt_events.Triggers().TriggerOnPlayerInteriorChange(p, oldInterior, newInterior)
+		alt_events.Triggers().TriggerOnPlayerInteriorChange(models.GetPools().GetPlayer(cPlayer.ID), oldInterior, newInterior)
 	}
 }
 
@@ -260,16 +206,10 @@ func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
 func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
 		defer w.FreePlayer(cPtr)
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
-		}
-		alt_events.Triggers().TriggerOnPlayerDimensionChange(p, oldDimension, newDimension)
+		alt_events.Triggers().TriggerOnPlayerDimensionChange(models.GetPools().GetPlayer(cPlayer.ID), oldDimension, newDimension)
 	}
 }
 
@@ -277,26 +217,14 @@ func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
 func onChangeVehicleSeat(cPtr, cvPtr uintptr, oldSeat, newSeat uint8) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
-	var veh = &models.IVehicle{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
-		v := models.GetPools().GetVehicle(cVehicle.ID)
 		defer func() {
 			w.FreePlayer(cPtr)
 			w.FreeVehicle(cvPtr)
 		}()
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
-		}
-		if v == nil {
-			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			models.GetPools().PutVehicle(veh)
-		}
-		alt_events.Triggers().TriggerOnChangeVehicleSeat(p, v, oldSeat, newSeat)
+		alt_events.Triggers().TriggerOnChangeVehicleSeat(models.GetPools().GetPlayer(cPlayer.ID), models.GetPools().GetVehicle(cVehicle.ID), oldSeat, newSeat)
 	}
 }
 
@@ -304,26 +232,14 @@ func onChangeVehicleSeat(cPtr, cvPtr uintptr, oldSeat, newSeat uint8) {
 func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
-	var veh = &models.IVehicle{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
-		p := models.GetPools().GetPlayer(cPlayer.ID)
-		v := models.GetPools().GetVehicle(cVehicle.ID)
 		defer func() {
 			w.FreePlayer(cPtr)
 			w.FreeVehicle(cvPtr)
 		}()
-		if p == nil {
-			p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-			models.GetPools().PutPlayer(p)
-		}
-		if v == nil {
-			v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-			models.GetPools().PutVehicle(veh)
-		}
-		alt_events.Triggers().TriggerOnLeaveVehicle(p, v, seat)
+		alt_events.Triggers().TriggerOnLeaveVehicle(models.GetPools().GetPlayer(cPlayer.ID), models.GetPools().GetVehicle(cVehicle.ID), seat)
 	}
 }
 
@@ -331,9 +247,6 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
-	var veh = &models.IVehicle{}
-	var colshape = &models.IColshape{}
 	var colshapeEntityType = colshape_entity_type.ColshapeEntityType(cType)
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
@@ -350,32 +263,12 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	switch colshapeEntityType {
 	case colshape_entity_type.Player:
 		if cPlayer != nil && cColshape != nil {
-			p := models.GetPools().GetPlayer(cPlayer.ID)
-			c := models.GetPools().GetColshape(cColshape.ID)
-			if p == nil {
-				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-				models.GetPools().PutPlayer(p)
-			}
-			if c == nil {
-				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-				models.GetPools().PutColshape(c)
-			}
-			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, p, nil, c)
+			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, models.GetPools().GetPlayer(cPlayer.ID), nil, models.GetPools().GetColshape(cColshape.ID))
 		}
 		break
 	case colshape_entity_type.Vehicle:
 		if cVehicle != nil && cColshape != nil {
-			v := models.GetPools().GetVehicle(cVehicle.ID)
-			c := models.GetPools().GetColshape(cColshape.ID)
-			if v == nil {
-				v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-				models.GetPools().PutVehicle(veh)
-			}
-			if c == nil {
-				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-				models.GetPools().PutColshape(c)
-			}
-			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, nil, v, c)
+			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, nil, models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetColshape(cColshape.ID))
 		}
 		break
 	}
@@ -385,9 +278,6 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	var player = &models.IPlayer{}
-	var veh = &models.IVehicle{}
-	var colshape = &models.IColshape{}
 	var colshapeEntityType = colshape_entity_type.ColshapeEntityType(cType)
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
@@ -404,32 +294,12 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	switch colshapeEntityType {
 	case colshape_entity_type.Player:
 		if cPlayer != nil && cColshape != nil {
-			p := models.GetPools().GetPlayer(cPlayer.ID)
-			c := models.GetPools().GetColshape(cColshape.ID)
-			if p == nil {
-				p = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
-				models.GetPools().PutPlayer(p)
-			}
-			if c == nil {
-				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-				models.GetPools().PutColshape(c)
-			}
-			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, p, nil, c)
+			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, models.GetPools().GetPlayer(cPlayer.ID), nil, models.GetPools().GetColshape(cColshape.ID))
 		}
 		break
 	case colshape_entity_type.Vehicle:
 		if cVehicle != nil && cColshape != nil {
-			v := models.GetPools().GetVehicle(cVehicle.ID)
-			c := models.GetPools().GetColshape(cColshape.ID)
-			if v == nil {
-				v = veh.NewIVehicle(cVehicle.ID, cVehicle.Model, cVehicle.PrimaryColor, cVehicle.SecondColor, cVehicle.Position, cVehicle.Rotation)
-				models.GetPools().PutVehicle(veh)
-			}
-			if c == nil {
-				c = colshape.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
-				models.GetPools().PutColshape(c)
-			}
-			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, nil, v, c)
+			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, nil, models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetColshape(cColshape.ID))
 		}
 		break
 	}
@@ -439,10 +309,7 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
-	p := models.GetPools().GetPlayer(cPlayerId)
-	eventName := w.PtrMarshalGoString(cEventNamePtr)
-	eventArgs := w.PtrMarshalGoString(cEventArgsPtr)
-	alt_events.Triggers().TriggerOnClientEvent(p, eventName, eventArgs)
+	alt_events.Triggers().TriggerOnClientEvent(models.GetPools().GetPlayer(cPlayerId), w.PtrMarshalGoString(cEventNamePtr), w.PtrMarshalGoString(cEventArgsPtr))
 }
 
 func panicRecover() {
