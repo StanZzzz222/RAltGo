@@ -145,6 +145,8 @@ func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any)
 			}
 			triggerCommand(command, player, args...)
 		}
+	} else {
+		alt_events.Triggers().TriggerOnCommandError(player, false, "", "")
 	}
 }
 
@@ -203,14 +205,14 @@ func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 				desc = command.desc
 			}
 			commandErrorMessage := customHandler(player, command.name, desc, true)
-			alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+			alt_events.Triggers().TriggerOnCommandError(player, true, command.name, commandErrorMessage)
 			return
 		}
 		if len(command.desc) <= 0 {
-			alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+			alt_events.Triggers().TriggerOnCommandError(player, true, command.name, errorMessage)
 			return
 		}
-		alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+		alt_events.Triggers().TriggerOnCommandError(player, true, command.name, command.desc)
 		return
 	}
 	for i := 1; i < callbackType.NumIn(); i++ {
@@ -223,14 +225,14 @@ func triggerCommand(command *Command, player *models.IPlayer, args ...any) {
 					desc = command.desc
 				}
 				commandErrorMessage := customHandler(player, command.name, desc, false)
-				alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+				alt_events.Triggers().TriggerOnCommandError(player, true, command.name, commandErrorMessage)
 				return
 			}
 			if len(command.desc) <= 0 {
-				alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+				alt_events.Triggers().TriggerOnCommandError(player, true, command.name, errorMessage)
 				return
 			}
-			alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+			alt_events.Triggers().TriggerOnCommandError(player, true, command.name, command.desc)
 			return
 		}
 	}
@@ -256,14 +258,14 @@ func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any)
 				desc = command.desc
 			}
 			commandErrorMessage := customHandler(player, command.name, desc, true)
-			alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+			alt_events.Triggers().TriggerOnCommandError(player, true, command.name, commandErrorMessage)
 			return
 		}
 		if len(command.desc) <= 0 {
-			alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+			alt_events.Triggers().TriggerOnCommandError(player, true, command.name, errorMessage)
 			return
 		}
-		alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+		alt_events.Triggers().TriggerOnCommandError(player, true, command.name, command.desc)
 		return
 	}
 	for i := 1; i < callbackType.NumIn(); i++ {
@@ -276,14 +278,14 @@ func triggerGreedyCommand(command *Command, player *models.IPlayer, args ...any)
 					desc = command.desc
 				}
 				commandErrorMessage := customHandler(player, command.name, desc, false)
-				alt_events.Triggers().TriggerOnCommandError(player, command.name, commandErrorMessage)
+				alt_events.Triggers().TriggerOnCommandError(player, true, command.name, commandErrorMessage)
 				return
 			}
 			if len(command.desc) <= 0 {
-				alt_events.Triggers().TriggerOnCommandError(player, command.name, errorMessage)
+				alt_events.Triggers().TriggerOnCommandError(player, true, command.name, errorMessage)
 				return
 			}
-			alt_events.Triggers().TriggerOnCommandError(player, command.name, command.desc)
+			alt_events.Triggers().TriggerOnCommandError(player, true, command.name, command.desc)
 			return
 		}
 	}

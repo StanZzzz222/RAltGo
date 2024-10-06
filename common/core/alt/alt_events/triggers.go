@@ -94,9 +94,9 @@ func (t *EventBusTrigger) TriggerOnLeaveColshape(colshapeEntityType colshape_ent
 	}
 }
 
-func (t *EventBusTrigger) TriggerOnCommandError(player *models.IPlayer, commandName, desc string) {
+func (t *EventBusTrigger) TriggerOnCommandError(player *models.IPlayer, existCommand bool, commandName, desc string) {
 	if eventBus.onCommandError != nil {
-		eventBus.onCommandError(player, commandName, desc)
+		eventBus.onCommandError(player, existCommand, commandName, desc)
 	}
 }
 
