@@ -84,6 +84,25 @@ func SendBroadcast(message string) {
 	alt_events.EmitAllPlayer("chat:message", "", message)
 }
 
+func KickPlayer(player *models.IPlayer, reason string) {
+	var w = lib.GetWarpper()
+	w.SetServerData(enums.KickPlayer, int64(player.GetId()), reason)
+}
+
+func StopServer() {
+	var w = lib.GetWarpper()
+	w.SetServerData(enums.StopServer, int64(0), "")
+}
+
+func ToggleWorldProfiler(toggleWorldProfiler bool) {
+	var w = lib.GetWarpper()
+	value := 0
+	if toggleWorldProfiler {
+		value = 1
+	}
+	w.SetServerData(enums.StopServer, int64(value), "")
+}
+
 func SetStreamingDistance(streamingDistance uint32) {
 	var w = lib.GetWarpper()
 	w.SetServerData(enums.ServerStreamingDistance, int64(streamingDistance), "")
@@ -157,6 +176,17 @@ func SetVoiceExternal(host string, port uint16) {
 func SetVoiceExternalPublic(host string, port uint16) {
 	var w = lib.GetWarpper()
 	w.SetServerData(enums.ServerVoiceExternalPublic, int64(port), host)
+}
+
+func GetNetTime() uint32 {
+	var w = lib.GetWarpper()
+	ret, freeDataResultFunc := w.GetServerData(enums.NetTime, 0)
+	cDataResult := entities.ConverCDataResult(ret)
+	if cDataResult != nil {
+		freeDataResultFunc()
+		return cDataResult.U32Val
+	}
+	return 0
 }
 
 func GetStreamingDistance() uint32 {
@@ -426,4 +456,77 @@ func GetEntitiesInRange[T any](position *entities.Vector3, dimension int32, inRa
 		}
 	}
 	return entitys
+}
+
+func GetClosestEntities[T any](position *entities.Vector3, dimension int32, inRange float32, limit int32, closestEntitiesOrderType enums.ClosestEntitiesOrderType) []*T {
+	entitys := GetEntitiesInRange[T](position, dimension, inRange)
+	switch closestEntitiesOrderType {
+	case enums.ClosestEntitiesOrderDefault, enums.ClosestEntitiesOrderAsc:
+		entitiesQuickSort(position, entitys, 0, len(entitys)-1, enums.ClosestEntitiesOrderAsc)
+	case enums.ClosestEntitiesOrderDesc:
+		entitiesQuickSort(position, entitys, 0, len(entitys)-1, enums.ClosestEntitiesOrderDesc)
+	default:
+	}
+	return entitys[:limit]
+}
+
+func entitiesQuickSort[T any](target *entities.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) {
+	if low < high {
+		p := entitiesPartition(target, datas, low, high, closestEntitiesOrderType)
+		entitiesQuickSort(target, datas, low, p-1, closestEntitiesOrderType)
+		entitiesQuickSort(target, datas, p+1, high, closestEntitiesOrderType)
+	}
+}
+
+func entitiesPartition[T any](target *entities.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) int {
+	i := low - 1
+	pivot := getEntityRange(target, datas[high])
+	if closestEntitiesOrderType == enums.ClosestEntitiesOrderAsc {
+		for j := low; j < high; j++ {
+			if getEntityRange(target, datas[j]) <= pivot {
+				i++
+				datas[i], datas[j] = datas[j], datas[i]
+			}
+		}
+	} else {
+		for j := low; j < high; j++ {
+			if getEntityRange(target, datas[j]) >= pivot {
+				i++
+				datas[i], datas[j] = datas[j], datas[i]
+			}
+		}
+	}
+	datas[i+1], datas[high] = datas[high], datas[i+1]
+	return i + 1
+}
+
+func getEntityRange[T any](target *entities.Vector3, elem *T) float32 {
+	if e, ok := any(elem).(*models.IPlayer); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.IBlip); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.IPed); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.IVehicle); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.IObject); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.IMarker); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.ICheckpoint); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.IColshape); ok {
+		return e.GetPosition().Distance(target)
+	}
+	if e, ok := any(elem).(*models.IVirtualEntity); ok {
+		return e.GetPosition().Distance(target)
+	}
+	return 0
 }

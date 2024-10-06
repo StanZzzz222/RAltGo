@@ -26,4 +26,8 @@ const (
 	ServerVoiceExternalPublic
 	ServerVoiceConnectionState
 	ServerAmmoHashForWeaponHash
+	KickPlayer
+	StopServer
+	ToggleWorldProfiler
+	NetTime
 )
