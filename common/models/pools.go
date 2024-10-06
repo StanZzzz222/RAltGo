@@ -99,62 +99,62 @@ func (p *Pools) PutVirtualEntity(virtualEntity *IVirtualEntity) {
 }
 
 func (p *Pools) DestroyBlip(blip *IBlip) {
-	if _, ok := p.blips.Load((*blip).GetId()); ok {
-		p.blips.Delete((*blip).GetId())
+	if _, ok := p.blips.Load(blip.GetId()); ok {
+		p.blips.Delete(blip.GetId())
 	}
 }
 
 func (p *Pools) DestroyPlayer(player *IPlayer) {
-	if _, ok := p.players.Load((*player).GetId()); ok {
-		p.players.Delete((*player).GetId())
+	if _, ok := p.players.Load(player.GetId()); ok {
+		p.players.Delete(player.GetId())
 	}
 }
 
 func (p *Pools) DestroyVehicle(vehicle *IVehicle) {
-	if _, ok := p.vehicles.Load((*vehicle).GetId()); ok {
-		p.vehicles.Delete((*vehicle).GetId())
+	if _, ok := p.vehicles.Load(vehicle.GetId()); ok {
+		p.vehicles.Delete(vehicle.GetId())
 	}
 }
 
 func (p *Pools) DestroyPed(ped *IPed) {
-	if _, ok := p.peds.Load((*ped).GetId()); ok {
-		p.peds.Delete((*ped).GetId())
+	if _, ok := p.peds.Load(ped.GetId()); ok {
+		p.peds.Delete(ped.GetId())
 	}
 }
 
 func (p *Pools) DestroyColshape(colshape *IColshape) {
-	if _, ok := p.colshapes.Load((*colshape).GetId()); ok {
-		p.colshapes.Delete((*colshape).GetId())
+	if _, ok := p.colshapes.Load(colshape.GetId()); ok {
+		p.colshapes.Delete(colshape.GetId())
 	}
 }
 
 func (p *Pools) DestroyCheckpoint(checkpoint *ICheckpoint) {
-	if _, ok := p.checkpoints.Load((*checkpoint).GetId()); ok {
-		p.checkpoints.Delete((*checkpoint).GetId())
+	if _, ok := p.checkpoints.Load(checkpoint.GetId()); ok {
+		p.checkpoints.Delete(checkpoint.GetId())
 	}
 }
 
 func (p *Pools) DestroyMarker(marker *IMarker) {
-	if _, ok := p.markers.Load((*marker).GetId()); ok {
-		p.markers.Delete((*marker).GetId())
+	if _, ok := p.markers.Load(marker.GetId()); ok {
+		p.markers.Delete(marker.GetId())
 	}
 }
 
 func (p *Pools) DestroyObject(object *IObject) {
-	if _, ok := p.objects.Load((*object).GetId()); ok {
-		p.objects.Delete((*object).GetId())
+	if _, ok := p.objects.Load(object.GetId()); ok {
+		p.objects.Delete(object.GetId())
 	}
 }
 
 func (p *Pools) DestroyVirtualEntityGroup(virtualEntityGroup *IVirtualEntityGroup) {
-	if _, ok := p.virtualEntityGroups.Load((*virtualEntityGroup).GetId()); ok {
-		p.virtualEntityGroups.Delete((*virtualEntityGroup).GetId())
+	if _, ok := p.virtualEntityGroups.Load(virtualEntityGroup.GetId()); ok {
+		p.virtualEntityGroups.Delete(virtualEntityGroup.GetId())
 	}
 }
 
 func (p *Pools) DestroyVirtualEntity(virtualEntity *IVirtualEntity) {
-	if _, ok := p.virtualEntitys.Load((*virtualEntity).GetId()); ok {
-		p.virtualEntitys.Delete((*virtualEntity).GetId())
+	if _, ok := p.virtualEntitys.Load(virtualEntity.GetId()); ok {
+		p.virtualEntitys.Delete(virtualEntity.GetId())
 	}
 }
 

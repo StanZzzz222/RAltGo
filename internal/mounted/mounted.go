@@ -101,7 +101,9 @@ func onPlayerConnect(cPtr uintptr) {
 		defer func() {
 			w.FreePlayer(cPtr)
 			pools := models.GetPools()
-			pools.PutPlayer(player)
+			if pools.GetPlayer(player.GetId()) == nil {
+				pools.PutPlayer(player)
+			}
 		}()
 		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
 		alt_events.Triggers().TriggerOnPlayerConnect(player)
