@@ -44,29 +44,32 @@ func onStart() {
 				args := strings.Split(message, " ")
 				groups := command.GetCommandGroups()
 				for _, group := range groups {
-					s.AddTask(func() {
-						var params []any
-						for _, param := range args[1:] {
-							if strings.Contains(param, ".") {
-								if value, err := strconv.ParseFloat(param, 64); err == nil {
+					if _, ok := group.GetCommand(args[0]); ok {
+						s.AddTask(func() {
+							var params []any
+							for _, param := range args[1:] {
+								if strings.Contains(param, ".") {
+									if value, err := strconv.ParseFloat(param, 64); err == nil {
+										params = append(params, value)
+										continue
+									}
+									params = append(params, param)
+									continue
+								}
+								if value, err := strconv.ParseInt(param, 10, 64); err == nil {
+									params = append(params, value)
+									continue
+								}
+								if value, err := strconv.ParseBool(param); err == nil {
 									params = append(params, value)
 									continue
 								}
 								params = append(params, param)
-								continue
 							}
-							if value, err := strconv.ParseInt(param, 10, 64); err == nil {
-								params = append(params, value)
-								continue
-							}
-							if value, err := strconv.ParseBool(param); err == nil {
-								params = append(params, value)
-								continue
-							}
-							params = append(params, param)
-						}
-						group.TriggerCommand(args[0], player, params...)
-					})
+							group.TriggerCommand(args[0], player, params...)
+						})
+						break
+					}
 				}
 				s.Run()
 				return

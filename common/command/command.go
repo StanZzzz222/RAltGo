@@ -126,7 +126,7 @@ func (g *Group) OnCommand(name string, callback any, greedy bool) {
 }
 
 func (g *Group) TriggerCommand(name string, player *models.IPlayer, args ...any) {
-	if command, ok := g.getCommand(name); ok {
+	if command, ok := g.GetCommand(name); ok {
 		var res = false
 		if len(g.middlewares) <= 0 {
 			res = true
@@ -164,7 +164,7 @@ func (g *Group) ExportCommands() []*ExportCommand {
 	return exportCommands
 }
 
-func (g *Group) getCommand(name string) (*Command, bool) {
+func (g *Group) GetCommand(name string) (*Command, bool) {
 	var res = false
 	var resCommand *Command
 	g.commands.Range(func(key, value any) bool {

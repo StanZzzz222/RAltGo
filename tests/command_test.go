@@ -23,7 +23,8 @@ func TestCommand(t *testing.T) {
 	command.SetCommandErrorCustomHandler(func(player *models.IPlayer, name string, desc string, isParamInsufficient bool) string {
 		return "参数不正确, 应为: " + desc
 	})
-	alt_events.Events().OnCommandError(func(player *models.IPlayer, commandName, desc string) {
+	alt_events.Events().OnCommandError(func(player *models.IPlayer, existCommand bool, commandName, desc string) {
+		fmt.Println(existCommand)
 		fmt.Println(commandName, " | ", desc)
 	})
 	group := command.NewCommandGroup("PublicCommands")
@@ -57,5 +58,6 @@ func TestCommand(t *testing.T) {
 		params = append(params, param)
 	}
 	group.TriggerCommand("/test", p, params...)
+	group.TriggerCommand("/test2", p)
 	command.TriggerLocalCommand("/test", p, int64(64))
 }
