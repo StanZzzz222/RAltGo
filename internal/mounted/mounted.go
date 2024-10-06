@@ -40,11 +40,13 @@ func onStart() {
 	s.AddTask(func() {
 		alt_events.Events().OnClientEvent("chat:message", func(player *models.IPlayer, message string) {
 			if message[0] == '/' {
+				exist := false
 				s = scheduler.NewScheduler()
 				args := strings.Split(message, " ")
 				groups := command.GetCommandGroups()
 				for _, group := range groups {
 					if _, ok := group.GetCommand(args[0]); ok {
+						exist = true
 						s.AddTask(func() {
 							var params []any
 							for _, param := range args[1:] {
@@ -72,6 +74,9 @@ func onStart() {
 					}
 				}
 				s.Run()
+				if !exist {
+					alt_events.Triggers().TriggerOnCommandError(player, false, args[0], "")
+				}
 				return
 			}
 			alt_events.Triggers().TriggerOnChatMessage(player, message)
