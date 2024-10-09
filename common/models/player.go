@@ -346,10 +346,8 @@ func (p *IPlayer) SetCurrentWeaponAmmo(ammo uint16) {
 }
 
 func (p *IPlayer) SetDimension(dimension int32) {
-	if dimension > 0 {
-		p.dimension = dimension
-		w.SetPlayerData(p.id, enums.PlayerDimension, int64(dimension))
-	}
+	p.dimension = dimension
+	w.SetPlayerData(p.id, enums.PlayerDimension, int64(dimension))
 }
 
 func (p *IPlayer) SetRotation(rotation *entities.Vector3) {
