@@ -91,6 +91,7 @@ func (v *IVehicle) GetDimension() int32                { return v.dimension }
 func (v *IVehicle) GetFrozen() bool                    { return v.frozen }
 func (v *IVehicle) GetBoatAnchorActive() bool          { return v.boatAnchorActive }
 func (v *IVehicle) GetCustomTires() bool               { return v.customTires }
+func (v *IVehicle) GetEngineOn() bool                  { return v.engineOn }
 func (v *IVehicle) GetVisible() bool                   { return v.visible }
 func (v *IVehicle) GetCollision() bool                 { return v.collision }
 func (v *IVehicle) GetDriftMode() bool                 { return v.driftMode }
@@ -296,15 +297,6 @@ func (v *IVehicle) GetDriver() *IPlayer {
 	}
 	return nil
 }
-func (v *IVehicle) GetEngineOn() bool {
-	ret, freeDataResultFunc := w.GetMetaData(v.id, enums.Vehicle, uint8(enums.VehicleEngineOn), int64(0))
-	cDataResult := entities.ConverCDataResult(ret)
-	if cDataResult != nil {
-		freeDataResultFunc()
-		return cDataResult.BoolVal
-	}
-	return false
-}
 func (v *IVehicle) GetLockState() vehicle_lock_state_type.VehicleLockState {
 	ret, freeDataResultFunc := w.GetMetaData(v.id, enums.Vehicle, uint8(enums.VehicleLockState), int64(0))
 	cDataResult := entities.ConverCDataResult(ret)
@@ -388,8 +380,8 @@ func (v *IVehicle) SetEngineOn(engineOn bool) {
 }
 
 func (v *IVehicle) ToggleEngine() {
-	v.engineOn = !v.engineOn
 	value := 0
+	v.engineOn = !v.engineOn
 	if v.engineOn {
 		value = 1
 	}
@@ -561,6 +553,7 @@ func (v *IVehicle) SetHybridExtraState(state uint8) {
 }
 
 func (v *IVehicle) SetManualEngineControl(manualEngineControl bool) {
+	v.engineOn = false
 	v.manualEngineControl = manualEngineControl
 	value := 0
 	if manualEngineControl {
