@@ -5,7 +5,7 @@
 
 typedef struct {
     uint32_t id;
-    bool spatial;
+    uint8_t spatial;
     float max_distance;
 } CVoiceChannel;
 
