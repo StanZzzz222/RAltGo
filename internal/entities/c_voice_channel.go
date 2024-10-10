@@ -29,7 +29,7 @@ func ConvertCVoiceChannel(cvPtr uintptr) *CVoiceChannel {
 	}
 	return &CVoiceChannel{
 		ID:          uint32(cVoiceChannel.id),
-		Spatial:     bool(uint8(cVoiceChannel.spatial)),
+		Spatial:     cVoiceChannel.spatial != 0,
 		MaxDistance: float32(cVoiceChannel.max_distance),
 	}
 }
