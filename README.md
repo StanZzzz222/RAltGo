@@ -8,6 +8,8 @@
 
 ---
 
+<img src="https://lavender-neighbouring-coral-264.mypinata.cloud/ipfs/QmYwAvoofx4BSton35andHWugF6CWAWsp76noTV7aPRrMV" title="" alt="" width="605">
+
 #### **This module has reduced the performance overhead caused by CGO, allowing you to get closer to docking Go performance**
 
 ###### Thanks to the contributors of the altv-rust module for allowing me to make this Go module in Rust
@@ -33,10 +35,10 @@ Measured screenshots:
 Some APIs that have been implemented:
 
 ```
-Object:
-1. Blip - Mostly done
-2. Player - Mostly done
-3. Vehicle - Mostly done
+Baisc Object:
+1. Blip - Mostly done (90%)  √
+2. Player - Mostly done (90%)  √
+3. Vehicle - Mostly done (85%) 
 4. Ped - Done √
 5. Colshape - Done √
 6. Checkpoint - Done √
@@ -44,11 +46,8 @@ Object:
 8. Object - Done √
 9. VisualEntity - Done √
 10. VirtualEntityGroup - Done √
-11. Pools - The object pool has implemented all the above objects
-12. VoiceChannel - To be implemented
-12. ConnectionInfo - To be implemented
-.... TODO: The remaining objects to be implemented, 
-.... and the real optimization after the module is completed
+11. Pools - Done √
+12. VoiceChannel - Done √
 
 Events:
 1. OnStart - Done
@@ -56,20 +55,29 @@ Events:
 3. OnStop - Done
 4. OnPlayerConnect - Done
 5. OnPlayerDisconnect - Done
-6. OnEnterVehicle - Done
-7. OnLeaveVehicle - Done
-8. OnEnterColshape - Done
-9. OnLeaveColshape - Done
+6. OnPlayerEnterVehicle - Done
+7. OnPlayerLeaveVehicle - Done
+8. OnPlayerEnterColshape - Done
+9. OnPlayerLeaveColshape - Done
 10. OnClientEvent - Done
 11. OnLocalEvent - Done
 12. OnCommandEvent - Done
 13. OnConsoleCommand - Done
-14. OnEnteringVehicle - Done
+14. OnPlayerEnteringVehicle - Done
 15. OnNetOwnerChange - Done
-16. OnChangeVehicleSeat - Done
+16. OnPlayerChangeVehicleSeat - Done
 17. OnPlayerSpawn - Done
-18. OnInteriorChange - Done
-19. OnDimensionChange - Done
+18. OnPlayerInteriorChange - Done
+19. OnPlayerDimensionChange - Done
+20. OnPlayerDeath - Done
+21. OnPlayerDamage - Done
+22. OnPlayerWeaponChange - Done
+23. OnPlayerConnectDenied - Done
+24. OnPlayerHeal - Done
+25. OnPlayerRequestControl - Done
+26. OnVehicleAttach - Done
+27. OnVehicleDetach - Done
+28. OnVehicleDestroy - Done
 .... TODO: The remaining events to be implemented, 
 .... and the real optimization after the module is completed
 ```

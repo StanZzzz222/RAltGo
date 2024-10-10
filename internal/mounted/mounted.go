@@ -7,6 +7,8 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/core/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/denied_reason_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
@@ -260,13 +262,15 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	var cColshape = entities.ConvertCColshape(ccPtr)
 	defer func() {
-		if cPtr != 0 {
+		if cPlayer != nil {
 			w.FreePlayer(cPtr)
 		}
-		if cvPtr != 0 {
+		if cVehicle != nil {
 			w.FreeVehicle(cvPtr)
 		}
-		w.FreeColshape(ccPtr)
+		if cColshape != nil {
+			w.FreeColshape(ccPtr)
+		}
 	}()
 	switch colshapeEntityType {
 	case colshape_entity_type.Player:
@@ -318,6 +322,178 @@ func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
 	alt_events.Triggers().TriggerOnClientEvent(models.GetPools().GetPlayer(cPlayerId), w.PtrMarshalGoString(cEventNamePtr), w.PtrMarshalGoString(cEventArgsPtr))
+}
+
+//export onPlayerDeath
+func onPlayerDeath(cPtr uintptr, deathType, objectType, objectId uint8, weaponHash uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		defer w.FreePlayer(cPtr)
+		switch deathType {
+		case 0:
+			var killer any
+			switch enums.ObjectType(objectType) {
+			case enums.Player:
+				killer = models.GetPools().GetPlayer(uint32(objectId))
+				break
+			case enums.Vehicle:
+				killer = models.GetPools().GetVehicle(uint32(objectId))
+				break
+			case enums.Ped:
+				killer = models.GetPools().GetPed(uint32(objectId))
+				break
+			case enums.Object:
+				killer = models.GetPools().GetObject(uint32(objectId))
+				break
+			default:
+				killer = nil
+				break
+			}
+			alt_events.Triggers().TriggerOnPlayerDeath(models.GetPools().GetPlayer(cPlayer.ID), killer, weapon_hash.ModelHash(weaponHash))
+			break
+		case 1:
+			alt_events.Triggers().TriggerOnPlayerDeath(models.GetPools().GetPlayer(cPlayer.ID), nil, weapon_hash.ModelHash(weaponHash))
+			break
+		}
+	}
+}
+
+//export onPlayerDamage
+func onPlayerDamage(cPtr uintptr, deathType, objectType, objectId uint8, healthDamage, armourDamage uint16) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		defer w.FreePlayer(cPtr)
+		switch deathType {
+		case 0:
+			var attacker any
+			switch enums.ObjectType(objectType) {
+			case enums.Player:
+				attacker = models.GetPools().GetPlayer(uint32(objectId))
+				break
+			case enums.Vehicle:
+				attacker = models.GetPools().GetVehicle(uint32(objectId))
+				break
+			case enums.Ped:
+				attacker = models.GetPools().GetPed(uint32(objectId))
+				break
+			case enums.Object:
+				attacker = models.GetPools().GetObject(uint32(objectId))
+				break
+			default:
+				attacker = nil
+				break
+			}
+			alt_events.Triggers().TriggerOnPlayerDamage(models.GetPools().GetPlayer(cPlayer.ID), attacker, healthDamage, armourDamage)
+			break
+		case 1:
+			alt_events.Triggers().TriggerOnPlayerDamage(models.GetPools().GetPlayer(cPlayer.ID), nil, healthDamage, armourDamage)
+			break
+		}
+	}
+}
+
+//export onPlayerWeaponChange
+func onPlayerWeaponChange(cPtr uintptr, oldWeaponHash, newWeaponHash uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		defer w.FreePlayer(cPtr)
+		alt_events.Triggers().TriggerOnPlayerWeaponChange(models.GetPools().GetPlayer(cPlayer.ID), oldWeaponHash, newWeaponHash)
+	}
+}
+
+//export onPlayerConnectDenied
+func onPlayerConnectDenied(cReason uint8, cNamePtr, cIpPtr uintptr, passwordHash uint64, isDebug bool, cBranchPtr uintptr, majorVersion, minorVersion uint16, cCdnUrlPtr uintptr, discordId int64) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	alt_events.Triggers().TriggerOnPlayerConnectDenied(denied_reason_type.DeniedReason(cReason), w.PtrMarshalGoString(cNamePtr), w.PtrMarshalGoString(cIpPtr),
+		passwordHash, isDebug, w.PtrMarshalGoString(cBranchPtr), majorVersion, minorVersion, w.PtrMarshalGoString(cCdnUrlPtr), discordId)
+}
+
+//export onPlayerHeal
+func onPlayerHeal(cPtr uintptr, oldHealth, newHealth, oldArmour, newArmour uint16) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		defer w.FreePlayer(cPtr)
+		alt_events.Triggers().TriggerOnPlayerHeal(models.GetPools().GetPlayer(cPlayer.ID), oldHealth, newHealth, oldArmour, newArmour)
+	}
+}
+
+//export onPlayerRequestControl
+func onPlayerRequestControl(cPtr uintptr, objectType, objectId uint8) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		defer w.FreePlayer(cPtr)
+		var entity any
+		switch enums.ObjectType(objectType) {
+		case enums.Player:
+			entity = models.GetPools().GetPlayer(uint32(objectId))
+			break
+		case enums.Vehicle:
+			entity = models.GetPools().GetVehicle(uint32(objectId))
+			break
+		case enums.Ped:
+			entity = models.GetPools().GetPed(uint32(objectId))
+			break
+		case enums.Object:
+			entity = models.GetPools().GetObject(uint32(objectId))
+			break
+		default:
+			entity = nil
+			break
+		}
+		alt_events.Triggers().TriggerOnPlayerRequestControl(models.GetPools().GetPlayer(cPlayer.ID), entity)
+	}
+}
+
+//export onVehicleAttach
+func onVehicleAttach(cvPtr, caPtr uintptr) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	var cAttached = entities.ConvertCVehicle(caPtr)
+	if cVehicle != nil && cAttached != nil {
+		defer func() {
+			w.FreeVehicle(cvPtr)
+			w.FreeVehicle(caPtr)
+		}()
+		alt_events.Triggers().TriggerOnVehicleAttach(models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetVehicle(cAttached.ID))
+	}
+}
+
+//export onVehicleDetach
+func onVehicleDetach(cvPtr, cdPtr uintptr) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	var cDetached = entities.ConvertCVehicle(cdPtr)
+	if cVehicle != nil && cDetached != nil {
+		defer func() {
+			w.FreeVehicle(cvPtr)
+			w.FreeVehicle(cdPtr)
+		}()
+		alt_events.Triggers().TriggerOnVehicleDetach(models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetVehicle(cDetached.ID))
+	}
+}
+
+//export onVehicleDestroy
+func onVehicleDestroy(cvPtr uintptr) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	if cVehicle != nil {
+		defer w.FreeVehicle(cvPtr)
+		alt_events.Triggers().TriggerOnVehicleDestroy(models.GetPools().GetVehicle(cVehicle.ID))
+	}
 }
 
 func panicRecover() {

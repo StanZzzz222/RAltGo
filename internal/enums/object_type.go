@@ -20,4 +20,5 @@ const (
 	Marker
 	VirtualEntityGroup
 	VirtualEntity
+	VoiceChannel
 )

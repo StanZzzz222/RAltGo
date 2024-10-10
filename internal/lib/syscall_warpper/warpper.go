@@ -39,6 +39,7 @@ var freeMarkerProc *syscall.Proc
 var freeObjectProc *syscall.Proc
 var freeVirtualEntityGroupProc *syscall.Proc
 var freeVirtualEntityProc *syscall.Proc
+var freeVoiceChannelProc *syscall.Proc
 var freeDataResultProc *syscall.Proc
 var setVirtualEntityDataProc *syscall.Proc
 var setColshapeDataProc *syscall.Proc
@@ -53,6 +54,7 @@ var setPlayerHeadDataProc *syscall.Proc
 var setPedDataProc *syscall.Proc
 var setServerDataProc *syscall.Proc
 var setEntityDataProc *syscall.Proc
+var setVoiceChannelDataProc *syscall.Proc
 var createVirtualEntityGroupProc *syscall.Proc
 var createVirtualEntityProc *syscall.Proc
 var createObjectProc *syscall.Proc
@@ -63,6 +65,7 @@ var createBlipProc *syscall.Proc
 var createPedProc *syscall.Proc
 var createColshapeProc *syscall.Proc
 var createPolygonColshapeProc *syscall.Proc
+var createVoiceChannelProc *syscall.Proc
 var getEntityDataProc *syscall.Proc
 var getServerDataProc *syscall.Proc
 var getColshapeDataProc *syscall.Proc
@@ -95,6 +98,7 @@ func init() {
 		freeObjectProc = dll.MustFindProc("free_object")
 		freeVirtualEntityGroupProc = dll.MustFindProc("free_virtual_entity_group")
 		freeVirtualEntityProc = dll.MustFindProc("free_virtual_entity")
+		freeVoiceChannelProc = dll.MustFindProc("free_voice_channel")
 		freeDataResultProc = dll.MustFindProc("free_data_result")
 		setNetworkDataProc = dll.MustFindProc("set_network_data")
 		setVirtualEntityDataProc = dll.MustFindProc("set_virtual_entity_data")
@@ -107,6 +111,7 @@ func init() {
 		setCheckpointDataProc = dll.MustFindProc("set_checkpoint_data")
 		setMarkerDataProc = dll.MustFindProc("set_marker_data")
 		setObjectDataProc = dll.MustFindProc("set_object_data")
+		setVoiceChannelDataProc = dll.MustFindProc("set_voice_channel_data")
 		createMarkerProc = dll.MustFindProc("create_marker")
 		createVirtualEntityGroupProc = dll.MustFindProc("create_virtual_entity_group")
 		createVirtualEntityProc = dll.MustFindProc("create_virtual_entity")
@@ -117,6 +122,7 @@ func init() {
 		createPedProc = dll.MustFindProc("create_ped")
 		createColshapeProc = dll.MustFindProc("create_colshape")
 		createPolygonColshapeProc = dll.MustFindProc("create_polygon_colshape")
+		createVoiceChannelProc = dll.MustFindProc("create_voice_channel")
 		getEntityDataProc = dll.MustFindProc("get_entity_data")
 		setServerDataProc = dll.MustFindProc("set_server_data")
 		setEntityDataProc = dll.MustFindProc("set_entity_data")
@@ -404,6 +410,14 @@ func (w *SyscallWarrper) SetEntityData(id uint32, dataType, entityDataType, enti
 	}
 }
 
+func (w *SyscallWarrper) SetVoiceChannelData(id uint32, voiceChannelDataType uint8, data int64) {
+	_, _, err := setVoiceChannelDataProc.Call(uintptr(id), uintptr(voiceChannelDataType), uintptr(data))
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.Logger().LogErrorf("set voice channel data failed: %v", err.Error())
+		return
+	}
+}
+
 func (w *SyscallWarrper) SetNetworkData(id uint32, dataType, networkDataType uint8, keysData, valuesData string) {
 	keysDataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(keysData)
 	valuesDataPtr, freeValuesDataCStringFunc := w.GoStringMarshalPtr(valuesData)
@@ -424,6 +438,20 @@ func (w *SyscallWarrper) SetPlayerData(id uint32, playerDataType enums.PlayerDat
 		logger.Logger().LogErrorf("set player data failed: %v", err.Error())
 		return
 	}
+}
+
+func (w *SyscallWarrper) CreateVoiceChannel(spatial uint8, maxDistance float32) (uintptr, func()) {
+	ret, _, err := createVoiceChannelProc.Call(uintptr(spatial), uintptr(math.Float32bits(maxDistance)))
+	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
+		logger.Logger().LogErrorf("create voice channel failed: %v", err.Error())
+		return 0, func() {}
+	}
+	freePtrFunc := func() {
+		if ret != 0 {
+			w.FreeVoiceChannel(ret)
+		}
+	}
+	return ret, freePtrFunc
 }
 
 func (w *SyscallWarrper) CreateVirtualEntityGroup(maxEntitiesInStream uint32) (uintptr, func()) {
@@ -647,6 +675,14 @@ func (w *SyscallWarrper) FreeObject(ptr uintptr) {
 	_, _, err := freeObjectProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free object failed: %v", err.Error())
+		return
+	}
+}
+
+func (w *SyscallWarrper) FreeVoiceChannel(ptr uintptr) {
+	_, _, err := freeVoiceChannelProc.Call(ptr)
+	if err != nil && err.Error() != "The operation completed successfully." {
+		logger.Logger().LogErrorf("free voice channel failed: %v", err.Error())
 		return
 	}
 }

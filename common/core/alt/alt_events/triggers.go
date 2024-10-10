@@ -6,6 +6,8 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/core/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/denied_reason_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -133,6 +135,60 @@ func (t *EventBusTrigger) TriggerOnPlayerInteriorChange(player *models.IPlayer, 
 func (t *EventBusTrigger) TriggerOnPlayerDimensionChange(player *models.IPlayer, oldDimension, newDimension int32) {
 	if eventBus.onPlayerDimensionChange != nil {
 		eventBus.onPlayerDimensionChange(player, oldDimension, newDimension)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPlayerDeath(player *models.IPlayer, killer any, weaponHash weapon_hash.ModelHash) {
+	if eventBus.onPlayerDeath != nil {
+		eventBus.onPlayerDeath(player, killer, weaponHash)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPlayerDamage(player *models.IPlayer, attacker any, healthDamage, armourDamage uint16) {
+	if eventBus.onPlayerDamage != nil {
+		eventBus.onPlayerDamage(player, attacker, healthDamage, armourDamage)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPlayerWeaponChange(player *models.IPlayer, oldWeaponHash, newWeaponHash uint32) {
+	if eventBus.onPlayerWeaponChange != nil {
+		eventBus.onPlayerWeaponChange(player, weapon_hash.ModelHash(oldWeaponHash), weapon_hash.ModelHash(newWeaponHash))
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPlayerConnectDenied(reason denied_reason_type.DeniedReason, name, ip string, passwordHash uint64, isDebug bool, branch string, majorVersion, minorVersion uint16, cdnUrl string, discordId int64) {
+	if eventBus.onPlayerConnectDenied != nil {
+		eventBus.onPlayerConnectDenied(reason, name, ip, passwordHash, isDebug, branch, majorVersion, minorVersion, cdnUrl, discordId)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPlayerHeal(player *models.IPlayer, oldHealth, newHealth, oldArmour, newArmour uint16) {
+	if eventBus.onPlayerHeal != nil {
+		eventBus.onPlayerHeal(player, oldHealth, newHealth, oldArmour, newArmour)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPlayerRequestControl(player *models.IPlayer, entity any) {
+	if eventBus.onPlayerRequestControl != nil {
+		eventBus.onPlayerRequestControl(player, entity)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVehicleAttach(vehicle *models.IVehicle, attached *models.IVehicle) {
+	if eventBus.onVehicleAttach != nil {
+		eventBus.onVehicleAttach(vehicle, attached)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVehicleDetach(vehicle *models.IVehicle, attached *models.IVehicle) {
+	if eventBus.onVehicleDetach != nil {
+		eventBus.onVehicleDetach(vehicle, attached)
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVehicleDestroy(vehicle *models.IVehicle) {
+	if eventBus.onVehicleDestroy != nil {
+		eventBus.onVehicleDestroy(vehicle)
 	}
 }
 

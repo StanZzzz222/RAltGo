@@ -41,6 +41,15 @@ type EventBus struct {
 	onLeaveColshape         OnLeaveColshapeCallback
 	onChatMessage           OnChatMessageCallback
 	onCommandError          OnCommandErrorCallback
+	onPlayerDeath           OnPlayerDeathCallback
+	onPlayerDamage          OnPlayerDamageCallback
+	onPlayerWeaponChange    OnPlayerWeaponChangeCallback
+	onPlayerConnectDenied   OnPlayerConnectDeniedCallback
+	onPlayerHeal            OnPlayerHealCallback
+	onPlayerRequestControl  OnPlayerRequestControlCallback
+	onVehicleAttach         OnVehicleAttachCallback
+	onVehicleDetach         OnVehicleDetachCallback
+	onVehicleDestroy        OnVehicleDestroyCallback
 	onClientEvents          *sync.Map
 	onLocalEvents           *sync.Map
 }
@@ -119,6 +128,42 @@ func (bus *EventBus) OnPlayerInteriorChange(callback OnPlayerInteriorChangeCallb
 
 func (bus *EventBus) OnPlayerDimensionChange(callback OnPlayerDimensionChangeCallback) {
 	bus.onPlayerDimensionChange = callback
+}
+
+func (bus *EventBus) OnPlayerDeath(callback OnPlayerDeathCallback) {
+	bus.onPlayerDeath = callback
+}
+
+func (bus *EventBus) OnPlayerDamage(callback OnPlayerDamageCallback) {
+	bus.onPlayerDamage = callback
+}
+
+func (bus *EventBus) OnPlayerWeaponChange(callback OnPlayerWeaponChangeCallback) {
+	bus.onPlayerWeaponChange = callback
+}
+
+func (bus *EventBus) OnPlayerConnectDenied(callback OnPlayerConnectDeniedCallback) {
+	bus.onPlayerConnectDenied = callback
+}
+
+func (bus *EventBus) OnPlayerHeal(callback OnPlayerHealCallback) {
+	bus.onPlayerHeal = callback
+}
+
+func (bus *EventBus) OnPlayerRequestControl(callback OnPlayerRequestControlCallback) {
+	bus.onPlayerRequestControl = callback
+}
+
+func (bus *EventBus) OnVehicleAttach(callback OnVehicleAttachCallback) {
+	bus.onVehicleAttach = callback
+}
+
+func (bus *EventBus) OnVehicleDetach(callback OnVehicleDetachCallback) {
+	bus.onVehicleDetach = callback
+}
+
+func (bus *EventBus) OnVehicleDestroy(callback OnVehicleDestroyCallback) {
+	bus.onVehicleDestroy = callback
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {

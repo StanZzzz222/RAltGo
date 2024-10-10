@@ -16,11 +16,14 @@ func _() {
 	_ = x[Object-5]
 	_ = x[CheckPoint-6]
 	_ = x[Marker-7]
+	_ = x[VirtualEntityGroup-8]
+	_ = x[VirtualEntity-9]
+	_ = x[VoiceChannel-10]
 }
 
-const _ObjectType_name = "PlayerVehiclePedBlipColshapeObjectCheckPointMarker"
+const _ObjectType_name = "PlayerVehiclePedBlipColshapeObjectCheckPointMarkerVirtualEntityGroupVirtualEntityVoiceChannel"
 
-var _ObjectType_index = [...]uint8{0, 6, 13, 16, 20, 28, 34, 44, 50}
+var _ObjectType_index = [...]uint8{0, 6, 13, 16, 20, 28, 34, 44, 50, 68, 81, 93}
 
 func (i ObjectType) String() string {
 	if i < 0 || i >= ObjectType(len(_ObjectType_index)-1) {

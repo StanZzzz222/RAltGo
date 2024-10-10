@@ -23,6 +23,7 @@ type Pools struct {
 	objects             *sync.Map
 	virtualEntityGroups *sync.Map
 	virtualEntitys      *sync.Map
+	voiceChannels       *sync.Map
 }
 
 func newPools() *Pools {
@@ -37,6 +38,7 @@ func newPools() *Pools {
 		objects:             &sync.Map{},
 		virtualEntityGroups: &sync.Map{},
 		virtualEntitys:      &sync.Map{},
+		voiceChannels:       &sync.Map{},
 	}
 }
 
@@ -78,6 +80,10 @@ func (p *Pools) PutVirtualEntityGroup(virtualEntityGroup *IVirtualEntityGroup) {
 
 func (p *Pools) PutVirtualEntity(virtualEntity *IVirtualEntity) {
 	p.virtualEntitys.Store(virtualEntity.GetId(), virtualEntity)
+}
+
+func (p *Pools) PutVoiceChannel(voiceChannel *IVoiceChannel) {
+	p.voiceChannels.Store(voiceChannel.GetId(), voiceChannel)
 }
 
 func (p *Pools) DestroyBlip(blip *IBlip) {
@@ -137,6 +143,12 @@ func (p *Pools) DestroyVirtualEntityGroup(virtualEntityGroup *IVirtualEntityGrou
 func (p *Pools) DestroyVirtualEntity(virtualEntity *IVirtualEntity) {
 	if _, ok := p.virtualEntitys.Load(virtualEntity.GetId()); ok {
 		p.virtualEntitys.Delete(virtualEntity.GetId())
+	}
+}
+
+func (p *Pools) DestroyVoiceChannel(voiceChannel *IVoiceChannel) {
+	if _, ok := p.voiceChannels.Load(voiceChannel.GetId()); ok {
+		p.voiceChannels.Delete(voiceChannel.GetId())
 	}
 }
 
@@ -210,6 +222,13 @@ func (p *Pools) GetVirtualEntity(id uint32) *IVirtualEntity {
 	return nil
 }
 
+func (p *Pools) GetVoiceChannel(id uint32) *IVoiceChannel {
+	if value, ok := p.voiceChannels.Load(id); ok {
+		return value.(*IVoiceChannel)
+	}
+	return nil
+}
+
 func (p *Pools) GetVehiclePools() *sync.Map {
 	return p.vehicles
 }
@@ -248,6 +267,10 @@ func (p *Pools) GetVirtualEntityGroupPools() *sync.Map {
 
 func (p *Pools) GetVirtualEntityPools() *sync.Map {
 	return p.virtualEntitys
+}
+
+func (p *Pools) GetVoiceChannelPools() *sync.Map {
+	return p.voiceChannels
 }
 
 func GetPools() *Pools {

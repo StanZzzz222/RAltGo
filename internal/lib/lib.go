@@ -269,11 +269,30 @@ func (w *Warpper) SetNetworkData(id uint32, dataType enums.ObjectType, networkDa
 	w.syscall.SetNetworkData(id, uint8(dataType), uint8(networkDataType), keysData, valuesData)
 }
 
+func (w *Warpper) SetVoiceChannelData(id uint32, voiceChannelDataType enums.VoiceChannelDataType, data int64) {
+	if w.IsWindows() {
+		w.windows.SetVoiceChannelData(id, uint8(voiceChannelDataType), data)
+		return
+	}
+	w.syscall.SetVoiceChannelData(id, uint8(voiceChannelDataType), data)
+}
+
 func (w *Warpper) CreateVirtualEntityGroup(maxEntitiesInStream uint32) (uintptr, func()) {
 	if w.IsWindows() {
 		return w.windows.CreateVirtualEntityGroup(maxEntitiesInStream)
 	}
 	return w.syscall.CreateVirtualEntityGroup(maxEntitiesInStream)
+}
+
+func (w *Warpper) CreateVoiceChannel(spatial bool, maxDistance float32) (uintptr, func()) {
+	var value uint8 = 0
+	if spatial {
+		value = 1
+	}
+	if w.IsWindows() {
+		return w.windows.CreateVoiceChannel(value, maxDistance)
+	}
+	return w.syscall.CreateVoiceChannel(value, maxDistance)
 }
 
 func (w *Warpper) CreateVirtualEntity(groupId uint32, posData, posMetaData uint64, streamingDistance uint32) (uintptr, func()) {

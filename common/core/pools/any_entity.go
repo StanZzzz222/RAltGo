@@ -47,6 +47,9 @@ func GetAnyEntity[T any](id uint32) T {
 	case reflect.TypeOf((*models.IVirtualEntityGroup)(nil)).Elem():
 		entity = *(*T)(unsafe.Pointer(models.GetPools().GetVirtualEntityGroup(id)))
 		break
+	case reflect.TypeOf((*models.IVoiceChannel)(nil)).Elem():
+		entity = *(*T)(unsafe.Pointer(models.GetPools().GetVoiceChannel(id)))
+		break
 	}
 	return entity
 }
@@ -86,6 +89,9 @@ func GetAnyEntitys[T any]() []*T {
 		break
 	case reflect.TypeOf((*models.IVirtualEntityGroup)(nil)).Elem():
 		pools = models.GetPools().GetVirtualEntityGroupPools()
+		break
+	case reflect.TypeOf((*models.IVoiceChannel)(nil)).Elem():
+		pools = models.GetPools().GetVoiceChannelPools()
 		break
 	}
 	if pools != nil {
@@ -134,6 +140,9 @@ func GetAnyEntityIterator[T any]() <-chan *T {
 		break
 	case reflect.TypeOf((*models.IVirtualEntityGroup)(nil)).Elem():
 		pools = models.GetPools().GetVirtualEntityGroupPools()
+		break
+	case reflect.TypeOf((*models.IVoiceChannel)(nil)).Elem():
+		pools = models.GetPools().GetVoiceChannelPools()
 		break
 	}
 	go func() {
