@@ -206,7 +206,7 @@ func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName
 			}
 			for i, arg := range args {
 				if arg == nil {
-					inputs = append(inputs, reflect.Zero(callbackType.In(i)))
+					inputs = append(inputs, reflect.Zero(callbackType.In(i+1)))
 					continue
 				}
 				inputs = append(inputs, reflect.ValueOf(arg))
