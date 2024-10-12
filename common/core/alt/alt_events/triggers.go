@@ -244,6 +244,10 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 	}
 	if len(args) != 0 {
 		for _, objAny := range args {
+			if objAny == nil {
+				result = append(result, nil)
+				continue
+			}
 			obj := objAny.(map[string]any)
 			argType := obj["type"]
 			argValue := obj["value"]
