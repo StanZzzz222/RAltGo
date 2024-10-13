@@ -280,7 +280,7 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 		break
 	case colshape_entity_type.Vehicle:
 		if cVehicle != nil && cColshape != nil {
-			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, nil, models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetColshape(cColshape.ID))
+			alt_events.Triggers().TriggerOnEnterColshape(colshapeEntityType, models.GetPools().GetPlayer(cPlayer.ID), models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetColshape(cColshape.ID))
 		}
 		break
 	}
@@ -311,7 +311,7 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 		break
 	case colshape_entity_type.Vehicle:
 		if cVehicle != nil && cColshape != nil {
-			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, nil, models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetColshape(cColshape.ID))
+			alt_events.Triggers().TriggerOnLeaveColshape(colshapeEntityType, models.GetPools().GetPlayer(cPlayer.ID), models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetColshape(cColshape.ID))
 		}
 		break
 	}
