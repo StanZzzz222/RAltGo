@@ -23,7 +23,7 @@ func CreateBlipPoint(global bool, spriteId, color uint32, name string, position 
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, (*models.Vector3)(cBlip.Position))
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(global)
@@ -41,7 +41,7 @@ func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint3
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, (*models.Vector3)(cBlip.Position))
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
@@ -60,7 +60,7 @@ func CreateBlipArea(global bool, color uint32, name string, position *models.Vec
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, (*models.Vector3)(cBlip.Position))
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		return blip
@@ -77,7 +77,7 @@ func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name str
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, (*models.Vector3)(cBlip.Position))
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)
@@ -100,7 +100,7 @@ func CreateBlipRadius(global bool, color uint32, name string, position *models.V
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, (*models.Vector3)(cBlip.Position))
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(global)
@@ -122,7 +122,7 @@ func CreateBlipRadiusSomePlayers(players []*models.IPlayer, color uint32, name s
 	cBlip := entities.ConvertCBlip(ret)
 	if cBlip != nil {
 		freePtrFunc()
-		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, cBlip.Position)
+		blip = blip.NewIBlip(cBlip.ID, cBlip.BlipType, cBlip.SpriteId, cBlip.Color, cBlip.Name, cBlip.Rot, (*models.Vector3)(cBlip.Position))
 		pools := models.GetPools()
 		pools.PutBlip(blip)
 		blip.SetGlobal(false)

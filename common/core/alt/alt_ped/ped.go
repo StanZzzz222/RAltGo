@@ -24,7 +24,7 @@ func CreatePed(model string, position, rotation *models.Vector3) *models.IPed {
 	cPed := entities.ConvertCPed(ret)
 	if cPed != nil {
 		freePtrFunc()
-		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
+		p = p.NewIPed(cPed.ID, cPed.Model, (*models.Vector3)(cPed.Position), (*models.Vector3)(cPed.Rotation))
 		pools := models.GetPools()
 		pools.PutPed(p)
 		return p
@@ -41,7 +41,7 @@ func CreateStreamPed(model string, position, rotation *models.Vector3, streaming
 	cPed := entities.ConvertCPed(ret)
 	if cPed != nil {
 		freePtrFunc()
-		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
+		p = p.NewIPed(cPed.ID, cPed.Model, (*models.Vector3)(cPed.Position), (*models.Vector3)(cPed.Rotation))
 		pools := models.GetPools()
 		pools.PutPed(p)
 		return p
@@ -58,7 +58,7 @@ func CreatePedByHash(model ped_hash.ModelHash, position, rotation *models.Vector
 	cPed := entities.ConvertCPed(ret)
 	if cPed != nil {
 		freePtrFunc()
-		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
+		p = p.NewIPed(cPed.ID, cPed.Model, (*models.Vector3)(cPed.Position), (*models.Vector3)(cPed.Rotation))
 		pools := models.GetPools()
 		pools.PutPed(p)
 		return p
@@ -75,7 +75,7 @@ func CreateStreamPedByHash(model ped_hash.ModelHash, position, rotation *models.
 	cPed := entities.ConvertCPed(ret)
 	if cPed != nil {
 		freePtrFunc()
-		p = p.NewIPed(cPed.ID, cPed.Model, cPed.Position, cPed.Rotation)
+		p = p.NewIPed(cPed.ID, cPed.Model, (*models.Vector3)(cPed.Position), (*models.Vector3)(cPed.Rotation))
 		pools := models.GetPools()
 		pools.PutPed(p)
 		return p

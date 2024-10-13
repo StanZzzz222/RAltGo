@@ -22,7 +22,7 @@ func CreateVirtualEntity(group *models.IVirtualEntityGroup, position *models.Vec
 	cVirtualEntity := entities.ConvertCVirtualEntity(ret)
 	if cVirtualEntity != nil {
 		freePtrFunc()
-		virtualEntity = virtualEntity.NewIVirtualEntity(cVirtualEntity.ID, cVirtualEntity.StreamingDistance, cVirtualEntity.Position)
+		virtualEntity = virtualEntity.NewIVirtualEntity(cVirtualEntity.ID, cVirtualEntity.StreamingDistance, (*models.Vector3)(cVirtualEntity.Position))
 		pools := models.GetPools()
 		pools.PutVirtualEntity(virtualEntity)
 		return virtualEntity

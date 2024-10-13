@@ -22,7 +22,7 @@ func CreateMarker(markerType marker_type.MarkerType, position *models.Vector3, c
 	cMarker := entities.ConvertCMarker(ret)
 	if cMarker != nil {
 		freePtrFunc()
-		m = m.NewIMarker(cMarker.ID, cMarker.MarkerType, cMarker.Position)
+		m = m.NewIMarker(cMarker.ID, cMarker.MarkerType, (*models.Vector3)(cMarker.Position))
 		pools := models.GetPools()
 		pools.PutMarker(m)
 		return m

@@ -22,7 +22,7 @@ func CreateCheckpoint(checkPointType check_point_type.CheckPointType, position *
 	cCheckpoint := entities.ConvertCCheckPoint(ret)
 	if cCheckpoint != nil {
 		freePtrFunc()
-		c = c.NewICheckPoint(cCheckpoint.ID, cCheckpoint.CheckpointType, cCheckpoint.Position, height, radius)
+		c = c.NewICheckPoint(cCheckpoint.ID, cCheckpoint.CheckpointType, (*models.Vector3)(cCheckpoint.Position), height, radius)
 		pools := models.GetPools()
 		pools.PutCheckpoint(c)
 		return c

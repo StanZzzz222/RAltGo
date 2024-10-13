@@ -23,7 +23,7 @@ func CreateColshapeCircle(position *models.Vector3, radius float32) *models.ICol
 	cColshape := entities.ConvertCColshape(ret)
 	if cColshape != nil {
 		freePtrFunc()
-		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, (*models.Vector3)(cColshape.Position))
 		pools := models.GetPools()
 		pools.PutColshape(c)
 		return c
@@ -39,7 +39,7 @@ func CreateColshapeSphere(position *models.Vector3, radius float32) *models.ICol
 	cColshape := entities.ConvertCColshape(ret)
 	if cColshape != nil {
 		freePtrFunc()
-		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, (*models.Vector3)(cColshape.Position))
 		pools := models.GetPools()
 		pools.PutColshape(c)
 		return c
@@ -56,7 +56,7 @@ func CreateColshapeRectangle(pointPosition *models.Vector3, secondPointPosition 
 	cColshape := entities.ConvertCColshape(ret)
 	if cColshape != nil {
 		freePtrFunc()
-		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, (*models.Vector3)(cColshape.Position))
 		pools := models.GetPools()
 		pools.PutColshape(c)
 		return c
@@ -73,7 +73,7 @@ func CreateColshapeCuboid(pointPosition *models.Vector3, secondPointPosition *mo
 	cColshape := entities.ConvertCColshape(ret)
 	if cColshape != nil {
 		freePtrFunc()
-		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, (*models.Vector3)(cColshape.Position))
 		pools := models.GetPools()
 		pools.PutColshape(c)
 		return c
@@ -89,7 +89,7 @@ func CreateColshapeCylinder(pointPosition *models.Vector3, radius, height float3
 	cColshape := entities.ConvertCColshape(ret)
 	if cColshape != nil {
 		freePtrFunc()
-		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, (*models.Vector3)(cColshape.Position))
 		pools := models.GetPools()
 		pools.PutColshape(c)
 		return c
@@ -105,7 +105,7 @@ func CreateColshapePolygon(minZ, maxZ float32, points []*models.Vector3) *models
 	cColshape := entities.ConvertCColshape(ret)
 	if cColshape != nil {
 		freePtrFunc()
-		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, cColshape.Position)
+		c = c.NewIColshape(cColshape.ID, cColshape.ColshapeType, (*models.Vector3)(cColshape.Position))
 		pools := models.GetPools()
 		pools.PutColshape(c)
 		return c
