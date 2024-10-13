@@ -108,7 +108,7 @@ func onPlayerConnect(cPtr uintptr) {
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
-		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, cPlayer.Position, cPlayer.Rotation)
+		player = player.NewIPlayer(cPlayer.ID, cPlayer.Name, cPlayer.IP, cPlayer.AuthToken, cPlayer.SocialName, cPlayer.SocialID, cPlayer.HWIDHash, cPlayer.HWIDExHash, (*models.Vector3)(cPlayer.Position), (*models.Vector3)(cPlayer.Rotation))
 		models.GetPools().PutPlayer(player)
 		alt_events.Triggers().TriggerOnPlayerConnect(player)
 	}
