@@ -64,7 +64,7 @@ func ConverCDataResult(cresPtr uintptr) *CDataResult {
 		res.U64Val = uint64(*(*C.uint64_t)(unsafe.Pointer(&cDataResult.data)))
 		break
 	case BoolTag:
-		res.BoolVal = int(*(*C.int)(unsafe.Pointer(&cDataResult.data))) != 0
+		res.BoolVal = uint8(*(*C.uint8_t)(unsafe.Pointer(&cDataResult.data))) != 0
 		break
 	case StringTag:
 		res.StringVal = w.PtrMarshalGoString(uintptr(unsafe.Pointer(*(**C.char)(unsafe.Pointer(&cDataResult.data)))))
