@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_timers"
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/hash_enums/radio_station_type"
@@ -696,8 +695,7 @@ func (v *IVehicle) SetWheels(wheelType, variation uint8) {
 
 func (v *IVehicle) Destroy() {
 	if driver := v.GetDriver(); driver != nil {
-		pos := v.GetPosition()
-		driver.SetPosition(common.NewVector3ARound(pos.X, pos.Y, pos.Z, 1))
+		driver.SetPosition(v.GetPosition())
 	}
 	alt_timers.SetTimeout(time.Millisecond*300, func() {
 		v.warpper.SetVehicleData(v.id, enums.VehicleDestroy, int64(0))
