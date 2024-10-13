@@ -3,7 +3,6 @@ package alt_events
 import (
 	"github.com/StanZzzz222/RAltGo/common/core/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
-	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
@@ -243,10 +242,10 @@ func dumpEventArgs(callback any) []byte {
 			case reflect.TypeOf((*models.IColshape)(nil)).Elem():
 				obj = append(obj, "altv::ColshapeContainer")
 				continue
-			case reflect.TypeOf((*entities.Vector3)(nil)).Elem():
+			case reflect.TypeOf((*models.Vector3)(nil)).Elem():
 				obj = append(obj, "altv::Vector3")
 				continue
-			case reflect.TypeOf((*entities.Rgba)(nil)).Elem():
+			case reflect.TypeOf((*models.Rgba)(nil)).Elem():
 				obj = append(obj, "altv::Rgba")
 				continue
 			}

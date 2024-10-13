@@ -14,7 +14,7 @@ import (
    File: checkpoint.go
 */
 
-func CreateCheckpoint(checkPointType check_point_type.CheckPointType, position *entities.Vector3, radius, height float32, color *entities.Rgba, streamingDistance uint32) *models.ICheckpoint {
+func CreateCheckpoint(checkPointType check_point_type.CheckPointType, position *models.Vector3, radius, height float32, color *models.Rgba, streamingDistance uint32) *models.ICheckpoint {
 	var w = lib.GetWarpper()
 	var c = &models.ICheckpoint{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32

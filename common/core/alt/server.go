@@ -398,7 +398,7 @@ func GetEntitiesInDimension[T any](dimension int32) []*T {
 	return entitys
 }
 
-func GetEntitiesInRange[T any](position *entities.Vector3, dimension int32, inRange float32) []*T {
+func GetEntitiesInRange[T any](position *models.Vector3, dimension int32, inRange float32) []*T {
 	var entitys []*T
 	for entity := range pools.GetAnyEntityIterator[T]() {
 		if e, ok := any(entity).(*models.IPlayer); ok {
@@ -450,7 +450,7 @@ func GetEntitiesInRange[T any](position *entities.Vector3, dimension int32, inRa
 	return entitys
 }
 
-func GetClosestEntities[T any](position *entities.Vector3, dimension int32, inRange float32, limit int32, closestEntitiesOrderType enums.ClosestEntitiesOrderType) []*T {
+func GetClosestEntities[T any](position *models.Vector3, dimension int32, inRange float32, limit int32, closestEntitiesOrderType enums.ClosestEntitiesOrderType) []*T {
 	entitys := GetEntitiesInRange[T](position, dimension, inRange)
 	switch closestEntitiesOrderType {
 	case enums.ClosestEntitiesOrderDefault, enums.ClosestEntitiesOrderAsc:
@@ -462,7 +462,7 @@ func GetClosestEntities[T any](position *entities.Vector3, dimension int32, inRa
 	return entitys[:limit]
 }
 
-func entitiesQuickSort[T any](target *entities.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) {
+func entitiesQuickSort[T any](target *models.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) {
 	if low < high {
 		p := entitiesPartition(target, datas, low, high, closestEntitiesOrderType)
 		entitiesQuickSort(target, datas, low, p-1, closestEntitiesOrderType)
@@ -470,7 +470,7 @@ func entitiesQuickSort[T any](target *entities.Vector3, datas []*T, low, high in
 	}
 }
 
-func entitiesPartition[T any](target *entities.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) int {
+func entitiesPartition[T any](target *models.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) int {
 	i := low - 1
 	pivot := getEntityRange(target, datas[high])
 	if closestEntitiesOrderType == enums.ClosestEntitiesOrderAsc {
@@ -492,7 +492,7 @@ func entitiesPartition[T any](target *entities.Vector3, datas []*T, low, high in
 	return i + 1
 }
 
-func getEntityRange[T any](target *entities.Vector3, elem *T) float32 {
+func getEntityRange[T any](target *models.Vector3, elem *T) float32 {
 	if e, ok := any(elem).(*models.IPlayer); ok {
 		return e.GetPosition().Distance(target)
 	}

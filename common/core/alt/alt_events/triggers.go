@@ -8,7 +8,6 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/denied_reason_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
-	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
@@ -311,12 +310,12 @@ func (t *EventBusTrigger) EventArgsParse(eventArgs string) []any {
 				case reflect.String.String():
 					switch argValue.(string) {
 					case "rgba":
-						var rgba *entities.Rgba
+						var rgba *models.Rgba
 						_ = json.Unmarshal([]byte(argValue.(string)), &rgba)
 						result = append(result, rgba)
 						continue
 					case "vector2":
-						var vec3 *entities.Vector3
+						var vec3 *models.Vector3
 						_ = json.Unmarshal([]byte(argValue.(string)), &vec3)
 						result = append(result, vec3)
 						continue

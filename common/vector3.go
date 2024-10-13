@@ -2,7 +2,7 @@ package common
 
 import (
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/internal/entities"
+	"github.com/StanZzzz222/RAltGo/common/models"
 	"math"
 	"math/rand"
 	"strconv"
@@ -16,12 +16,26 @@ import (
    File: vector3.go
 */
 
-func NewVector3Collection(points [][][]float32) []*entities.Vector3 {
-	var slice []*entities.Vector3
+func NewVector3(x, y, z float32) *models.Vector3 {
+	return &models.Vector3{X: x, Y: y, Z: z}
+}
+
+func NewVector3ARound(x, y, z float32, rangeVal float32) *models.Vector3 {
+	source := rand.NewSource(time.Now().UnixNano())
+	source.Seed(time.Now().UnixNano())
+	r := rand.New(source)
+	position := &models.Vector3{X: x, Y: y, Z: z}
+	position.X += r.Float32()*(rangeVal*2) - rangeVal
+	position.Y += r.Float32()*(rangeVal*2) - rangeVal
+	return position
+}
+
+func NewVector3Collection(points [][][]float32) []*models.Vector3 {
+	var slice []*models.Vector3
 	for _, v := range points {
 		for _, point := range v {
 			if len(point) >= 3 {
-				slice = append(slice, &entities.Vector3{
+				slice = append(slice, &models.Vector3{
 					X: point[0],
 					Y: point[1],
 					Z: point[2],
@@ -32,21 +46,7 @@ func NewVector3Collection(points [][][]float32) []*entities.Vector3 {
 	return slice
 }
 
-func NewVector3(x, y, z float32) *entities.Vector3 {
-	return &entities.Vector3{X: x, Y: y, Z: z}
-}
-
-func NewVector3ARound(x, y, z float32, rangeVal float32) *entities.Vector3 {
-	source := rand.NewSource(time.Now().UnixNano())
-	source.Seed(time.Now().UnixNano())
-	r := rand.New(source)
-	position := &entities.Vector3{X: x, Y: y, Z: 0}
-	position.X += r.Float32()*(rangeVal*2) - rangeVal
-	position.Y += r.Float32()*(rangeVal*2) - rangeVal
-	return position
-}
-
-func NewVector3FromStr(position string) (*entities.Vector3, error) {
+func NewVector3FromStr(position string) (*models.Vector3, error) {
 	position = strings.TrimSpace(position)
 	arr := strings.Split(position, ",")
 	if len(arr) != 3 {
@@ -64,7 +64,7 @@ func NewVector3FromStr(position string) (*entities.Vector3, error) {
 	return NewVector3(coords[0], coords[1], coords[2]), nil
 }
 
-func GetVectoe3Distance(v1, v2 *entities.Vector3) float32 {
+func GetVectoe3Distance(v1, v2 *models.Vector3) float32 {
 	return float32(math.Sqrt(float64(
 		(v2.X-v1.X)*(v2.X-v1.X) +
 			(v2.Y-v1.Y)*(v2.Y-v1.Y) +

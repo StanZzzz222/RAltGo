@@ -14,7 +14,7 @@ import (
    File: marker.go
 */
 
-func CreateMarker(markerType marker_type.MarkerType, position *entities.Vector3, color *entities.Rgba) *models.IMarker {
+func CreateMarker(markerType marker_type.MarkerType, position *models.Vector3, color *models.Rgba) *models.IMarker {
 	var w = lib.GetWarpper()
 	var m = &models.IMarker{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32

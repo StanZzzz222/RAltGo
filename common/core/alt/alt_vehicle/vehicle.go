@@ -16,7 +16,7 @@ import (
    File: vehicle_hash.go
 */
 
-func CreateVehicle(model string, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
+func CreateVehicle(model string, numberPlate string, position, rotation *models.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
 	var w = lib.GetWarpper()
 	var veh = &models.IVehicle{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
@@ -35,7 +35,7 @@ func CreateVehicle(model string, numberPlate string, position, rotation *entitie
 	return nil
 }
 
-func CreateVehicleByHash(model vehicle_hash.ModelHash, numberPlate string, position, rotation *entities.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
+func CreateVehicleByHash(model vehicle_hash.ModelHash, numberPlate string, position, rotation *models.Vector3, primaryColor, secondColor uint8) *models.IVehicle {
 	var w = lib.GetWarpper()
 	var veh = &models.IVehicle{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32

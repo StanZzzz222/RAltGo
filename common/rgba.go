@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/StanZzzz222/RAltGo/internal/entities"
+	"github.com/StanZzzz222/RAltGo/common/models"
 )
 
 /*
@@ -10,8 +10,8 @@ import (
    File: basic.go
 */
 
-func NewRGB(r, g, b uint8) *entities.Rgba {
-	return &entities.Rgba{
+func NewRGB(r, g, b uint8) *models.Rgba {
+	return &models.Rgba{
 		R: r,
 		G: g,
 		B: b,
@@ -19,8 +19,8 @@ func NewRGB(r, g, b uint8) *entities.Rgba {
 	}
 }
 
-func NewRGBA(r, g, b, a uint8) *entities.Rgba {
-	return &entities.Rgba{
+func NewRGBA(r, g, b, a uint8) *models.Rgba {
+	return &models.Rgba{
 		R: r,
 		G: g,
 		B: b,

@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"reflect"
 )
@@ -18,16 +19,17 @@ type SyncId uint16
 type EntityData struct {
 	entityId         uint32
 	entityObjectType enums.ObjectType
+	warpper          *lib.Warpper
 }
 
 func NewEntityData(id uint32, objectType enums.ObjectType) *EntityData {
-	return &EntityData{id, objectType}
+	return &EntityData{id, objectType, lib.GetWarpper()}
 }
 
 func (e *EntityData) GetNetOwner() *IPlayer {
 	switch e.entityObjectType {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.NetOwner)
+		ret, freeEntityDataFunc := e.warpper.GetEntityData(e.entityId, e.entityObjectType, enums.NetOwner)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -44,7 +46,7 @@ func (e *EntityData) GetNetOwner() *IPlayer {
 func (e *EntityData) GetSyncId() SyncId {
 	switch e.entityObjectType {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.SyncId)
+		ret, freeEntityDataFunc := e.warpper.GetEntityData(e.entityId, e.entityObjectType, enums.SyncId)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -60,7 +62,7 @@ func (e *EntityData) GetSyncId() SyncId {
 func (e *EntityData) GetStreamed() bool {
 	switch e.entityObjectType {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.Streamed)
+		ret, freeEntityDataFunc := e.warpper.GetEntityData(e.entityId, e.entityObjectType, enums.Streamed)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -76,7 +78,7 @@ func (e *EntityData) GetStreamed() bool {
 func (e *EntityData) GetStreamingDistance() uint32 {
 	switch e.entityObjectType {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
-		ret, freeEntityDataFunc := w.GetEntityData(e.entityId, e.entityObjectType, enums.Streamed)
+		ret, freeEntityDataFunc := e.warpper.GetEntityData(e.entityId, e.entityObjectType, enums.Streamed)
 		res := entities.ConverCDataResult(ret)
 		if res != nil {
 			defer freeEntityDataFunc()
@@ -96,7 +98,7 @@ func (e *EntityData) SetNetOwner(owner *IPlayer, disableMigration bool) {
 		if disableMigration {
 			value = 1
 		}
-		w.SetEntityData(e.entityId, e.entityObjectType, enums.NetOwner, 0, uint64(owner.GetId()), uint32(value), "")
+		e.warpper.SetEntityData(e.entityId, e.entityObjectType, enums.NetOwner, 0, uint64(owner.GetId()), uint32(value), "")
 	default:
 		logger.Logger().LogWarnf("ObjectType: %v does not support the SetNetOwner method", e.entityObjectType.String())
 		break
@@ -110,7 +112,7 @@ func (e *EntityData) SetStreamed(streamed bool) {
 		if streamed {
 			value = 1
 		}
-		w.SetEntityData(e.entityId, e.entityObjectType, enums.Streamed, 0, uint64(value), 0, "")
+		e.warpper.SetEntityData(e.entityId, e.entityObjectType, enums.Streamed, 0, uint64(value), 0, "")
 	default:
 		logger.Logger().LogWarnf("ObjectType: %v does not support the SetStreamed method", e.entityObjectType.String())
 		break
@@ -120,7 +122,7 @@ func (e *EntityData) SetStreamed(streamed bool) {
 func (e *EntityData) SetStreamingDistance(streamingDistance uint32) {
 	switch e.entityObjectType {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
-		w.SetEntityData(e.entityId, e.entityObjectType, enums.StreamingDistance, 0, 0, streamingDistance, "")
+		e.warpper.SetEntityData(e.entityId, e.entityObjectType, enums.StreamingDistance, 0, 0, streamingDistance, "")
 	default:
 		logger.Logger().LogWarnf("ObjectType: %v does not support the SetStreamingDistance method", e.entityObjectType.String())
 		break
@@ -130,7 +132,7 @@ func (e *EntityData) SetStreamingDistance(streamingDistance uint32) {
 func (e *EntityData) Detach() {
 	switch e.entityObjectType {
 	case enums.Player, enums.Vehicle, enums.Ped, enums.Object:
-		w.SetEntityData(e.entityId, e.entityObjectType, enums.Detach, 0, 0, 0, "")
+		e.warpper.SetEntityData(e.entityId, e.entityObjectType, enums.Detach, 0, 0, 0, "")
 	default:
 		logger.Logger().LogWarnf("ObjectType: %v does not support the Detach method", e.entityObjectType.String())
 		break
@@ -139,7 +141,7 @@ func (e *EntityData) Detach() {
 
 func (e *EntityData) AttachToEntityBoneName(targetEntity any, bone *AttachToEntityBoneName) {
 	if ok, entityType, id := checkSupport(targetEntity); ok {
-		w.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneName, entityType, uint64(id), 0, bone.Dump())
+		e.warpper.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneName, entityType, uint64(id), 0, bone.Dump())
 		return
 	}
 	logger.Logger().LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())
@@ -147,7 +149,7 @@ func (e *EntityData) AttachToEntityBoneName(targetEntity any, bone *AttachToEnti
 
 func (e *EntityData) AttachToEntityBoneIndex(targetEntity any, boneIndex *AttachToEntityBoneIndex) {
 	if ok, entityType, id := checkSupport(targetEntity); ok {
-		w.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneIndex, entityType, uint64(id), 0, boneIndex.Dump())
+		e.warpper.SetEntityData(e.entityId, e.entityObjectType, enums.AttachToEntityBoneIndex, entityType, uint64(id), 0, boneIndex.Dump())
 		return
 	}
 	logger.Logger().LogWarnf("ObjectType: %v does not support the AttachToEntityBoneName method", e.entityObjectType.String())

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"github.com/goccy/go-json"
@@ -117,8 +116,8 @@ func (mv *MValues) Dump() string {
 					"type":  enums.Marker,
 				})
 				continue
-			case reflect.TypeOf((*entities.Vector3)(nil)).Elem():
-				param, ok := arg.(*entities.Vector3)
+			case reflect.TypeOf((*Vector3)(nil)).Elem():
+				param, ok := arg.(*Vector3)
 				if !ok {
 					logger.Logger().LogErrorf("Invalid type for Vector3: %v", param)
 					continue
@@ -135,8 +134,8 @@ func (mv *MValues) Dump() string {
 					})
 				}
 				continue
-			case reflect.TypeOf((*entities.Rgba)(nil)).Elem():
-				param, ok := arg.(*entities.Rgba)
+			case reflect.TypeOf((*Rgba)(nil)).Elem():
+				param, ok := arg.(*Rgba)
 				if !ok {
 					logger.Logger().LogErrorf("Invalid type for RGBA: %v", param)
 					continue

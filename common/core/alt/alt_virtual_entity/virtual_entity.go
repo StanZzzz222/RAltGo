@@ -14,7 +14,7 @@ import (
    File: virtual_entity.go
 */
 
-func CreateVirtualEntity(group *models.IVirtualEntityGroup, position *entities.Vector3, streamingDistance uint32) *models.IVirtualEntity {
+func CreateVirtualEntity(group *models.IVirtualEntityGroup, position *models.Vector3, streamingDistance uint32) *models.IVirtualEntity {
 	var w = lib.GetWarpper()
 	var virtualEntity = &models.IVirtualEntity{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32

@@ -14,7 +14,7 @@ import (
    File: object.go
 */
 
-func CreateObject(model uint32, position, rotation *entities.Vector3) *models.IObject {
+func CreateObject(model uint32, position, rotation *models.Vector3) *models.IObject {
 	var w = lib.GetWarpper()
 	var o = &models.IObject{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
@@ -31,7 +31,7 @@ func CreateObject(model uint32, position, rotation *entities.Vector3) *models.IO
 	return nil
 }
 
-func CreateObjectByModelName(model string, position, rotation *entities.Vector3) *models.IObject {
+func CreateObjectByModelName(model string, position, rotation *models.Vector3) *models.IObject {
 	var modelHash = common.Hash(model)
 	var w = lib.GetWarpper()
 	var o = &models.IObject{}

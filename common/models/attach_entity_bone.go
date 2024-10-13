@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/goccy/go-json"
 )
 
@@ -12,24 +11,24 @@ import (
 */
 
 type AttachToEntityBoneIndex struct {
-	OtherBoneIndex  uint16            `json:"other_bone_index"`
-	MyBoneIndex     uint16            `json:"my_bone_index"`
-	Pos             *entities.Vector3 `json:"pos"`
-	Rot             *entities.Vector3 `json:"rot"`
-	Collision       bool              `json:"collision"`
-	NoFixedRotation bool              `json:"no_fixed_rotation"`
+	OtherBoneIndex  uint16   `json:"other_bone_index"`
+	MyBoneIndex     uint16   `json:"my_bone_index"`
+	Pos             *Vector3 `json:"pos"`
+	Rot             *Vector3 `json:"rot"`
+	Collision       bool     `json:"collision"`
+	NoFixedRotation bool     `json:"no_fixed_rotation"`
 }
 
 type AttachToEntityBoneName struct {
-	OtherBoneName   string            `json:"other_bone_name"`
-	MyBoneName      string            `json:"my_bone_name"`
-	Pos             *entities.Vector3 `json:"pos"`
-	Rot             *entities.Vector3 `json:"rot"`
-	Collision       bool              `json:"collision"`
-	NoFixedRotation bool              `json:"no_fixed_rotation"`
+	OtherBoneName   string   `json:"other_bone_name"`
+	MyBoneName      string   `json:"my_bone_name"`
+	Pos             *Vector3 `json:"pos"`
+	Rot             *Vector3 `json:"rot"`
+	Collision       bool     `json:"collision"`
+	NoFixedRotation bool     `json:"no_fixed_rotation"`
 }
 
-func NewAttachToEntityBoneIndex(otherBonIndex, myBoneIndex uint16, position, rotation *entities.Vector3, collision, noFixedRotation bool) *AttachToEntityBoneIndex {
+func NewAttachToEntityBoneIndex(otherBonIndex, myBoneIndex uint16, position, rotation *Vector3, collision, noFixedRotation bool) *AttachToEntityBoneIndex {
 	return &AttachToEntityBoneIndex{
 		OtherBoneIndex:  otherBonIndex,
 		MyBoneIndex:     myBoneIndex,
@@ -40,7 +39,7 @@ func NewAttachToEntityBoneIndex(otherBonIndex, myBoneIndex uint16, position, rot
 	}
 }
 
-func NewAttachToEntityBoneName(otherBoneName, myBoneName string, position, rotation *entities.Vector3, collision, noFixedRotation bool) *AttachToEntityBoneName {
+func NewAttachToEntityBoneName(otherBoneName, myBoneName string, position, rotation *Vector3, collision, noFixedRotation bool) *AttachToEntityBoneName {
 	return &AttachToEntityBoneName{
 		OtherBoneName:   otherBoneName,
 		MyBoneName:      myBoneName,

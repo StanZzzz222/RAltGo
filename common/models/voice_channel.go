@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"sync"
 )
 
@@ -17,6 +18,7 @@ type IVoiceChannel struct {
 	spatial     bool
 	maxDistance float32
 	players     *sync.Map
+	warpper     *lib.Warpper
 	*NetworkData
 }
 
@@ -24,7 +26,7 @@ func (v *IVoiceChannel) GetId() uint32           { return v.id }
 func (v *IVoiceChannel) GetSpatial() bool        { return v.spatial }
 func (v *IVoiceChannel) GetMaxDistance() float32 { return v.maxDistance }
 func (v *IVoiceChannel) GetFilter() uint32 {
-	ret, freeDataResultFunc := w.GetData(v.id, enums.VoiceChannel, uint8(enums.VoiceChannelFilter))
+	ret, freeDataResultFunc := v.warpper.GetData(v.id, enums.VoiceChannel, uint8(enums.VoiceChannelFilter))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -33,7 +35,7 @@ func (v *IVoiceChannel) GetFilter() uint32 {
 	return 0
 }
 func (v *IVoiceChannel) GetPriority() int32 {
-	ret, freeDataResultFunc := w.GetData(v.id, enums.VoiceChannel, uint8(enums.VoiceChannelPriority))
+	ret, freeDataResultFunc := v.warpper.GetData(v.id, enums.VoiceChannel, uint8(enums.VoiceChannelPriority))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -48,6 +50,7 @@ func (v *IVoiceChannel) NewIVoiceChannel(id uint32, spatial bool, maxDistance fl
 		spatial:     spatial,
 		maxDistance: maxDistance,
 		players:     &sync.Map{},
+		warpper:     lib.GetWarpper(),
 		NetworkData: NewNetworkData(id, enums.VoiceChannel),
 	}
 }
@@ -55,35 +58,35 @@ func (v *IVoiceChannel) NewIVoiceChannel(id uint32, spatial bool, maxDistance fl
 func (v *IVoiceChannel) AddPlayer(player *IPlayer) {
 	if _, ok := v.players.Load(player.GetId()); !ok {
 		v.players.Store(player.GetId(), player)
-		w.SetVoiceChannelData(v.id, enums.VoiceChannelAddPlayer, int64(player.GetId()))
+		v.warpper.SetVoiceChannelData(v.id, enums.VoiceChannelAddPlayer, int64(player.GetId()))
 	}
 }
 
 func (v *IVoiceChannel) RemovePlayer(player *IPlayer) {
 	if _, ok := v.players.Load(player.GetId()); ok {
 		v.players.Delete(player.GetId())
-		w.SetVoiceChannelData(v.id, enums.VoiceChannelRemovePlayer, int64(player.GetId()))
+		v.warpper.SetVoiceChannelData(v.id, enums.VoiceChannelRemovePlayer, int64(player.GetId()))
 	}
 }
 
 func (v *IVoiceChannel) MutePlayer(player *IPlayer) {
 	if _, ok := v.players.Load(player.GetId()); ok {
-		w.SetVoiceChannelData(v.id, enums.VoiceChannelMutePlayer, int64(player.GetId()))
+		v.warpper.SetVoiceChannelData(v.id, enums.VoiceChannelMutePlayer, int64(player.GetId()))
 	}
 }
 
 func (v *IVoiceChannel) UnmutePlayer(player *IPlayer) {
 	if _, ok := v.players.Load(player.GetId()); ok {
-		w.SetVoiceChannelData(v.id, enums.VoiceChannelUnmutePlayer, int64(player.GetId()))
+		v.warpper.SetVoiceChannelData(v.id, enums.VoiceChannelUnmutePlayer, int64(player.GetId()))
 	}
 }
 
 func (v *IVoiceChannel) SetFilter(filter uint32) {
-	w.SetVoiceChannelData(v.id, enums.VoiceChannelFilter, int64(filter))
+	v.warpper.SetVoiceChannelData(v.id, enums.VoiceChannelFilter, int64(filter))
 }
 
 func (v *IVoiceChannel) SetPriority(priority uint32) {
-	w.SetVoiceChannelData(v.id, enums.VoiceChannelPriority, int64(priority))
+	v.warpper.SetVoiceChannelData(v.id, enums.VoiceChannelPriority, int64(priority))
 }
 
 func (v *IVoiceChannel) HasPlayer(player *IPlayer) bool {
@@ -93,7 +96,7 @@ func (v *IVoiceChannel) HasPlayer(player *IPlayer) bool {
 
 func (v *IVoiceChannel) IsPlayerMuted(player *IPlayer) bool {
 	if _, ok := v.players.Load(player.GetId()); ok {
-		ret, freeDataResultFunc := w.GetMetaData(v.id, enums.VoiceChannel, uint8(enums.VoiceChannelIsPlayerMuted), int64(player.GetId()))
+		ret, freeDataResultFunc := v.warpper.GetMetaData(v.id, enums.VoiceChannel, uint8(enums.VoiceChannelIsPlayerMuted), int64(player.GetId()))
 		cDataResult := entities.ConverCDataResult(ret)
 		if cDataResult != nil {
 			freeDataResultFunc()
@@ -105,6 +108,6 @@ func (v *IVoiceChannel) IsPlayerMuted(player *IPlayer) bool {
 }
 
 func (v *IVoiceChannel) Destroy() {
-	w.SetVoiceChannelData(v.id, enums.VoiceChannelDestroy, 0)
+	v.warpper.SetVoiceChannelData(v.id, enums.VoiceChannelDestroy, 0)
 	pools.DestroyVoiceChannel(v)
 }

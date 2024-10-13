@@ -5,6 +5,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_type"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"math"
 	"reflect"
 	"sync"
@@ -19,20 +20,21 @@ import (
 type IColshape struct {
 	id           uint32
 	colshapeType colshape_type.ColshapeType
-	position     *entities.Vector3
+	position     *Vector3
 	playersOnly  bool
 	dimension    int32
 	datas        *sync.Map
+	warpper      *lib.Warpper
 	*NetworkData
 }
 
 func (c *IColshape) GetId() uint32                               { return c.id }
 func (c *IColshape) GetColshapeType() colshape_type.ColshapeType { return c.colshapeType }
-func (c *IColshape) GetPosition() *entities.Vector3              { return c.position }
+func (c *IColshape) GetPosition() *Vector3                       { return c.position }
 func (c *IColshape) GetPlayersOnly() bool                        { return c.playersOnly }
 func (c *IColshape) GetDimension() int32                         { return c.dimension }
 func (c *IColshape) IsEntityIdIn(syncId SyncId) bool {
-	ret, freeDataResultFunc := w.GetColshapeData(c.id, enums.ColshapeIsEntityIdIn, 0, 0, uint64(syncId))
+	ret, freeDataResultFunc := c.warpper.GetColshapeData(c.id, enums.ColshapeIsEntityIdIn, 0, 0, uint64(syncId))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -40,8 +42,8 @@ func (c *IColshape) IsEntityIdIn(syncId SyncId) bool {
 	}
 	return false
 }
-func (c *IColshape) IsPointIn(position *entities.Vector3) bool {
-	ret, freeDataResultFunc := w.GetColshapeData(c.id, enums.ColshapeIsPointIn, 0, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
+func (c *IColshape) IsPointIn(position *Vector3) bool {
+	ret, freeDataResultFunc := c.warpper.GetColshapeData(c.id, enums.ColshapeIsPointIn, 0, int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -51,7 +53,7 @@ func (c *IColshape) IsPointIn(position *entities.Vector3) bool {
 }
 func (c *IColshape) IsEntityIn(entity any) bool {
 	if res, entityType, id := checkEntity(entity); res {
-		ret, freeDataResultFunc := w.GetColshapeData(c.id, enums.ColshapeIsEntityIn, entityType, int64(id), 0)
+		ret, freeDataResultFunc := c.warpper.GetColshapeData(c.id, enums.ColshapeIsEntityIn, entityType, int64(id), 0)
 		cDataResult := entities.ConverCDataResult(ret)
 		if cDataResult != nil {
 			freeDataResultFunc()
@@ -61,20 +63,21 @@ func (c *IColshape) IsEntityIn(entity any) bool {
 	return false
 }
 
-func (c *IColshape) NewIColshape(id uint32, colshapeType uint32, position *entities.Vector3) *IColshape {
+func (c *IColshape) NewIColshape(id uint32, colshapeType uint32, position *Vector3) *IColshape {
 	return &IColshape{
 		id:           id,
 		colshapeType: colshape_type.ColshapeType(colshapeType),
 		position:     position,
 		dimension:    hash_enums.DefaultDimension,
 		datas:        &sync.Map{},
+		warpper:      lib.GetWarpper(),
 		NetworkData:  NewNetworkData(id, enums.Colshape),
 	}
 }
 
 func (c *IColshape) SetDimension(dimension int32) {
 	c.dimension = dimension
-	w.SetColshapeData(c.id, enums.ColshapeDimension, int64(dimension), 0)
+	c.warpper.SetColshapeData(c.id, enums.ColshapeDimension, int64(dimension), 0)
 }
 
 func (c *IColshape) SetPlayersOnly(playersOnly bool) {
@@ -83,17 +86,17 @@ func (c *IColshape) SetPlayersOnly(playersOnly bool) {
 	if playersOnly {
 		value = 1
 	}
-	w.SetColshapeData(c.id, enums.ColshapePlayersOnly, int64(value), 0)
+	c.warpper.SetColshapeData(c.id, enums.ColshapePlayersOnly, int64(value), 0)
 }
 
-func (c *IColshape) SetPosition(position *entities.Vector3) {
+func (c *IColshape) SetPosition(position *Vector3) {
 	c.position = position
 	posData, posMetaData := int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
-	w.SetColshapeData(c.id, enums.ColshapePosition, posData, posMetaData)
+	c.warpper.SetColshapeData(c.id, enums.ColshapePosition, posData, posMetaData)
 }
 
 func (c *IColshape) Destroy() {
-	w.SetColshapeData(c.id, enums.ColshapeDestory, 0, 0)
+	c.warpper.SetColshapeData(c.id, enums.ColshapeDestory, 0, 0)
 	pools.DestroyColshape(c)
 }
 

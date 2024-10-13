@@ -15,7 +15,7 @@ import (
    File: checkpoint.go
 */
 
-func CreateColshapeCircle(position *entities.Vector3, radius float32) *models.IColshape {
+func CreateColshapeCircle(position *models.Vector3, radius float32) *models.IColshape {
 	var w = lib.GetWarpper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
@@ -31,7 +31,7 @@ func CreateColshapeCircle(position *entities.Vector3, radius float32) *models.IC
 	return nil
 }
 
-func CreateColshapeSphere(position *entities.Vector3, radius float32) *models.IColshape {
+func CreateColshapeSphere(position *models.Vector3, radius float32) *models.IColshape {
 	var w = lib.GetWarpper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
@@ -47,7 +47,7 @@ func CreateColshapeSphere(position *entities.Vector3, radius float32) *models.IC
 	return nil
 }
 
-func CreateColshapeRectangle(pointPosition *entities.Vector3, secondPointPosition *entities.Vector3) *models.IColshape {
+func CreateColshapeRectangle(pointPosition *models.Vector3, secondPointPosition *models.Vector3) *models.IColshape {
 	var w = lib.GetWarpper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(pointPosition.X))|(uint64(math.Float32bits(pointPosition.Y))<<32), uint64(math.Float32bits(pointPosition.Z))<<32
@@ -64,7 +64,7 @@ func CreateColshapeRectangle(pointPosition *entities.Vector3, secondPointPositio
 	return nil
 }
 
-func CreateColshapeCuboid(pointPosition *entities.Vector3, secondPointPosition *entities.Vector3) *models.IColshape {
+func CreateColshapeCuboid(pointPosition *models.Vector3, secondPointPosition *models.Vector3) *models.IColshape {
 	var w = lib.GetWarpper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(pointPosition.X))|(uint64(math.Float32bits(pointPosition.Y))<<32), uint64(math.Float32bits(pointPosition.Z))<<32
@@ -81,7 +81,7 @@ func CreateColshapeCuboid(pointPosition *entities.Vector3, secondPointPosition *
 	return nil
 }
 
-func CreateColshapeCylinder(pointPosition *entities.Vector3, radius, height float32) *models.IColshape {
+func CreateColshapeCylinder(pointPosition *models.Vector3, radius, height float32) *models.IColshape {
 	var w = lib.GetWarpper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(pointPosition.X))|(uint64(math.Float32bits(pointPosition.Y))<<32), uint64(math.Float32bits(pointPosition.Z))<<32
@@ -97,7 +97,7 @@ func CreateColshapeCylinder(pointPosition *entities.Vector3, radius, height floa
 	return nil
 }
 
-func CreateColshapePolygon(minZ, maxZ float32, points []*entities.Vector3) *models.IColshape {
+func CreateColshapePolygon(minZ, maxZ float32, points []*models.Vector3) *models.IColshape {
 	var w = lib.GetWarpper()
 	var c = &models.IColshape{}
 	pointsBytes, _ := json.Marshal(points)

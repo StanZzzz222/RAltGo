@@ -14,7 +14,7 @@ Date Time: 2024/9/12
 File: blip.go
 */
 
-func CreateBlipPoint(global bool, spriteId, color uint32, name string, position *entities.Vector3) *models.IBlip {
+func CreateBlipPoint(global bool, spriteId, color uint32, name string, position *models.Vector3) *models.IBlip {
 	var w = lib.GetWarpper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
@@ -32,7 +32,7 @@ func CreateBlipPoint(global bool, spriteId, color uint32, name string, position 
 	return nil
 }
 
-func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint32, name string, position *entities.Vector3) *models.IBlip {
+func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint32, name string, position *models.Vector3) *models.IBlip {
 	var w = lib.GetWarpper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
@@ -51,7 +51,7 @@ func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint3
 	return nil
 }
 
-func CreateBlipArea(global bool, color uint32, name string, position *entities.Vector3, width, height float32) *models.IBlip {
+func CreateBlipArea(global bool, color uint32, name string, position *models.Vector3, width, height float32) *models.IBlip {
 	var w = lib.GetWarpper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
@@ -68,7 +68,7 @@ func CreateBlipArea(global bool, color uint32, name string, position *entities.V
 	return nil
 }
 
-func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name string, position *entities.Vector3, width, height float32) *models.IBlip {
+func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name string, position *models.Vector3, width, height float32) *models.IBlip {
 	var w = lib.GetWarpper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
@@ -87,7 +87,7 @@ func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name str
 	return nil
 }
 
-func CreateBlipRadius(global bool, color uint32, name string, position *entities.Vector3, radius float32, outline bool) *models.IBlip {
+func CreateBlipRadius(global bool, color uint32, name string, position *models.Vector3, radius float32, outline bool) *models.IBlip {
 	var w = lib.GetWarpper()
 	var blip = &models.IBlip{}
 	var spriteId = 9
@@ -109,7 +109,7 @@ func CreateBlipRadius(global bool, color uint32, name string, position *entities
 	return nil
 }
 
-func CreateBlipRadiusSomePlayers(players []*models.IPlayer, color uint32, name string, position *entities.Vector3, radius float32, outline bool) *models.IBlip {
+func CreateBlipRadiusSomePlayers(players []*models.IPlayer, color uint32, name string, position *models.Vector3, radius float32, outline bool) *models.IBlip {
 	var w = lib.GetWarpper()
 	var blip = &models.IBlip{}
 	var spriteId = 9

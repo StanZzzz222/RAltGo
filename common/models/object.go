@@ -4,6 +4,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/hash_enums"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 	"math"
 )
 
@@ -18,6 +19,7 @@ type IObject struct {
 	model            uint32
 	alpha            uint8
 	textureVariation uint8
+	warpper          *lib.Warpper
 	*BaseObject
 	*NetworkData
 	*EntityData
@@ -32,7 +34,7 @@ func (o *IObject) GetModel() uint32           { return o.model }
 func (o *IObject) GetAlpha() uint8            { return o.alpha }
 func (o *IObject) GetTextureVariation() uint8 { return o.textureVariation }
 func (o *IObject) GetLodDistance() uint16 {
-	ret, freeDataResultFunc := w.GetData(o.id, enums.Object, uint8(enums.ObjectLodDistance))
+	ret, freeDataResultFunc := o.warpper.GetData(o.id, enums.Object, uint8(enums.ObjectLodDistance))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
@@ -40,31 +42,32 @@ func (o *IObject) GetLodDistance() uint16 {
 	}
 	return 0
 }
-func (o *IObject) GetPosition() *entities.Vector3 {
-	ret, freeDataResultFunc := w.GetData(o.id, enums.Object, uint8(enums.ObjectPosition))
+func (o *IObject) GetPosition() *Vector3 {
+	ret, freeDataResultFunc := o.warpper.GetData(o.id, enums.Object, uint8(enums.ObjectPosition))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
-		return cDataResult.Vector3Val
+		return (*Vector3)(cDataResult.Vector3Val)
 	}
 	return nil
 }
-func (o *IObject) GetRotation() *entities.Vector3 {
-	ret, freeDataResultFunc := w.GetData(o.id, enums.Object, uint8(enums.ObjectRotation))
+func (o *IObject) GetRotation() *Vector3 {
+	ret, freeDataResultFunc := o.warpper.GetData(o.id, enums.Object, uint8(enums.ObjectRotation))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
-		return cDataResult.Vector3Val
+		return (*Vector3)(cDataResult.Vector3Val)
 	}
 	return nil
 }
 
-func (o *IObject) NewIObject(id, model uint32, position, rotation *entities.Vector3) *IObject {
+func (o *IObject) NewIObject(id, model uint32, position, rotation *Vector3) *IObject {
 	return &IObject{
 		id:               id,
 		model:            model,
 		alpha:            255,
 		textureVariation: 0,
+		warpper:          lib.GetWarpper(),
 		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 		NetworkData:      NewNetworkData(id, enums.Object),
 		EntityData:       NewEntityData(id, enums.Object),
@@ -73,7 +76,7 @@ func (o *IObject) NewIObject(id, model uint32, position, rotation *entities.Vect
 
 func (o *IObject) SetDimension(dimension int32) {
 	o.dimension = dimension
-	w.SetObjectData(o.id, enums.ObjectDimension, int64(dimension), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectDimension, int64(dimension), 0)
 }
 
 func (o *IObject) SetVisible(visible bool) {
@@ -82,21 +85,21 @@ func (o *IObject) SetVisible(visible bool) {
 	if visible {
 		value = 1
 	}
-	w.SetObjectData(o.id, enums.ObjectVisible, int64(value), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectVisible, int64(value), 0)
 }
 
 func (o *IObject) SetAlpha(alpha uint8) {
 	o.alpha = alpha
-	w.SetObjectData(o.id, enums.ObjectAlpha, int64(alpha), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectAlpha, int64(alpha), 0)
 }
 
 func (o *IObject) SetLodDistance(lodDistance uint16) {
-	w.SetObjectData(o.id, enums.ObjectLodDistance, int64(lodDistance), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectLodDistance, int64(lodDistance), 0)
 }
 
 func (o *IObject) SetTextureVariation(textureVariation uint8) {
 	o.textureVariation = textureVariation
-	w.SetObjectData(o.id, enums.ObjectTextureVariation, int64(textureVariation), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectTextureVariation, int64(textureVariation), 0)
 }
 
 func (o *IObject) SetFrozen(frozen bool) {
@@ -105,7 +108,7 @@ func (o *IObject) SetFrozen(frozen bool) {
 	if frozen {
 		value = 1
 	}
-	w.SetObjectData(o.id, enums.ObjectFrozen, int64(value), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectFrozen, int64(value), 0)
 }
 
 func (o *IObject) SetCollision(collision bool) {
@@ -114,22 +117,22 @@ func (o *IObject) SetCollision(collision bool) {
 	if collision {
 		value = 1
 	}
-	w.SetObjectData(o.id, enums.ObjectCollision, int64(value), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectCollision, int64(value), 0)
 }
 
-func (o *IObject) SetPosition(position *entities.Vector3) {
+func (o *IObject) SetPosition(position *Vector3) {
 	o.position = position
 	posData, posMetaData := int64(math.Float32bits(position.X))|(int64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
-	w.SetObjectData(o.id, enums.ObjectPosition, posData, posMetaData)
+	o.warpper.SetObjectData(o.id, enums.ObjectPosition, posData, posMetaData)
 }
 
-func (o *IObject) SetRotation(rotation *entities.Vector3) {
+func (o *IObject) SetRotation(rotation *Vector3) {
 	o.rotation = rotation
 	rotData, rotMetaData := int64(math.Float32bits(rotation.X))|(int64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32
-	w.SetObjectData(o.id, enums.ObjectRotation, rotData, rotMetaData)
+	o.warpper.SetObjectData(o.id, enums.ObjectRotation, rotData, rotMetaData)
 }
 
 func (o *IObject) Destroy() {
-	w.SetObjectData(o.id, enums.ObjectDestory, int64(0), 0)
+	o.warpper.SetObjectData(o.id, enums.ObjectDestory, int64(0), 0)
 	pools.DestroyObject(o)
 }
