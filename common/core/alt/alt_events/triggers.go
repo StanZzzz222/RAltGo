@@ -29,165 +29,219 @@ func Triggers() *EventBusTrigger {
 }
 
 func (t *EventBusTrigger) TriggerOnStart() {
-	if eventBus.onStart != nil {
-		eventBus.onStart()
+	if len(eventBus.onStarts) > 0 {
+		for _, onStart := range eventBus.onStarts {
+			onStart()
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnStop() {
-	if eventBus.onStop != nil {
-		eventBus.onStop()
+	if len(eventBus.onStops) > 0 {
+		for _, onStop := range eventBus.onStops {
+			onStop()
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnServerStarted() {
-	if eventBus.onServerStarted != nil {
-		eventBus.onServerStarted()
+	if len(eventBus.onServerStarteds) > 0 {
+		for _, onServerStarted := range eventBus.onServerStarteds {
+			onServerStarted()
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerConnect(player *models.IPlayer) {
-	if eventBus.onPlayerConnect != nil {
-		eventBus.onPlayerConnect(player)
+	if len(eventBus.onPlayerConnects) > 0 {
+		for _, onPlayerConnect := range eventBus.onPlayerConnects {
+			onPlayerConnect(player)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerDisconnect(player *models.IPlayer, reason string) {
-	if eventBus.onPlayerDisconnect != nil {
-		eventBus.onPlayerDisconnect(player, reason)
+	if len(eventBus.onPlayerDisconnects) > 0 {
+		for _, onPlayerDisconnect := range eventBus.onPlayerDisconnects {
+			onPlayerDisconnect(player, reason)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnChatMessage(player *models.IPlayer, message string) {
 	EmitAllPlayer("chat:message", player.GetGameName(), message)
-	if eventBus.onChatMessage != nil {
-		eventBus.onChatMessage(player, message)
+	if len(eventBus.onChatMessages) > 0 {
+		for _, onChatMessage := range eventBus.onChatMessages {
+			onChatMessage(player, message)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnEnteringVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
-	if eventBus.onEnteringVehicle != nil {
-		eventBus.onEnteringVehicle(player, vehicle, seat)
+	if len(eventBus.onEnteringVehicles) > 0 {
+		for _, onEnteringVehicle := range eventBus.onEnteringVehicles {
+			onEnteringVehicle(player, vehicle, seat)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnEnterVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
-	if eventBus.onEnterVehicle != nil {
-		eventBus.onEnterVehicle(player, vehicle, seat)
+	if len(eventBus.onEnterVehicles) > 0 {
+		for _, onEnterVehicle := range eventBus.onEnterVehicles {
+			onEnterVehicle(player, vehicle, seat)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnLeaveVehicle(player *models.IPlayer, vehicle *models.IVehicle, seat uint8) {
-	if eventBus.onLeaveVehicle != nil {
-		eventBus.onLeaveVehicle(player, vehicle, seat)
+	if len(eventBus.onLeaveVehicles) > 0 {
+		for _, onLeaveVehicle := range eventBus.onLeaveVehicles {
+			onLeaveVehicle(player, vehicle, seat)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnEnterColshape(colshapeEntityType colshape_entity_type.ColshapeEntityType, player *models.IPlayer, vehicle *models.IVehicle, colshape *models.IColshape) {
-	if eventBus.onEnterColshape != nil {
-		eventBus.onEnterColshape(colshapeEntityType, player, vehicle, colshape)
+	if len(eventBus.onEnterColshapes) > 0 {
+		for _, onEnterColshape := range eventBus.onEnterColshapes {
+			onEnterColshape(colshapeEntityType, player, vehicle, colshape)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnLeaveColshape(colshapeEntityType colshape_entity_type.ColshapeEntityType, player *models.IPlayer, vehicle *models.IVehicle, colshape *models.IColshape) {
-	if eventBus.onLeaveColshape != nil {
-		eventBus.onLeaveColshape(colshapeEntityType, player, vehicle, colshape)
+	if len(eventBus.onLeaveColshapes) > 0 {
+		for _, onLeaveColshape := range eventBus.onLeaveColshapes {
+			onLeaveColshape(colshapeEntityType, player, vehicle, colshape)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnCommandError(player *models.IPlayer, existCommand bool, commandName, desc string) {
-	if eventBus.onCommandError != nil {
-		eventBus.onCommandError(player, existCommand, commandName, desc)
+	if len(eventBus.onCommandErrors) > 0 {
+		for _, onCommandError := range eventBus.onCommandErrors {
+			onCommandError(player, existCommand, commandName, desc)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnConsoleCommand(name string, args []string) {
-	if eventBus.onConsoleCommand != nil {
-		eventBus.onConsoleCommand(name, args)
+	if len(eventBus.onConsoleCommands) > 0 {
+		for _, onConsoleCommand := range eventBus.onConsoleCommands {
+			onConsoleCommand(name, args)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnNetOwnerChange(entity any, oldNetOwner *models.IPlayer, newNetOwner *models.IPlayer) {
-	if eventBus.onNetOwnerChange != nil {
-		eventBus.onNetOwnerChange(entity, oldNetOwner, newNetOwner)
+	if len(eventBus.onNetOwnerChanges) > 0 {
+		for _, onNetOwnerChange := range eventBus.onNetOwnerChanges {
+			onNetOwnerChange(entity, oldNetOwner, newNetOwner)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnChangeVehicleSeat(player *models.IPlayer, vehicle *models.IVehicle, oldSeat, newSeat uint8) {
-	if eventBus.onChangeVehicleSeat != nil {
-		eventBus.onChangeVehicleSeat(player, vehicle, oldSeat, newSeat)
+	if len(eventBus.onChangeVehicleSeats) > 0 {
+		for _, onChangeVehicleSeat := range eventBus.onChangeVehicleSeats {
+			onChangeVehicleSeat(player, vehicle, oldSeat, newSeat)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerSpawn(player *models.IPlayer) {
-	if eventBus.onPlayerSpawn != nil {
-		eventBus.onPlayerSpawn(player)
+	if len(eventBus.onPlayerSpawns) > 0 {
+		for _, onPlayerSpawn := range eventBus.onPlayerSpawns {
+			onPlayerSpawn(player)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerInteriorChange(player *models.IPlayer, oldInterior, newInterior uint32) {
-	if eventBus.onPlayerInteriorChange != nil {
-		eventBus.onPlayerInteriorChange(player, oldInterior, newInterior)
+	if len(eventBus.onPlayerInteriorChanges) > 0 {
+		for _, onPlayerInteriorChange := range eventBus.onPlayerInteriorChanges {
+			onPlayerInteriorChange(player, oldInterior, newInterior)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerDimensionChange(player *models.IPlayer, oldDimension, newDimension int32) {
-	if eventBus.onPlayerDimensionChange != nil {
-		eventBus.onPlayerDimensionChange(player, oldDimension, newDimension)
+	if len(eventBus.onPlayerDimensionChanges) > 0 {
+		for _, onPlayerDimensionChange := range eventBus.onPlayerDimensionChanges {
+			onPlayerDimensionChange(player, oldDimension, newDimension)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerDeath(player *models.IPlayer, killer any, weaponHash weapon_hash.ModelHash) {
-	if eventBus.onPlayerDeath != nil {
-		eventBus.onPlayerDeath(player, killer, weaponHash)
+	if len(eventBus.onPlayerDeaths) > 0 {
+		for _, onPlayerDeath := range eventBus.onPlayerDeaths {
+			onPlayerDeath(player, killer, weaponHash)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerDamage(player *models.IPlayer, attacker any, healthDamage, armourDamage uint16) {
-	if eventBus.onPlayerDamage != nil {
-		eventBus.onPlayerDamage(player, attacker, healthDamage, armourDamage)
+	if len(eventBus.onPlayerDamages) > 0 {
+		for _, onPlayerDamage := range eventBus.onPlayerDamages {
+			onPlayerDamage(player, attacker, healthDamage, armourDamage)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerWeaponChange(player *models.IPlayer, oldWeaponHash, newWeaponHash uint32) {
-	if eventBus.onPlayerWeaponChange != nil {
-		eventBus.onPlayerWeaponChange(player, weapon_hash.ModelHash(oldWeaponHash), weapon_hash.ModelHash(newWeaponHash))
+	if len(eventBus.onPlayerWeaponChanges) > 0 {
+		for _, onPlayerWeaponChange := range eventBus.onPlayerWeaponChanges {
+			onPlayerWeaponChange(player, weapon_hash.ModelHash(oldWeaponHash), weapon_hash.ModelHash(newWeaponHash))
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerConnectDenied(reason denied_reason_type.DeniedReason, name, ip string, passwordHash uint64, isDebug bool, branch string, majorVersion, minorVersion uint16, cdnUrl string, discordId int64) {
-	if eventBus.onPlayerConnectDenied != nil {
-		eventBus.onPlayerConnectDenied(reason, name, ip, passwordHash, isDebug, branch, majorVersion, minorVersion, cdnUrl, discordId)
+	if len(eventBus.onPlayerConnectDenieds) > 0 {
+		for _, onPlayerConnectDenied := range eventBus.onPlayerConnectDenieds {
+			onPlayerConnectDenied(reason, name, ip, passwordHash, isDebug, branch, majorVersion, minorVersion, cdnUrl, discordId)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerHeal(player *models.IPlayer, oldHealth, newHealth, oldArmour, newArmour uint16) {
-	if eventBus.onPlayerHeal != nil {
-		eventBus.onPlayerHeal(player, oldHealth, newHealth, oldArmour, newArmour)
+	if len(eventBus.onPlayerHeals) > 0 {
+		for _, onPlayerHeal := range eventBus.onPlayerHeals {
+			onPlayerHeal(player, oldHealth, newHealth, oldArmour, newArmour)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnPlayerRequestControl(player *models.IPlayer, entity any) {
-	if eventBus.onPlayerRequestControl != nil {
-		eventBus.onPlayerRequestControl(player, entity)
+	if len(eventBus.onPlayerRequestControls) > 0 {
+		for _, onPlayerRequestControl := range eventBus.onPlayerRequestControls {
+			onPlayerRequestControl(player, entity)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnVehicleAttach(vehicle *models.IVehicle, attached *models.IVehicle) {
-	if eventBus.onVehicleAttach != nil {
-		eventBus.onVehicleAttach(vehicle, attached)
+	if len(eventBus.onVehicleAttaches) > 0 {
+		for _, onVehicleAttach := range eventBus.onVehicleAttaches {
+			onVehicleAttach(vehicle, attached)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnVehicleDetach(vehicle *models.IVehicle, attached *models.IVehicle) {
-	if eventBus.onVehicleDetach != nil {
-		eventBus.onVehicleDetach(vehicle, attached)
+	if len(eventBus.onVehicleDetaches) > 0 {
+		for _, onVehicleDetach := range eventBus.onVehicleDetaches {
+			onVehicleDetach(vehicle, attached)
+		}
 	}
 }
 
 func (t *EventBusTrigger) TriggerOnVehicleDestroy(vehicle *models.IVehicle) {
-	if eventBus.onVehicleDestroy != nil {
-		eventBus.onVehicleDestroy(vehicle)
+	if len(eventBus.onVehicleDestroys) > 0 {
+		for _, onVehicleDestroy := range eventBus.onVehicleDestroys {
+			onVehicleDestroy(vehicle)
+		}
 	}
 }
 

@@ -22,35 +22,35 @@ var eventBus = &EventBus{
 }
 
 type EventBus struct {
-	onStart                 OnStartCallback
-	onStop                  OnStopCallback
-	onServerStarted         OnServerStartedCallback
-	onPlayerConnect         OnPlayerConnectCallback
-	onPlayerDisconnect      OnPlayerDisconnectCallback
-	onConsoleCommand        OnConsoleCommandCallback
-	onNetOwnerChange        OnNetOwnerChangeCallback
-	onChangeVehicleSeat     OnChangeVehicleSeatCallback
-	onPlayerSpawn           OnPlayerSpawnCallback
-	onPlayerInteriorChange  OnPlayerInteriorChangeCallback
-	onPlayerDimensionChange OnPlayerDimensionChangeCallback
-	onEnteringVehicle       OnEnteringVehicleCallback
-	onEnterVehicle          OnEnterVehicleCallback
-	onLeaveVehicle          OnLeaveVehicleCallback
-	onEnterColshape         OnEnterColshapeCallback
-	onLeaveColshape         OnLeaveColshapeCallback
-	onChatMessage           OnChatMessageCallback
-	onCommandError          OnCommandErrorCallback
-	onPlayerDeath           OnPlayerDeathCallback
-	onPlayerDamage          OnPlayerDamageCallback
-	onPlayerWeaponChange    OnPlayerWeaponChangeCallback
-	onPlayerConnectDenied   OnPlayerConnectDeniedCallback
-	onPlayerHeal            OnPlayerHealCallback
-	onPlayerRequestControl  OnPlayerRequestControlCallback
-	onVehicleAttach         OnVehicleAttachCallback
-	onVehicleDetach         OnVehicleDetachCallback
-	onVehicleDestroy        OnVehicleDestroyCallback
-	onClientEvents          *sync.Map
-	onLocalEvents           *sync.Map
+	onStarts                 []OnStartCallback
+	onStops                  []OnStopCallback
+	onServerStarteds         []OnServerStartedCallback
+	onPlayerConnects         []OnPlayerConnectCallback
+	onPlayerDisconnects      []OnPlayerDisconnectCallback
+	onConsoleCommands        []OnConsoleCommandCallback
+	onNetOwnerChanges        []OnNetOwnerChangeCallback
+	onChangeVehicleSeats     []OnChangeVehicleSeatCallback
+	onPlayerSpawns           []OnPlayerSpawnCallback
+	onPlayerInteriorChanges  []OnPlayerInteriorChangeCallback
+	onPlayerDimensionChanges []OnPlayerDimensionChangeCallback
+	onEnteringVehicles       []OnEnteringVehicleCallback
+	onEnterVehicles          []OnEnterVehicleCallback
+	onLeaveVehicles          []OnLeaveVehicleCallback
+	onEnterColshapes         []OnEnterColshapeCallback
+	onLeaveColshapes         []OnLeaveColshapeCallback
+	onChatMessages           []OnChatMessageCallback
+	onCommandErrors          []OnCommandErrorCallback
+	onPlayerDeaths           []OnPlayerDeathCallback
+	onPlayerDamages          []OnPlayerDamageCallback
+	onPlayerWeaponChanges    []OnPlayerWeaponChangeCallback
+	onPlayerConnectDenieds   []OnPlayerConnectDeniedCallback
+	onPlayerHeals            []OnPlayerHealCallback
+	onPlayerRequestControls  []OnPlayerRequestControlCallback
+	onVehicleAttaches        []OnVehicleAttachCallback
+	onVehicleDetaches        []OnVehicleDetachCallback
+	onVehicleDestroys        []OnVehicleDestroyCallback
+	onClientEvents           *sync.Map
+	onLocalEvents            *sync.Map
 }
 
 func Events() *EventBus {
@@ -58,111 +58,111 @@ func Events() *EventBus {
 }
 
 func (bus *EventBus) OnStart(callback OnStartCallback) {
-	bus.onStart = callback
+	bus.onStarts = append(bus.onStarts, callback)
 }
 
 func (bus *EventBus) OnStop(callback OnStopCallback) {
-	bus.onStop = callback
+	bus.onStops = append(bus.onStops, callback)
 }
 
 func (bus *EventBus) OnServerStarted(callback OnServerStartedCallback) {
-	bus.onServerStarted = callback
+	bus.onServerStarteds = append(bus.onServerStarteds, callback)
 }
 
 func (bus *EventBus) OnPlayerConnect(callback OnPlayerConnectCallback) {
-	bus.onPlayerConnect = callback
+	bus.onPlayerConnects = append(bus.onPlayerConnects, callback)
 }
 
 func (bus *EventBus) OnPlayerDisconnect(callback OnPlayerDisconnectCallback) {
-	bus.onPlayerDisconnect = callback
+	bus.onPlayerDisconnects = append(bus.onPlayerDisconnects, callback)
 }
 
 func (bus *EventBus) OnEnterVehicle(callback OnEnterVehicleCallback) {
-	bus.onEnterVehicle = callback
+	bus.onEnterVehicles = append(bus.onEnterVehicles, callback)
 }
 
 func (bus *EventBus) OnEnteringVehicle(callback OnEnteringVehicleCallback) {
-	bus.onEnteringVehicle = callback
+	bus.onEnteringVehicles = append(bus.onEnteringVehicles, callback)
 }
 
 func (bus *EventBus) OnLeaveVehicle(callback OnLeaveVehicleCallback) {
-	bus.onLeaveVehicle = callback
+	bus.onLeaveVehicles = append(bus.onLeaveVehicles, callback)
 }
 
 func (bus *EventBus) OnEnterColshape(callback OnEnterColshapeCallback) {
-	bus.onEnterColshape = callback
+	bus.onEnterColshapes = append(bus.onEnterColshapes, callback)
 }
 
 func (bus *EventBus) OnLeaveColshape(callback OnLeaveColshapeCallback) {
-	bus.onLeaveColshape = callback
+	bus.onLeaveColshapes = append(bus.onLeaveColshapes, callback)
 }
 
 func (bus *EventBus) OnChatMessage(callback OnChatMessageCallback) {
-	bus.onChatMessage = callback
+	bus.onChatMessages = append(bus.onChatMessages, callback)
 }
 
 func (bus *EventBus) OnCommandError(callback OnCommandErrorCallback) {
-	bus.onCommandError = callback
+	bus.onCommandErrors = append(bus.onCommandErrors, callback)
 }
 
 func (bus *EventBus) OnConsoleCommand(callback OnConsoleCommandCallback) {
-	bus.onConsoleCommand = callback
+	bus.onConsoleCommands = append(bus.onConsoleCommands, callback)
 }
 
 func (bus *EventBus) OnNetOwnerChange(callback OnNetOwnerChangeCallback) {
-	bus.onNetOwnerChange = callback
+	bus.onNetOwnerChanges = append(bus.onNetOwnerChanges, callback)
 }
 
 func (bus *EventBus) OnChangeVehicleSeat(callback OnChangeVehicleSeatCallback) {
-	bus.onChangeVehicleSeat = callback
+	bus.onChangeVehicleSeats = append(bus.onChangeVehicleSeats, callback)
 }
 
 func (bus *EventBus) OnPlayerSpawn(callback OnPlayerSpawnCallback) {
-	bus.onPlayerSpawn = callback
+	bus.onPlayerSpawns = append(bus.onPlayerSpawns, callback)
 }
 
 func (bus *EventBus) OnPlayerInteriorChange(callback OnPlayerInteriorChangeCallback) {
-	bus.onPlayerInteriorChange = callback
+	bus.onPlayerInteriorChanges = append(bus.onPlayerInteriorChanges, callback)
 }
 
 func (bus *EventBus) OnPlayerDimensionChange(callback OnPlayerDimensionChangeCallback) {
-	bus.onPlayerDimensionChange = callback
+	bus.onPlayerDimensionChanges = append(bus.onPlayerDimensionChanges, callback)
 }
 
 func (bus *EventBus) OnPlayerDeath(callback OnPlayerDeathCallback) {
-	bus.onPlayerDeath = callback
+	bus.onPlayerDeaths = append(bus.onPlayerDeaths, callback)
 }
 
 func (bus *EventBus) OnPlayerDamage(callback OnPlayerDamageCallback) {
-	bus.onPlayerDamage = callback
+	bus.onPlayerDamages = append(bus.onPlayerDamages, callback)
 }
 
 func (bus *EventBus) OnPlayerWeaponChange(callback OnPlayerWeaponChangeCallback) {
-	bus.onPlayerWeaponChange = callback
+	bus.onPlayerWeaponChanges = append(bus.onPlayerWeaponChanges, callback)
 }
 
 func (bus *EventBus) OnPlayerConnectDenied(callback OnPlayerConnectDeniedCallback) {
-	bus.onPlayerConnectDenied = callback
+	bus.onPlayerConnectDenieds = append(bus.onPlayerConnectDenieds, callback)
 }
 
 func (bus *EventBus) OnPlayerHeal(callback OnPlayerHealCallback) {
-	bus.onPlayerHeal = callback
+	bus.onPlayerHeals = append(bus.onPlayerHeals, callback)
 }
 
 func (bus *EventBus) OnPlayerRequestControl(callback OnPlayerRequestControlCallback) {
-	bus.onPlayerRequestControl = callback
+	bus.onPlayerRequestControls = append(bus.onPlayerRequestControls, callback)
 }
 
 func (bus *EventBus) OnVehicleAttach(callback OnVehicleAttachCallback) {
-	bus.onVehicleAttach = callback
+	bus.onVehicleAttaches = append(bus.onVehicleAttaches, callback)
 }
 
 func (bus *EventBus) OnVehicleDetach(callback OnVehicleDetachCallback) {
-	bus.onVehicleDetach = callback
+	bus.onVehicleDetaches = append(bus.onVehicleDetaches, callback)
 }
 
 func (bus *EventBus) OnVehicleDestroy(callback OnVehicleDestroyCallback) {
-	bus.onVehicleDestroy = callback
+	bus.onVehicleDestroys = append(bus.onVehicleDestroys, callback)
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {
