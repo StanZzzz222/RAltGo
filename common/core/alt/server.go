@@ -7,6 +7,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/core/pools"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/ammo_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/closest_entities_order_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
@@ -450,19 +451,19 @@ func GetEntitiesInRange[T any](position *models.Vector3, dimension int32, inRang
 	return entitys
 }
 
-func GetClosestEntities[T any](position *models.Vector3, dimension int32, inRange float32, limit int32, closestEntitiesOrderType enums.ClosestEntitiesOrderType) []*T {
+func GetClosestEntities[T any](position *models.Vector3, dimension int32, inRange float32, limit int32, closestEntitiesOrderType closest_entities_order_type.ClosestEntitiesOrderType) []*T {
 	entitys := GetEntitiesInRange[T](position, dimension, inRange)
 	switch closestEntitiesOrderType {
-	case enums.ClosestEntitiesOrderDefault, enums.ClosestEntitiesOrderAsc:
-		entitiesQuickSort(position, entitys, 0, len(entitys)-1, enums.ClosestEntitiesOrderAsc)
-	case enums.ClosestEntitiesOrderDesc:
-		entitiesQuickSort(position, entitys, 0, len(entitys)-1, enums.ClosestEntitiesOrderDesc)
+	case closest_entities_order_type.ClosestEntitiesOrderDefault, closest_entities_order_type.ClosestEntitiesOrderAsc:
+		entitiesQuickSort(position, entitys, 0, len(entitys)-1, closest_entities_order_type.ClosestEntitiesOrderAsc)
+	case closest_entities_order_type.ClosestEntitiesOrderDesc:
+		entitiesQuickSort(position, entitys, 0, len(entitys)-1, closest_entities_order_type.ClosestEntitiesOrderDesc)
 	default:
 	}
 	return entitys[:limit]
 }
 
-func entitiesQuickSort[T any](target *models.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) {
+func entitiesQuickSort[T any](target *models.Vector3, datas []*T, low, high int, closestEntitiesOrderType closest_entities_order_type.ClosestEntitiesOrderType) {
 	if low < high {
 		p := entitiesPartition(target, datas, low, high, closestEntitiesOrderType)
 		entitiesQuickSort(target, datas, low, p-1, closestEntitiesOrderType)
@@ -470,10 +471,10 @@ func entitiesQuickSort[T any](target *models.Vector3, datas []*T, low, high int,
 	}
 }
 
-func entitiesPartition[T any](target *models.Vector3, datas []*T, low, high int, closestEntitiesOrderType enums.ClosestEntitiesOrderType) int {
+func entitiesPartition[T any](target *models.Vector3, datas []*T, low, high int, closestEntitiesOrderType closest_entities_order_type.ClosestEntitiesOrderType) int {
 	i := low - 1
 	pivot := getEntityRange(target, datas[high])
-	if closestEntitiesOrderType == enums.ClosestEntitiesOrderAsc {
+	if closestEntitiesOrderType == closest_entities_order_type.ClosestEntitiesOrderAsc {
 		for j := low; j < high; j++ {
 			if getEntityRange(target, datas[j]) <= pivot {
 				i++

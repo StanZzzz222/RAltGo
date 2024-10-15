@@ -1,4 +1,4 @@
-package enums
+package closest_entities_order_type
 
 /*
    Create by zyx
