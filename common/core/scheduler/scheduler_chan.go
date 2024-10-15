@@ -1,8 +1,7 @@
 package scheduler
 
 import (
-	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_timers"
-	"time"
+	"github.com/StanZzzz222/RAltGo/internal/lib"
 )
 
 /*
@@ -14,13 +13,12 @@ import (
 var schedulerChan = make(chan func())
 
 func init() {
+	var w = lib.GetWarpper()
 	go func() {
 		for {
 			select {
-			case task := <-schedulerChan:
-				alt_timers.SetTimeout(time.Microsecond, func() {
-					task()
-				})
+			case callback := <-schedulerChan:
+				w.PushTask(callback)
 			}
 		}
 	}()
