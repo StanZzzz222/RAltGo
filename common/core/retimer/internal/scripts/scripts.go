@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/common/core/retimer/entities"
+	"github.com/StanZzzz222/RAltGo/common/core/retimer"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"net"
 	"net/http"
@@ -22,16 +22,9 @@ const (
 	WEBHOOK = "WEBHOOK"
 )
 
-var sendChan = make(chan struct{}, 3000)
+var limitChan = make(chan struct{}, 3000)
 
-func analysisExpr(expr string) (string, string) {
-	idx := strings.Index(expr, ":")
-	exprType := expr[:idx]
-	exprValue := expr[idx+1:]
-	return exprType, exprValue
-}
-
-func ExprOperation(timer *entities.Timer) {
+func ExecuteTimerExpression(timer *retimer.Timer) {
 	exprType, exprValue := analysisExpr(timer.Expr)
 	switch exprType {
 	case TCP:
@@ -65,11 +58,18 @@ func ExprOperation(timer *entities.Timer) {
 	}
 }
 
-func udpNotify(host string, port int64, timer *entities.Timer) {
+func analysisExpr(expr string) (string, string) {
+	idx := strings.Index(expr, ":")
+	exprType := expr[:idx]
+	exprValue := expr[idx+1:]
+	return exprType, exprValue
+}
+
+func udpNotify(host string, port int64, timer *retimer.Timer) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
-		sendChan <- struct{}{}
+		limitChan <- struct{}{}
 		var socket *net.UDPConn
 		var err error
 		socket, err = net.DialUDP("udp4", nil, &net.UDPAddr{
@@ -93,17 +93,17 @@ func udpNotify(host string, port int64, timer *entities.Timer) {
 			logger.Logger().LogInfof(":: Retry UDP timer notify to %v | Key: %v", fmt.Sprintf("%v:%v", host, port), timer.Key)
 			return
 		}
-		<-sendChan
+		<-limitChan
 		wg.Done()
 	}()
 	wg.Wait()
 }
 
-func tcpNotify(host string, port int64, timer *entities.Timer) {
+func tcpNotify(host string, port int64, timer *retimer.Timer) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
-		sendChan <- struct{}{}
+		limitChan <- struct{}{}
 		var socket *net.TCPConn
 		var err error
 		socket, err = net.DialTCP("tcp", nil, &net.TCPAddr{
@@ -127,17 +127,17 @@ func tcpNotify(host string, port int64, timer *entities.Timer) {
 			logger.Logger().LogInfof(":: Retry TCP timer notify to %v | Key: %v", fmt.Sprintf("%v:%v", host, port), timer.Key)
 			return
 		}
-		<-sendChan
+		<-limitChan
 		wg.Done()
 	}()
 	wg.Wait()
 }
 
-func webhookNotify(url string, timer *entities.Timer) {
+func webhookNotify(url string, timer *retimer.Timer) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
-		sendChan <- struct{}{}
+		limitChan <- struct{}{}
 		jsonBytes, err := json.Marshal(timer)
 		if err != nil {
 			webhookNotify(url, timer)
@@ -156,7 +156,7 @@ func webhookNotify(url string, timer *entities.Timer) {
 			logger.Logger().LogInfof(":: Retry WEBHOOK timer notify to %v | Key: %v", url, timer.Key)
 			return
 		}
-		<-sendChan
+		<-limitChan
 		wg.Done()
 	}()
 	wg.Wait()
