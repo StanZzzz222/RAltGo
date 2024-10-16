@@ -3,6 +3,7 @@ package hooks
 import (
 	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_timers"
 	"github.com/StanZzzz222/RAltGo/common/core/retimer/timer"
+	"strings"
 	"sync"
 	"time"
 )
@@ -14,11 +15,15 @@ import (
 */
 
 var hooks = &sync.Map{}
+var hookPreffixMatch = &sync.Map{}
 
 type OnTimerEventCallback func(timer *timer.ITimer)
 
-func OnTimerEvent(key string, callback OnTimerEventCallback) {
+func OnTimerEvent(key string, preffixMatch bool, callback OnTimerEventCallback) {
 	hooks.Store(key, callback)
+	if preffixMatch {
+		hookPreffixMatch.Store(key, true)
+	}
 }
 
 func TriggerTimer(timer *timer.ITimer) {
@@ -28,5 +33,17 @@ func TriggerTimer(timer *timer.ITimer) {
 				hook.(OnTimerEventCallback)(timer)
 			})
 		}
+		hookPreffixMatch.Range(func(k, v any) bool {
+			key := k.(string)
+			if strings.Contains(key, timer.Key) {
+				if hook, ok := hooks.Load(key); ok {
+					alt_timers.SetTimeout(time.Microsecond, func() {
+						hook.(OnTimerEventCallback)(timer)
+					})
+					return false
+				}
+			}
+			return true
+		})
 	}
 }

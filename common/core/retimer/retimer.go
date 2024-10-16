@@ -47,8 +47,8 @@ func init() {
 	}()
 }
 
-func OnTimerEvent(key string, callback hooks.OnTimerEventCallback) {
-	hooks.OnTimerEvent(key, callback)
+func OnTimerEvent(key string, preffixMatch bool, callback hooks.OnTimerEventCallback) {
+	hooks.OnTimerEvent(key, preffixMatch, callback)
 }
 
 func CreateTimer(key string, duration time.Duration, loop bool) *timer.ITimer {
