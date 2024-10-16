@@ -32,31 +32,6 @@ func NewTimer(key string, milliSecond int64, loop bool, loopCount int) *Timer {
 	}
 }
 
-func (t *Timer) GetKey() string {
-	return t.Key
-}
-func (t *Timer) GetNextNotifyUnix() int64 {
-	return t.NotifyMillisecond
-}
-func (t *Timer) GetMillisecond() int64 {
-	return t.Millisecond
-}
-func (t *Timer) GetMessage() string {
-	return t.Message
-}
-func (t *Timer) GetExpr() string {
-	return t.Expr
-}
-func (t *Timer) GetLoopCount() int {
-	return t.LoopCount
-}
-func (t *Timer) IsLoop() bool {
-	return t.Loop
-}
-func (t *Timer) IsStop() bool {
-	return t.IsPause
-}
-
 func (t *Timer) SetMessage(message string) {
 	t.Message = message
 }
@@ -65,10 +40,18 @@ func (t *Timer) SetExpr(expr string) {
 	t.Expr = expr
 }
 
+func (t *Timer) SetLoop(loop bool) {
+	t.Loop = loop
+}
+
+func (t *Timer) SetLoopCount(loopCount int) {
+	t.LoopCount = loopCount
+}
+
 func (t *Timer) Pause() {
-	t.IsStop = true
+	t.IsPause = true
 }
 
 func (t *Timer) Play() {
-	t.IsStop = false
+	t.IsPause = false
 }
