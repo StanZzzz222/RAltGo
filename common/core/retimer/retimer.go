@@ -3,6 +3,7 @@ package retimer
 import (
 	"github.com/StanZzzz222/RAltGo/common/core/retimer/internal/hooks"
 	"github.com/StanZzzz222/RAltGo/common/core/retimer/internal/scripts"
+	"github.com/StanZzzz222/RAltGo/common/core/retimer/timer"
 	"sync"
 	"time"
 )
@@ -50,38 +51,38 @@ func OnTimerEvent(key string, callback hooks.OnTimerEventCallback) {
 	hooks.OnTimerEvent(key, callback)
 }
 
-func CreateTimer(key string, duration time.Duration, loop bool) *Timer {
-	timer := NewTimer(key, int64(duration), loop, 0)
-	timers.Store(timer.Key, timer)
-	return timer
+func CreateTimer(key string, duration time.Duration, loop bool) *timer.ITimer {
+	t := timer.NewTimer(key, int64(duration), loop, 0)
+	timers.Store(t.Key, t)
+	return t
 }
 
-func CreateLoopCountTimer(key string, duration time.Duration, loopCount int) *Timer {
-	timer := NewTimer(key, int64(duration), true, loopCount)
-	timers.Store(timer.Key, timer)
-	return timer
+func CreateLoopCountTimer(key string, duration time.Duration, loopCount int) *timer.ITimer {
+	t := timer.NewTimer(key, int64(duration), true, loopCount)
+	timers.Store(t.Key, t)
+	return t
 }
 
-func CreateScriptTimer(key string, expr string, duration time.Duration, loop bool) *Timer {
-	timer := NewTimer(key, int64(duration), loop, 0)
-	timer.Expr = expr
-	scripts.ExecuteTimerExpression(timer)
-	timers.Store(timer.Key, timer)
-	return timer
+func CreateScriptTimer(key string, expr string, duration time.Duration, loop bool) *timer.ITimer {
+	t := timer.NewTimer(key, int64(duration), loop, 0)
+	t.Expr = expr
+	scripts.ExecuteTimerExpression(t)
+	timers.Store(t.Key, t)
+	return t
 }
 
-func CreateLoopCountScriptTimer(key string, expr string, duration time.Duration, loopCount int) *Timer {
-	timer := NewTimer(key, int64(duration), true, loopCount)
-	timer.Expr = expr
-	scripts.ExecuteTimerExpression(timer)
-	timers.Store(timer.Key, timer)
-	return timer
+func CreateLoopCountScriptTimer(key string, expr string, duration time.Duration, loopCount int) *timer.ITimer {
+	t := timer.NewTimer(key, int64(duration), true, loopCount)
+	t.Expr = expr
+	scripts.ExecuteTimerExpression(t)
+	timers.Store(t.Key, t)
+	return t
 }
 
-func GetTimer(key string) *Timer {
-	timer, ok := timers.Load(key)
+func GetTimer(key string) *timer.ITimer {
+	t, ok := timers.Load(key)
 	if ok {
-		return timer.(*Timer)
+		return t.(*timer.ITimer)
 	}
 	return nil
 }
@@ -94,22 +95,22 @@ func Destroy(key string) {
 	}
 }
 
-func StopTimer(timer *Timer) {
+func StopTimer(timer *timer.ITimer) {
 	if timer != nil {
 		timer.IsPause = true
 	}
 }
 
-func PlayTimer(timer *Timer) {
+func PlayTimer(timer *timer.ITimer) {
 	if timer != nil {
 		timer.IsPause = false
 	}
 }
 
 func TTLTimer(key string) int64 {
-	timer := GetTimer(key)
-	if timer != nil {
-		second := timer.NotifyUnix - time.Now().UTC().Unix()
+	t := GetTimer(key)
+	if t != nil {
+		second := t.NotifyUnix - time.Now().UTC().Unix()
 		if second <= 0 {
 			return 0
 		}
@@ -122,9 +123,9 @@ func getTimersByMillsecond() *sync.Map {
 	millsecondTimers := &sync.Map{}
 	timers.Range(func(key, value any) bool {
 		if value != nil {
-			timer := value.(*Timer)
-			if timer.Duration < 1000 {
-				millsecondTimers.Store(key, timer)
+			t := value.(*timer.ITimer)
+			if t.Duration < 1000 {
+				millsecondTimers.Store(key, t)
 				return true
 			}
 		}
@@ -137,9 +138,9 @@ func getTimersBySecond() *sync.Map {
 	secondTimers := &sync.Map{}
 	timers.Range(func(key, value any) bool {
 		if value != nil {
-			timer := value.(*Timer)
-			if timer.Duration >= 1000 {
-				secondTimers.Store(key, timer)
+			t := value.(*timer.ITimer)
+			if t.Duration >= 1000 {
+				secondTimers.Store(key, t)
 				return true
 			}
 		}
@@ -152,9 +153,9 @@ func getTimersByMinute() *sync.Map {
 	minuteTimers := &sync.Map{}
 	timers.Range(func(key, value any) bool {
 		if value != nil {
-			timer := value.(*Timer)
-			if timer.Duration >= (60 * 1000) {
-				minuteTimers.Store(key, timer)
+			t := value.(*timer.ITimer)
+			if t.Duration >= (60 * 1000) {
+				minuteTimers.Store(key, t)
 				return true
 			}
 		}
@@ -167,9 +168,9 @@ func getTimersByHour() *sync.Map {
 	hourTimers := &sync.Map{}
 	timers.Range(func(key, value any) bool {
 		if value != nil {
-			timer := value.(*Timer)
-			if timer.Duration >= (60 * 60 * 1000) {
-				hourTimers.Store(key, timer)
+			t := value.(*timer.ITimer)
+			if t.Duration >= (60 * 60 * 1000) {
+				hourTimers.Store(key, t)
 				return true
 			}
 		}
@@ -182,9 +183,9 @@ func getTimersByDay() *sync.Map {
 	dayTimers := &sync.Map{}
 	timers.Range(func(key, value any) bool {
 		if value != nil {
-			timer := value.(*Timer)
-			if timer.Duration >= (60 * 60 * 1000) {
-				dayTimers.Store(key, timer)
+			t := value.(*timer.ITimer)
+			if t.Duration >= (60 * 60 * 1000) {
+				dayTimers.Store(key, t)
 				return true
 			}
 		}
@@ -196,26 +197,26 @@ func getTimersByDay() *sync.Map {
 func check(timers *sync.Map) {
 	timers.Range(func(key, value any) bool {
 		if value != nil {
-			timer := value.(*Timer)
-			if !timer.IsPause {
-				if time.Now().Add(time.Millisecond).UTC().Unix() >= timer.NotifyUnix {
-					if !timer.Loop {
-						Destroy(timer.Key)
-						hooks.TriggerTimer(timer)
+			t := value.(*timer.ITimer)
+			if !t.IsPause {
+				if time.Now().Add(time.Millisecond).UTC().Unix() >= t.NotifyUnix {
+					if !t.Loop {
+						Destroy(t.Key)
+						hooks.TriggerTimer(t)
 					} else {
-						if timer.LoopCount > 0 {
-							lastLoopCount := timer.LoopCount - 1
+						if t.LoopCount > 0 {
+							lastLoopCount := t.LoopCount - 1
 							if lastLoopCount == 0 {
-								Destroy(timer.Key)
-								hooks.TriggerTimer(timer)
+								Destroy(t.Key)
+								hooks.TriggerTimer(t)
 							} else {
-								timer.LoopCount = lastLoopCount
-								timer.NotifyUnix = time.Now().Add(time.Duration(timer.NotifyUnix)).Unix()
-								hooks.TriggerTimer(timer)
+								t.LoopCount = lastLoopCount
+								t.NotifyUnix = time.Now().Add(time.Duration(t.NotifyUnix)).Unix()
+								hooks.TriggerTimer(t)
 							}
 						} else {
-							timer.NotifyUnix = time.Now().Add(time.Duration(timer.NotifyUnix)).Unix()
-							hooks.TriggerTimer(timer)
+							t.NotifyUnix = time.Now().Add(time.Duration(t.NotifyUnix)).Unix()
+							hooks.TriggerTimer(t)
 						}
 					}
 				}

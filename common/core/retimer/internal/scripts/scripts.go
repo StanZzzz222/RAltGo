@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/common/core/retimer"
+	"github.com/StanZzzz222/RAltGo/common/core/retimer/timer"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"net"
 	"net/http"
@@ -24,7 +24,7 @@ const (
 
 var limitChan = make(chan struct{}, 3000)
 
-func ExecuteTimerExpression(timer *retimer.Timer) {
+func ExecuteTimerExpression(timer *timer.ITimer) {
 	exprType, exprValue := analysisExpr(timer.Expr)
 	switch exprType {
 	case TCP:
@@ -65,7 +65,7 @@ func analysisExpr(expr string) (string, string) {
 	return exprType, exprValue
 }
 
-func udpNotify(host string, port int64, timer *retimer.Timer) {
+func udpNotify(host string, port int64, timer *timer.ITimer) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
@@ -99,7 +99,7 @@ func udpNotify(host string, port int64, timer *retimer.Timer) {
 	wg.Wait()
 }
 
-func tcpNotify(host string, port int64, timer *retimer.Timer) {
+func tcpNotify(host string, port int64, timer *timer.ITimer) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
@@ -133,7 +133,7 @@ func tcpNotify(host string, port int64, timer *retimer.Timer) {
 	wg.Wait()
 }
 
-func webhookNotify(url string, timer *retimer.Timer) {
+func webhookNotify(url string, timer *timer.ITimer) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {

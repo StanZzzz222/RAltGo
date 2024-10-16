@@ -1,4 +1,4 @@
-package retimer
+package timer
 
 import "time"
 
@@ -8,7 +8,7 @@ import "time"
    File: retimer.go
 */
 
-type Timer struct {
+type ITimer struct {
 	Key        string `json:"key"`
 	NotifyUnix int64  `json:"notify_unix"`
 	Duration   int64  `json:"duration"`
@@ -19,8 +19,8 @@ type Timer struct {
 	IsPause    bool   `json:"stop"`
 }
 
-func NewTimer(key string, duration int64, loop bool, loopCount int) *Timer {
-	return &Timer{
+func NewTimer(key string, duration int64, loop bool, loopCount int) *ITimer {
+	return &ITimer{
 		Key:        key,
 		NotifyUnix: time.Now().Add(time.Duration(duration)).Unix(),
 		Duration:   duration,

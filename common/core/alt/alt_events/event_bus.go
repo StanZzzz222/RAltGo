@@ -174,7 +174,7 @@ func (bus *EventBus) OnClientEvent(eventName string, callback any) {
 			return
 		}
 		if !checkFirstEventArgs(callback) {
-			logger.Logger().LogError("OnClientEvent: The first parameter should be *models.IPlayer")
+			logger.Logger().LogError("OnClientEvent: The first parameter should be *timer.IPlayer")
 			return
 		}
 		bus.onClientEvents.Store(eventName, callback)

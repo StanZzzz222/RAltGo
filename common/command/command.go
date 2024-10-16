@@ -65,7 +65,7 @@ func TriggerLocalCommand(name string, args ...any) {
 		return
 	}
 	if !checkFirstEventArgs(args[0]) {
-		logger.Logger().LogError("TriggerLocalCommand: The first parameter should be *models.IPlayer")
+		logger.Logger().LogError("TriggerLocalCommand: The first parameter should be *timer.IPlayer")
 		return
 	}
 	groups.Range(func(key, value any) bool {
