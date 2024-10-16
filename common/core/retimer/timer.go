@@ -27,7 +27,7 @@ func init() {
 		for {
 			select {
 			case <-tickerMillsecond.C:
-				check(getTimersBySecond())
+				check(getTimersByMillsecond())
 				continue
 			case <-tickerSecond.C:
 				check(getTimersBySecond())
@@ -75,15 +75,15 @@ func RestartTimer(key string) {
 	timer := GetTimer(key)
 	if timer != nil {
 		DelTimer(key)
-		timer.NotifyMillisecond = time.Now().Add(time.Duration(timer.Millisecond) * time.Millisecond).UTC().Unix()
-		CreateTimer(timer.Key, time.Duration(timer.Millisecond), timer.Loop, timer.LoopCount)
+		timer.NotifyUnix = time.Now().Add(time.Duration(timer.Duration)).Unix()
+		CreateTimer(timer.Key, time.Duration(timer.Duration), timer.Loop, timer.LoopCount)
 	}
 }
 
 func TTLTimer(key string) int64 {
 	timer := GetTimer(key)
 	if timer != nil {
-		second := (timer.NotifyMillisecond * 1000) - time.Now().UTC().Unix()
+		second := timer.NotifyUnix - time.Now().UTC().Unix()
 		if second <= 0 {
 			return 0
 		}
@@ -97,7 +97,7 @@ func getTimersByMillsecond() *sync.Map {
 	timers.Range(func(key, value any) bool {
 		if value != nil {
 			timer := value.(*entities.Timer)
-			if timer.Millisecond < 1000 {
+			if timer.Duration < 1000 {
 				millsecondTimers.Store(key, timer)
 				return true
 			}
@@ -112,7 +112,7 @@ func getTimersBySecond() *sync.Map {
 	timers.Range(func(key, value any) bool {
 		if value != nil {
 			timer := value.(*entities.Timer)
-			if timer.Millisecond >= 1000 {
+			if timer.Duration >= 1000 {
 				secondTimers.Store(key, timer)
 				return true
 			}
@@ -127,7 +127,7 @@ func getTimersByMinute() *sync.Map {
 	timers.Range(func(key, value any) bool {
 		if value != nil {
 			timer := value.(*entities.Timer)
-			if timer.Millisecond >= (60 * 1000) {
+			if timer.Duration >= (60 * 1000) {
 				minuteTimers.Store(key, timer)
 				return true
 			}
@@ -142,7 +142,7 @@ func getTimersByHour() *sync.Map {
 	timers.Range(func(key, value any) bool {
 		if value != nil {
 			timer := value.(*entities.Timer)
-			if timer.Millisecond >= (60 * 60 * 1000) {
+			if timer.Duration >= (60 * 60 * 1000) {
 				hourTimers.Store(key, timer)
 				return true
 			}
@@ -157,7 +157,7 @@ func getTimersByDay() *sync.Map {
 	timers.Range(func(key, value any) bool {
 		if value != nil {
 			timer := value.(*entities.Timer)
-			if timer.Millisecond >= (60 * 60 * 1000) {
+			if timer.Duration >= (60 * 60 * 1000) {
 				dayTimers.Store(key, timer)
 				return true
 			}
@@ -172,7 +172,7 @@ func check(timers *sync.Map) {
 		if value != nil {
 			timer := value.(*entities.Timer)
 			if !timer.IsPause {
-				if time.Now().Add(time.Millisecond*1).UTC().Unix() >= timer.NotifyMillisecond {
+				if time.Now().Add(time.Millisecond).UTC().Unix() >= timer.NotifyUnix {
 					if !timer.Loop {
 						DelTimer(timer.Key)
 						hooks.TriggerTimer(timer)
@@ -184,11 +184,11 @@ func check(timers *sync.Map) {
 								hooks.TriggerTimer(timer)
 							} else {
 								timer.LoopCount = lastLoopCount
-								timer.NotifyMillisecond = time.Now().Add(time.Duration(timer.Millisecond) * time.Millisecond).UTC().Unix()
+								timer.NotifyUnix = time.Now().Add(time.Duration(timer.NotifyUnix)).Unix()
 								hooks.TriggerTimer(timer)
 							}
 						} else {
-							timer.NotifyMillisecond = time.Now().Add(time.Duration(timer.Millisecond) * time.Millisecond).UTC().Unix()
+							timer.NotifyUnix = time.Now().Add(time.Duration(timer.NotifyUnix)).Unix()
 							hooks.TriggerTimer(timer)
 						}
 					}
