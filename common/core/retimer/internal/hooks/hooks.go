@@ -15,9 +15,9 @@ import (
 
 var hooks = &sync.Map{}
 
-type onTimerEventCallback func(timer *entities.Timer)
+type OnTimerEventCallback func(timer *entities.Timer)
 
-func OnTimerEvent(key string, callback onTimerEventCallback) {
+func OnTimerEvent(key string, callback OnTimerEventCallback) {
 	hooks.Store(key, callback)
 }
 
@@ -25,7 +25,7 @@ func TriggerTimer(timer *entities.Timer) {
 	if timer != nil {
 		if hook, ok := hooks.Load(timer.Key); ok {
 			alt_timers.SetTimeout(time.Microsecond, func() {
-				hook.(onTimerEventCallback)(timer)
+				hook.(OnTimerEventCallback)(timer)
 			})
 		}
 	}

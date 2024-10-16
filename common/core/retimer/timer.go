@@ -46,8 +46,12 @@ func init() {
 	}()
 }
 
-func CreateTimer(key string, millisecond int64, loop bool, loopCount int) {
-	timer := entities.NewTimer(key, millisecond, loop, loopCount)
+func OnTimerEvent(key string, callback hooks.OnTimerEventCallback) {
+	hooks.OnTimerEvent(key, callback)
+}
+
+func CreateTimer(key string, duration time.Duration, loop bool, loopCount int) {
+	timer := entities.NewTimer(key, int64(duration), loop, loopCount)
 	timers.Store(timer.Key, timer)
 }
 
@@ -72,7 +76,7 @@ func RestartTimer(key string) {
 	if timer != nil {
 		DelTimer(key)
 		timer.NotifyMillisecond = time.Now().Add(time.Duration(timer.Millisecond) * time.Millisecond).UTC().Unix()
-		CreateTimer(timer.Key, timer.Millisecond, timer.Loop, timer.LoopCount)
+		CreateTimer(timer.Key, time.Duration(timer.Millisecond), timer.Loop, timer.LoopCount)
 	}
 }
 
