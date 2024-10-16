@@ -1,8 +1,10 @@
 package hooks
 
 import (
+	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_timers"
 	"github.com/StanZzzz222/RAltGo/common/core/retimer/internal/entities"
 	"sync"
+	"time"
 )
 
 /*
@@ -22,7 +24,9 @@ func OnTimerEvent(key string, callback onTimerEventCallback) {
 func TriggerTimer(timer *entities.Timer) {
 	if timer != nil {
 		if hook, ok := hooks.Load(timer.Key); ok {
-			hook.(onTimerEventCallback)(timer)
+			alt_timers.SetTimeout(time.Microsecond, func() {
+				hook.(onTimerEventCallback)(timer)
+			})
 		}
 	}
 }
