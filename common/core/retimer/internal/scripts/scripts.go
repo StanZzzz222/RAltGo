@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"github.com/StanZzzz222/RAltGo/common/core/retimer/internal/entities"
+	"github.com/StanZzzz222/RAltGo/common/core/retimer/entities"
 	"github.com/StanZzzz222/RAltGo/logger"
 	"net"
 	"net/http"

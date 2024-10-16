@@ -2,7 +2,7 @@ package hooks
 
 import (
 	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_timers"
-	"github.com/StanZzzz222/RAltGo/common/core/retimer/internal/entities"
+	"github.com/StanZzzz222/RAltGo/common/core/retimer/entities"
 	"sync"
 	"time"
 )

@@ -1,7 +1,7 @@
 package retimer
 
 import (
-	"github.com/StanZzzz222/RAltGo/common/core/retimer/internal/entities"
+	"github.com/StanZzzz222/RAltGo/common/core/retimer/entities"
 	"github.com/StanZzzz222/RAltGo/common/core/retimer/internal/hooks"
 	"sync"
 	"time"
