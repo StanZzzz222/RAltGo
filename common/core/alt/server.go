@@ -93,7 +93,7 @@ func ToggleWorldProfiler(toggleWorldProfiler bool) {
 	if toggleWorldProfiler {
 		value = 1
 	}
-	w.SetServerData(enums.StopServer, int64(value), "")
+	w.SetServerData(enums.ToggleWorldProfiler, int64(value), "")
 }
 
 func SetStreamingDistance(streamingDistance uint32) {
