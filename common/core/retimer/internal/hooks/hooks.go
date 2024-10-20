@@ -35,7 +35,7 @@ func TriggerTimer(timer *timer.ITimer) {
 		}
 		hookPreffixMatch.Range(func(k, v any) bool {
 			key := k.(string)
-			if strings.Contains(key, timer.Key) {
+			if strings.Contains(timer.Key, key) {
 				if hook, ok := hooks.Load(key); ok {
 					alt_timers.SetTimeout(time.Microsecond, func() {
 						hook.(OnTimerEventCallback)(timer)
