@@ -62,10 +62,11 @@ type IVehicle struct {
 	*EntityData
 }
 
-func (v *IVehicle) NewIVehicle(id, model uint32, primaryColor, secondColor uint8, position, rotation *Vector3) *IVehicle {
+func (v *IVehicle) NewIVehicle(id, model uint32, numberplate string, primaryColor, secondColor uint8, position, rotation *Vector3) *IVehicle {
 	return &IVehicle{
 		id:               id,
 		model:            vehicle_hash.ModelHash(model),
+		numberplate:      numberplate,
 		primaryColor:     primaryColor,
 		secondColor:      secondColor,
 		headLightColor:   vehicle_head_light_color_type.Default,
