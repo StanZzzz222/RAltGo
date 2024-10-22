@@ -135,7 +135,7 @@ func (b *IBlip) GetPlayers() []*IPlayer {
 	return nil
 }
 func (b *IBlip) GetGxtName() string {
-	ret, freeDataResultFunc := b.warpper.GetData(b.id, enums.Blip, uint8(enums.BlipCategory))
+	ret, freeDataResultFunc := b.warpper.GetData(b.id, enums.Blip, uint8(enums.BlipGxtName))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
 		freeDataResultFunc()
