@@ -12,20 +12,20 @@ import (
 */
 
 type ITimer struct {
-	Key        string    `json:"key"`
-	NotifyUnix int64     `json:"notify_unix"`
-	Duration   int64     `json:"duration"`
-	Expr       string    `json:"expr"`
-	Loop       bool      `json:"loop"`
-	LoopCount  int       `json:"loop_count"`
-	IsPause    bool      `json:"stop"`
-	Datas      *sync.Map `json:"datas"`
+	Key        string        `json:"key"`
+	NotifyUnix int64         `json:"notify_unix"`
+	Duration   time.Duration `json:"duration"`
+	Expr       string        `json:"expr"`
+	Loop       bool          `json:"loop"`
+	LoopCount  int           `json:"loop_count"`
+	IsPause    bool          `json:"stop"`
+	Datas      *sync.Map     `json:"datas"`
 }
 
-func NewTimer(key string, duration int64, loop bool, loopCount int) *ITimer {
+func NewTimer(key string, duration time.Duration, loop bool, loopCount int) *ITimer {
 	return &ITimer{
 		Key:        key,
-		NotifyUnix: time.Now().Add(time.Duration(duration)).Unix(),
+		NotifyUnix: time.Now().Add(duration).Unix(),
 		Duration:   duration,
 		Expr:       "",
 		Loop:       loop,

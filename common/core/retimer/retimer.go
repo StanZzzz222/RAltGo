@@ -52,19 +52,19 @@ func OnTimerEvent(key string, preffixMatch bool, callback hooks.OnTimerEventCall
 }
 
 func CreateTimer(key string, duration time.Duration, loop bool) *timer.ITimer {
-	t := timer.NewTimer(key, int64(duration), loop, 0)
+	t := timer.NewTimer(key, duration, loop, 0)
 	timers.Store(t.Key, t)
 	return t
 }
 
 func CreateLoopCountTimer(key string, duration time.Duration, loopCount int) *timer.ITimer {
-	t := timer.NewTimer(key, int64(duration), true, loopCount)
+	t := timer.NewTimer(key, duration, true, loopCount)
 	timers.Store(t.Key, t)
 	return t
 }
 
 func CreateScriptTimer(key string, expr string, duration time.Duration, loop bool) *timer.ITimer {
-	t := timer.NewTimer(key, int64(duration), loop, 0)
+	t := timer.NewTimer(key, duration, loop, 0)
 	t.Expr = expr
 	scripts.ExecuteTimerExpression(t)
 	timers.Store(t.Key, t)
@@ -72,7 +72,7 @@ func CreateScriptTimer(key string, expr string, duration time.Duration, loop boo
 }
 
 func CreateLoopCountScriptTimer(key string, expr string, duration time.Duration, loopCount int) *timer.ITimer {
-	t := timer.NewTimer(key, int64(duration), true, loopCount)
+	t := timer.NewTimer(key, duration, true, loopCount)
 	t.Expr = expr
 	scripts.ExecuteTimerExpression(t)
 	timers.Store(t.Key, t)
@@ -211,11 +211,11 @@ func check(timers *sync.Map) {
 								hooks.TriggerTimer(t)
 							} else {
 								t.LoopCount = lastLoopCount
-								t.NotifyUnix = time.Now().Add(time.Duration(t.NotifyUnix)).Unix()
+								t.NotifyUnix = time.Now().Add(t.Duration).Unix()
 								hooks.TriggerTimer(t)
 							}
 						} else {
-							t.NotifyUnix = time.Now().Add(time.Duration(t.NotifyUnix)).Unix()
+							t.NotifyUnix = time.Now().Add(t.Duration).Unix()
 							hooks.TriggerTimer(t)
 						}
 					}
