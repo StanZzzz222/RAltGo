@@ -73,7 +73,7 @@ var getDataProc *windows.Proc
 
 type WindowsWarrper struct{}
 
-func InitWindowsWarpper() {
+func init() {
 	if runtime.GOOS == "windows" {
 		path, _ := os.Getwd()
 		path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
