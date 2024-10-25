@@ -7,3 +7,7 @@ package windows_warpper
    Date Time: 2024/10/25
    File: linux_warpper.go
 */
+
+func init() {
+
+}
