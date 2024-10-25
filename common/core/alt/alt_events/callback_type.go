@@ -41,4 +41,7 @@ type (
 	OnVehicleAttachCallback         func(vehicle *models.IVehicle, attached *models.IVehicle)
 	OnVehicleDetachCallback         func(vehicle *models.IVehicle, detached *models.IVehicle)
 	OnVehicleDestroyCallback        func(vehicle *models.IVehicle)
+	OnVehicleDamageCallback         func(vehicle *models.IVehicle, damager any, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage uint32, weapon weapon_hash.ModelHash)
+	OnVehicleHornCallback           func(vehicle *models.IVehicle, player *models.IPlayer, state bool)
+	OnVehicleSirenCallback          func(vehicle *models.IVehicle, state bool)
 )

@@ -496,6 +496,59 @@ func onVehicleDestroy(cvPtr uintptr) {
 	}
 }
 
+//export onVehicleDamage
+func onVehicleDamage(cvPtr uintptr, objectType, objectId uint8, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	if cVehicle != nil {
+		defer w.FreeVehicle(cvPtr)
+		var entity any
+		switch enums.ObjectType(objectType) {
+		case enums.Player:
+			entity = models.GetPools().GetPlayer(uint32(objectId))
+			break
+		case enums.Vehicle:
+			entity = models.GetPools().GetVehicle(uint32(objectId))
+			break
+		case enums.Ped:
+			entity = models.GetPools().GetPed(uint32(objectId))
+			break
+		case enums.Object:
+			entity = models.GetPools().GetObject(uint32(objectId))
+			break
+		default:
+			entity = nil
+			break
+		}
+		alt_events.Triggers().TriggerOnVehicleDamage(models.GetPools().GetVehicle(cVehicle.ID), entity, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon_hash.ModelHash(weapon))
+	}
+}
+
+//export onVehicleHorn
+func onVehicleHorn(cvPtr, cPtr uintptr, state bool) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cVehicle != nil && cPlayer != nil {
+		defer w.FreeVehicle(cvPtr)
+		defer w.FreePlayer(cPtr)
+		alt_events.Triggers().TriggerOnVehicleHorn(models.GetPools().GetVehicle(cVehicle.ID), models.GetPools().GetPlayer(cPlayer.ID), state)
+	}
+}
+
+//export onVehicleSiren
+func onVehicleSiren(cvPtr uintptr, state bool) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cVehicle = entities.ConvertCVehicle(cvPtr)
+	if cVehicle != nil {
+		defer w.FreeVehicle(cvPtr)
+		alt_events.Triggers().TriggerOnVehicleSiren(models.GetPools().GetVehicle(cVehicle.ID), state)
+	}
+}
+
 func panicRecover() {
 	if r := recover(); r != nil {
 		var stackBuf [4096]byte

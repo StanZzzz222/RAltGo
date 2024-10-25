@@ -245,6 +245,30 @@ func (t *EventBusTrigger) TriggerOnVehicleDestroy(vehicle *models.IVehicle) {
 	}
 }
 
+func (t *EventBusTrigger) TriggerOnVehicleDamage(vehicle *models.IVehicle, damager any, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage uint32, weapon weapon_hash.ModelHash) {
+	if len(eventBus.onVehicleDamages) > 0 {
+		for _, onVehicleDamage := range eventBus.onVehicleDamages {
+			onVehicleDamage(vehicle, damager, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVehicleHorn(vehicle *models.IVehicle, player *models.IPlayer, state bool) {
+	if len(eventBus.onVehicleHorns) > 0 {
+		for _, onVehicleHorn := range eventBus.onVehicleHorns {
+			onVehicleHorn(vehicle, player, state)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVehicleSiren(vehicle *models.IVehicle, state bool) {
+	if len(eventBus.onVehicleSirens) > 0 {
+		for _, onVehicleSiren := range eventBus.onVehicleSirens {
+			onVehicleSiren(vehicle, state)
+		}
+	}
+}
+
 func (t *EventBusTrigger) TriggerOnClientEvent(player *models.IPlayer, eventName, eventArgs string) {
 	if callback, ok := eventBus.onClientEvents.Load(eventName); ok {
 		callbackValue := reflect.ValueOf(callback)

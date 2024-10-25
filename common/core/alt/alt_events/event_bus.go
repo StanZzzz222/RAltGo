@@ -49,6 +49,9 @@ type EventBus struct {
 	onVehicleAttaches        []OnVehicleAttachCallback
 	onVehicleDetaches        []OnVehicleDetachCallback
 	onVehicleDestroys        []OnVehicleDestroyCallback
+	onVehicleDamages         []OnVehicleDamageCallback
+	onVehicleHorns           []OnVehicleHornCallback
+	onVehicleSirens          []OnVehicleSirenCallback
 	onClientEvents           *sync.Map
 	onLocalEvents            *sync.Map
 }
@@ -163,6 +166,14 @@ func (bus *EventBus) OnVehicleDetach(callback OnVehicleDetachCallback) {
 
 func (bus *EventBus) OnVehicleDestroy(callback OnVehicleDestroyCallback) {
 	bus.onVehicleDestroys = append(bus.onVehicleDestroys, callback)
+}
+
+func (bus *EventBus) OnVehicleDamage(callback OnVehicleDamageCallback) {
+	bus.onVehicleDamages = append(bus.onVehicleDamages, callback)
+}
+
+func (bus *EventBus) OnVehicleHorn(callback OnVehicleHornCallback) {
+	bus.onVehicleHorns = append(bus.onVehicleHorns, callback)
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {
