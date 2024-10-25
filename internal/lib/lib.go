@@ -1,3 +1,5 @@
+//go:build windows
+
 package lib
 
 // #include <stdlib.h>
