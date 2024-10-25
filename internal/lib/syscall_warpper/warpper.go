@@ -1,3 +1,5 @@
+//go:build !windows
+
 package syscall_warpper
 
 // #include <stdlib.h>
