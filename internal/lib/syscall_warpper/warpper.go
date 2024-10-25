@@ -76,7 +76,7 @@ type SyscallWarrper struct{}
 func init() {
 	if runtime.GOOS != "windows" {
 		path, _ := os.Getwd()
-		path = fmt.Sprintf("%v/modules/rs-go-module.so", path)
+		path = fmt.Sprintf("%v/modules/libRsGoModule.so", path)
 		_, err := os.Stat(path)
 		if os.IsNotExist(err) {
 			logger.Logger().LogErrorf(":: Please check if %v exists", path)
