@@ -38,12 +38,14 @@ func onTick() {
 
 func init() {
 	if runtime.GOOS == "windows" {
+		windows_warpper.InitWindowsWarpper()
 		warpper = &Warpper{
 			windows: &windows_warpper.WindowsWarrper{},
 			syscall: nil,
 		}
 		return
 	}
+	syscall_warpper.InitLinuxWarpper()
 	warpper = &Warpper{
 		windows: nil,
 		syscall: &syscall_warpper.SyscallWarrper{},

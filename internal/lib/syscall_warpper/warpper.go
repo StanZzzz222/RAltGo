@@ -73,7 +73,7 @@ var getDataProc *syscall.Proc
 
 type SyscallWarrper struct{}
 
-func init() {
+func InitLinuxWarpper() {
 	if runtime.GOOS != "windows" {
 		path, _ := os.Getwd()
 		path = fmt.Sprintf("%v/modules/libRsGoModule.so", path)

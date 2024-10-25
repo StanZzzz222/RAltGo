@@ -1,5 +1,3 @@
-//go:build windows
-
 package windows_warpper
 
 // #include <stdlib.h>
@@ -75,7 +73,7 @@ var getDataProc *windows.Proc
 
 type WindowsWarrper struct{}
 
-func init() {
+func InitWindowsWarpper() {
 	if runtime.GOOS == "windows" {
 		path, _ := os.Getwd()
 		path = fmt.Sprintf("%v/modules/rs-go-module.dll", path)
