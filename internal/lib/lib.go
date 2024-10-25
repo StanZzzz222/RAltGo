@@ -20,13 +20,13 @@ import (
    File: lib.go
 */
 
-var warpper *Warpper
-var taskQueue = utils.NewTaskQueue()
-
 type Warpper struct {
 	windows *windows_warpper.WindowsWarrper
 	syscall *syscall_warpper.SyscallWarrper
 }
+
+var warpper *Warpper
+var taskQueue = utils.NewTaskQueue()
 
 //export onTick
 func onTick() {
