@@ -1,5 +1,3 @@
-//go:build windows
-
 package windows_warpper
 
 // #include <stdlib.h>
