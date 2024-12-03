@@ -16,8 +16,6 @@
 
 ###### 
 
-**It is still under development and is not recommended for use in any production environment at the moment.**
-
 <strong>You can try to use it and raise a related issue if you encounter problems</strong>
 
 **<font color="red">Note: Since the author has other things to do, he can only try to spend as much time as possible to update. You can rest assured that I will keep updating in my free time</font>**
@@ -80,15 +78,18 @@ Events:
 26. OnVehicleAttach - Done
 27. OnVehicleDetach - Done
 28. OnVehicleDestroy - Done
-29. OnExplosion - Done
-30. OnPedDeath - Done
-31. OnGivePedScriptedTask - Done
-32. OnPedDamage - Done
-33. OnPedHeal - Done
-34. OnVoiceConnect - Done
-35. OnVoiceDisconnect - Done
-36. OnVoiceConnecting - Done
-37. OnVoiceConnection - Done
+29. OnVehicleDamage - Done
+30. OnVehicleHorn - Done
+31. OnVehicleSiren - Done
+32. OnExplosion - Done
+33. OnPedDeath - Done
+34. OnGivePedScriptedTask - Done
+35. OnPedDamage - Done
+36. OnPedHeal - Done
+37. OnVoiceConnect - Done
+38. OnVoiceDisconnect - Done
+39. OnVoiceConnecting - Done
+40. OnVoiceConnection - Done
 .... TODO: The remaining events to be implemented, 
 .... and the real optimization after the module is completed
 ```

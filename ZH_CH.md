@@ -16,8 +16,6 @@
 
 ###### 
 
-**它依旧还在进行开发中，暂时不建议用于任何生产环境。**
-
 **您可以尝试使用它，如果遇到问题可以提出相关 issue**
 
 <font color="red">**注意：因作者现实也有其他事情，所以只能尽量花时间进行更新。但是您可以放心我会在空闲时间坚持保持更新**</font>
@@ -80,15 +78,18 @@ Events:
 26. OnVehicleAttach - 已完成 √
 27. OnVehicleDetach - 已完成 √
 28. OnVehicleDestroy - 已完成 √
-29. OnExplosion - 已完成 √
-30. OnPedDeath - 已完成 √
-31. OnGivePedScriptedTask - 已完成 √
-32. OnPedDamage - 已完成 √
-33. OnPedHeal - 已完成 √
-34. OnVoiceConnect - 已完成 √
-35. OnVoiceDisconnect - 已完成 √
-36. OnVoiceConnecting - 已完成 √
-37. OnVoiceConnection - Done
+29. OnVehicleDamage - 已完成 √
+30. OnVehicleHorn - 已完成 √
+31. OnVehicleSiren - 已完成 √
+32. OnExplosion - 已完成 √
+33. OnPedDeath - 已完成 √
+34. OnGivePedScriptedTask - 已完成 √
+35. OnPedDamage - 已完成 √
+36. OnPedHeal - 已完成 √
+37. OnVoiceConnect - 已完成 √
+38. OnVoiceDisconnect - 已完成 √
+39. OnVoiceConnecting - 已完成 √
+40. OnVoiceConnection - Done
 .... TODO: 剩下的待实现的事件，以及模块完成后的真正优化
 ```
 
