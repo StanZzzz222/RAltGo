@@ -24,8 +24,6 @@
 
 `Note: Currently not available on Linux platform`
 
-
-
 **We know many people may be concerned about the performance of this module, so we've added benchmarks to the examples resources. The current code and results are below. We think it is great to be able to achieve the current data. Of course, we will look for opportunities to continue to optimize it in the future as we continue to update it.**
 
 **Note: If you have fully tested part of the benchmark performance on the sample resources, you can calculate the TPS based on the time taken and the number of processes in the benchmark performance to calculate whether it can support your server. After our many tests, we can calculate that the current TPS of this module can fully support: 0-1800 people on the server side. With continued optimization and development in the future, we hope that it can eventually support 0-4000 people. Server side. Of course, what we need now is to implement all server-side APIs**
@@ -40,9 +38,9 @@ Some APIs that have been implemented:
 
 ```
 Baisc Object:
-1. Blip - Mostly done (90%)  √
+1. Blip - Done √
 2. Player - Mostly done (90%)  √
-3. Vehicle - Mostly done (85%) 
+3. Vehicle - Mostly done (90%) √
 4. Ped - Done √
 5. Colshape - Done √
 6. Checkpoint - Done √
@@ -82,6 +80,15 @@ Events:
 26. OnVehicleAttach - Done
 27. OnVehicleDetach - Done
 28. OnVehicleDestroy - Done
+29. OnExplosion - Done
+30. OnPedDeath - Done
+31. OnGivePedScriptedTask - Done
+32. OnPedDamage - Done
+33. OnPedHeal - Done
+34. OnVoiceConnect - Done
+35. OnVoiceDisconnect - Done
+36. OnVoiceConnecting - Done
+37. OnVoiceConnection - Done
 .... TODO: The remaining events to be implemented, 
 .... and the real optimization after the module is completed
 ```
