@@ -52,6 +52,15 @@ type EventBus struct {
 	onVehicleDamages         []OnVehicleDamageCallback
 	onVehicleHorns           []OnVehicleHornCallback
 	onVehicleSirens          []OnVehicleSirenCallback
+	onExplosions             []OnExplosionCallback
+	onPedDeaths              []OnPedDeathCallback
+	onGivePedScriptedTasks   []OnGivePedScriptedTaskCallback
+	onPedDamages             []OnPedDamageCallback
+	onPedHeals               []OnPedHealCallback
+	onVoiceConnects          []OnVoiceConnectCallback
+	onVoiceDisconnects       []OnVoiceDisconnectCallback
+	onVoiceConnectings       []OnVoiceConnectingCallback
+	onVoiceConnections       []OnVoiceConnectionCallback
 	onClientEvents           *sync.Map
 	onLocalEvents            *sync.Map
 }
@@ -174,6 +183,46 @@ func (bus *EventBus) OnVehicleDamage(callback OnVehicleDamageCallback) {
 
 func (bus *EventBus) OnVehicleHorn(callback OnVehicleHornCallback) {
 	bus.onVehicleHorns = append(bus.onVehicleHorns, callback)
+}
+
+func (bus *EventBus) OnVehicleSiren(callback OnVehicleSirenCallback) {
+	bus.onVehicleSirens = append(bus.onVehicleSirens, callback)
+}
+
+func (bus *EventBus) OnExplosion(callback OnExplosionCallback) {
+	bus.onExplosions = append(bus.onExplosions, callback)
+}
+
+func (bus *EventBus) OnPedDeath(callback OnPedDeathCallback) {
+	bus.onPedDeaths = append(bus.onPedDeaths, callback)
+}
+
+func (bus *EventBus) OnGivePedScriptedTask(callback OnGivePedScriptedTaskCallback) {
+	bus.onGivePedScriptedTasks = append(bus.onGivePedScriptedTasks, callback)
+}
+
+func (bus *EventBus) OnPedDamage(callback OnPedDamageCallback) {
+	bus.onPedDamages = append(bus.onPedDamages, callback)
+}
+
+func (bus *EventBus) OnPedHeal(callback OnPedHealCallback) {
+	bus.onPedHeals = append(bus.onPedHeals, callback)
+}
+
+func (bus *EventBus) OnVoiceConnect(callback OnVoiceConnectCallback) {
+	bus.onVoiceConnects = append(bus.onVoiceConnects, callback)
+}
+
+func (bus *EventBus) OnVoiceDisconnect(callback OnVoiceDisconnectCallback) {
+	bus.onVoiceDisconnects = append(bus.onVoiceDisconnects, callback)
+}
+
+func (bus *EventBus) OnVoiceConnecting(callback OnVoiceConnectingCallback) {
+	bus.onVoiceConnectings = append(bus.onVoiceConnectings, callback)
+}
+
+func (bus *EventBus) OnVoiceConnection(callback OnVoiceConnectionCallback) {
+	bus.onVoiceConnections = append(bus.onVoiceConnections, callback)
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {

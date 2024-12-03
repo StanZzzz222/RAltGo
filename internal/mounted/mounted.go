@@ -2,12 +2,14 @@ package mounted
 
 import "C"
 import (
+	"github.com/StanZzzz222/RAltGo/common"
 	"github.com/StanZzzz222/RAltGo/common/command"
 	"github.com/StanZzzz222/RAltGo/common/core/alt/alt_events"
 	"github.com/StanZzzz222/RAltGo/common/core/scheduler"
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/denied_reason_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/explosion_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/entities"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
@@ -325,14 +327,13 @@ func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
 }
 
 //export onPlayerDeath
-func onPlayerDeath(cPtr uintptr, deathType, objectType, objectId uint8, weaponHash uint32) {
+func onPlayerDeath(cPtr uintptr, isNil, objectType, objectId uint8, weaponHash uint32) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
-		switch deathType {
-		case 0:
+		if isNil != 0 {
 			var killer any
 			switch enums.ObjectType(objectType) {
 			case enums.Player:
@@ -352,23 +353,18 @@ func onPlayerDeath(cPtr uintptr, deathType, objectType, objectId uint8, weaponHa
 				break
 			}
 			alt_events.Triggers().TriggerOnPlayerDeath(models.GetPools().GetPlayer(cPlayer.ID), killer, weapon_hash.ModelHash(weaponHash))
-			break
-		case 1:
-			alt_events.Triggers().TriggerOnPlayerDeath(models.GetPools().GetPlayer(cPlayer.ID), nil, weapon_hash.ModelHash(weaponHash))
-			break
 		}
 	}
 }
 
 //export onPlayerDamage
-func onPlayerDamage(cPtr uintptr, deathType, objectType, objectId uint8, healthDamage, armourDamage uint16) {
+func onPlayerDamage(cPtr uintptr, isNil, objectType, objectId uint8, healthDamage, armourDamage uint16) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
-		switch deathType {
-		case 0:
+		if isNil != 0 {
 			var attacker any
 			switch enums.ObjectType(objectType) {
 			case enums.Player:
@@ -388,10 +384,6 @@ func onPlayerDamage(cPtr uintptr, deathType, objectType, objectId uint8, healthD
 				break
 			}
 			alt_events.Triggers().TriggerOnPlayerDamage(models.GetPools().GetPlayer(cPlayer.ID), attacker, healthDamage, armourDamage)
-			break
-		case 1:
-			alt_events.Triggers().TriggerOnPlayerDamage(models.GetPools().GetPlayer(cPlayer.ID), nil, healthDamage, armourDamage)
-			break
 		}
 	}
 }
@@ -497,31 +489,33 @@ func onVehicleDestroy(cvPtr uintptr) {
 }
 
 //export onVehicleDamage
-func onVehicleDamage(cvPtr uintptr, objectType, objectId uint8, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon uint32) {
+func onVehicleDamage(cvPtr uintptr, isNil, objectType, objectId uint8, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon uint32) {
 	defer panicRecover()
 	var w = lib.GetWarpper()
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cVehicle != nil {
-		defer w.FreeVehicle(cvPtr)
-		var entity any
-		switch enums.ObjectType(objectType) {
-		case enums.Player:
-			entity = models.GetPools().GetPlayer(uint32(objectId))
-			break
-		case enums.Vehicle:
-			entity = models.GetPools().GetVehicle(uint32(objectId))
-			break
-		case enums.Ped:
-			entity = models.GetPools().GetPed(uint32(objectId))
-			break
-		case enums.Object:
-			entity = models.GetPools().GetObject(uint32(objectId))
-			break
-		default:
-			entity = nil
-			break
+		if isNil != 0 {
+			defer w.FreeVehicle(cvPtr)
+			var entity any
+			switch enums.ObjectType(objectType) {
+			case enums.Player:
+				entity = models.GetPools().GetPlayer(uint32(objectId))
+				break
+			case enums.Vehicle:
+				entity = models.GetPools().GetVehicle(uint32(objectId))
+				break
+			case enums.Ped:
+				entity = models.GetPools().GetPed(uint32(objectId))
+				break
+			case enums.Object:
+				entity = models.GetPools().GetObject(uint32(objectId))
+				break
+			default:
+				entity = nil
+				break
+			}
+			alt_events.Triggers().TriggerOnVehicleDamage(models.GetPools().GetVehicle(cVehicle.ID), entity, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon_hash.ModelHash(weapon))
 		}
-		alt_events.Triggers().TriggerOnVehicleDamage(models.GetPools().GetVehicle(cVehicle.ID), entity, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon_hash.ModelHash(weapon))
 	}
 }
 
@@ -547,6 +541,146 @@ func onVehicleSiren(cvPtr uintptr, state bool) {
 		defer w.FreeVehicle(cvPtr)
 		alt_events.Triggers().TriggerOnVehicleSiren(models.GetPools().GetVehicle(cVehicle.ID), state)
 	}
+}
+
+//export onExplosion
+func onExplosion(cPtr uintptr, isNil, objectType, objectId uint8, x, y, z float32, explosionType int8, explosionFx uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPlayer = entities.ConvertCPlayer(cPtr)
+	if cPlayer != nil {
+		defer w.FreePlayer(cPtr)
+		if isNil != 0 {
+			var entity any
+			switch enums.ObjectType(objectType) {
+			case enums.Player:
+				entity = models.GetPools().GetPlayer(uint32(objectId))
+				break
+			case enums.Vehicle:
+				entity = models.GetPools().GetVehicle(uint32(objectId))
+				break
+			case enums.Ped:
+				entity = models.GetPools().GetPed(uint32(objectId))
+				break
+			case enums.Object:
+				entity = models.GetPools().GetObject(uint32(objectId))
+				break
+			default:
+				entity = nil
+				break
+			}
+			alt_events.Triggers().TriggerOnExplosion(models.GetPools().GetPlayer(cPlayer.ID), entity, common.NewVector3(x, y, z), explosion_type.ExplosionType(explosionType), explosionFx)
+		}
+	}
+}
+
+//export onPedDeath
+func onPedDeath(cPtr uintptr, isNil, objectType, objectId uint8, weaponHash uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPed = entities.ConvertCPed(cPtr)
+	if cPed != nil {
+		defer w.FreePed(cPtr)
+		if isNil != 0 {
+			var entity any
+			switch enums.ObjectType(objectType) {
+			case enums.Player:
+				entity = models.GetPools().GetPlayer(uint32(objectId))
+				break
+			case enums.Vehicle:
+				entity = models.GetPools().GetVehicle(uint32(objectId))
+				break
+			case enums.Ped:
+				entity = models.GetPools().GetPed(uint32(objectId))
+				break
+			case enums.Object:
+				entity = models.GetPools().GetObject(uint32(objectId))
+				break
+			default:
+				entity = nil
+				break
+			}
+			alt_events.Triggers().TriggerOnPedDeath(models.GetPools().GetPed(cPed.ID), entity, weapon_hash.ModelHash(weaponHash))
+		}
+	}
+}
+
+//export onGivePedScriptedTask
+func onGivePedScriptedTask(cPtr, cPedPtr uintptr, taskType uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPlayer = entities.ConvertCPed(cPtr)
+	var cPed = entities.ConvertCPed(cPedPtr)
+	if cPed != nil {
+		defer w.FreePed(cPtr)
+		alt_events.Triggers().TriggerOnGivePedScriptedTask(models.GetPools().GetPlayer(cPlayer.ID), models.GetPools().GetPed(cPed.ID), taskType)
+	}
+}
+
+//export onPedDamage
+func onPedDamage(cPtr uintptr, isNil, objectType, objectId uint8, healthDamage, armourDamage uint16, weaponHash uint32) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPed = entities.ConvertCPed(cPtr)
+	if cPed != nil {
+		defer w.FreePed(cPtr)
+		if isNil != 0 {
+			var entity any
+			switch enums.ObjectType(objectType) {
+			case enums.Player:
+				entity = models.GetPools().GetPlayer(uint32(objectId))
+				break
+			case enums.Vehicle:
+				entity = models.GetPools().GetVehicle(uint32(objectId))
+				break
+			case enums.Ped:
+				entity = models.GetPools().GetPed(uint32(objectId))
+				break
+			case enums.Object:
+				entity = models.GetPools().GetObject(uint32(objectId))
+				break
+			default:
+				entity = nil
+				break
+			}
+			alt_events.Triggers().TriggerOnPedDamage(models.GetPools().GetPed(cPed.ID), entity, healthDamage, armourDamage, weapon_hash.ModelHash(weaponHash))
+		}
+	}
+}
+
+//export onPedHeal
+func onPedHeal(cPtr uintptr, oldHealth, newHealth, oldArmour, newArmour uint16) {
+	defer panicRecover()
+	var w = lib.GetWarpper()
+	var cPed = entities.ConvertCPed(cPtr)
+	if cPed != nil {
+		defer w.FreePed(cPtr)
+		alt_events.Triggers().TriggerOnPedHeal(models.GetPools().GetPed(cPed.ID), oldHealth, newHealth, oldArmour, newArmour)
+	}
+}
+
+//export onVoiceConnect
+func onVoiceConnect() {
+	defer panicRecover()
+	alt_events.Triggers().TriggerOnVoiceConnect()
+}
+
+//export onVoiceDisconnect
+func onVoiceDisconnect() {
+	defer panicRecover()
+	alt_events.Triggers().TriggerOnVoiceDisconnect()
+}
+
+//export onVoiceConnecting
+func onVoiceConnecting() {
+	defer panicRecover()
+	alt_events.Triggers().TriggerOnVoiceConnecting()
+}
+
+//export onVoiceConnection
+func onVoiceConnection(state uint8) {
+	defer panicRecover()
+	alt_events.Triggers().TriggerOnVoiceConnection(enums.VoiceConnectionState(state))
 }
 
 func panicRecover() {

@@ -4,7 +4,9 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/denied_reason_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/explosion_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
+	"github.com/StanZzzz222/RAltGo/internal/enums"
 )
 
 /*
@@ -44,4 +46,13 @@ type (
 	OnVehicleDamageCallback         func(vehicle *models.IVehicle, damager any, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage uint32, weapon weapon_hash.ModelHash)
 	OnVehicleHornCallback           func(vehicle *models.IVehicle, player *models.IPlayer, state bool)
 	OnVehicleSirenCallback          func(vehicle *models.IVehicle, state bool)
+	OnExplosionCallback             func(player *models.IPlayer, target any, position *models.Vector3, explosionType explosion_type.ExplosionType, explosionFx uint32)
+	OnPedDeathCallback              func(ped *models.IPed, killer any, weaponHash weapon_hash.ModelHash)
+	OnGivePedScriptedTaskCallback   func(player *models.IPlayer, ped *models.IPed, taskType uint32)
+	OnPedDamageCallback             func(ped *models.IPed, attacker any, healthDamage, armourDamage uint16, weaponHash weapon_hash.ModelHash)
+	OnPedHealCallback               func(ped *models.IPed, oldHealth, newHealth, oldArmour, newArmour uint16)
+	OnVoiceConnectCallback          func()
+	OnVoiceDisconnectCallback       func()
+	OnVoiceConnectingCallback       func()
+	OnVoiceConnectionCallback       func(state enums.VoiceConnectionState)
 )

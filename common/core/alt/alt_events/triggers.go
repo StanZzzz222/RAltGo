@@ -7,6 +7,7 @@ import (
 	"github.com/StanZzzz222/RAltGo/common/models"
 	"github.com/StanZzzz222/RAltGo/hash_enums/colshape_entity_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/denied_reason_type"
+	"github.com/StanZzzz222/RAltGo/hash_enums/explosion_type"
 	"github.com/StanZzzz222/RAltGo/hash_enums/weapon_hash"
 	"github.com/StanZzzz222/RAltGo/internal/enums"
 	"github.com/StanZzzz222/RAltGo/logger"
@@ -265,6 +266,78 @@ func (t *EventBusTrigger) TriggerOnVehicleSiren(vehicle *models.IVehicle, state 
 	if len(eventBus.onVehicleSirens) > 0 {
 		for _, onVehicleSiren := range eventBus.onVehicleSirens {
 			onVehicleSiren(vehicle, state)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnExplosion(player *models.IPlayer, target any, position *models.Vector3, explosionType explosion_type.ExplosionType, explosionFx uint32) {
+	if len(eventBus.onExplosions) > 0 {
+		for _, onExplosion := range eventBus.onExplosions {
+			onExplosion(player, target, position, explosionType, explosionFx)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPedDeath(ped *models.IPed, killer any, weaponHash weapon_hash.ModelHash) {
+	if len(eventBus.onPedDeaths) > 0 {
+		for _, onPedDeath := range eventBus.onPedDeaths {
+			onPedDeath(ped, killer, weaponHash)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnGivePedScriptedTask(player *models.IPlayer, ped *models.IPed, taskType uint32) {
+	if len(eventBus.onPedDeaths) > 0 {
+		for _, onGivePedScriptedTask := range eventBus.onGivePedScriptedTasks {
+			onGivePedScriptedTask(player, ped, taskType)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPedDamage(ped *models.IPed, attacker any, healthDamage, armourDamage uint16, weaponHash weapon_hash.ModelHash) {
+	if len(eventBus.onPedDamages) > 0 {
+		for _, onPedDamage := range eventBus.onPedDamages {
+			onPedDamage(ped, attacker, healthDamage, armourDamage, weaponHash)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnPedHeal(ped *models.IPed, oldHealth, newHealth, oldArmour, newArmour uint16) {
+	if len(eventBus.onPedHeals) > 0 {
+		for _, onPedHeal := range eventBus.onPedHeals {
+			onPedHeal(ped, oldHealth, newHealth, oldArmour, newArmour)
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVoiceConnect() {
+	if len(eventBus.onVoiceConnects) > 0 {
+		for _, onVoiceConnect := range eventBus.onVoiceConnects {
+			onVoiceConnect()
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVoiceDisconnect() {
+	if len(eventBus.onVoiceDisconnects) > 0 {
+		for _, onVoiceDisconnect := range eventBus.onVoiceDisconnects {
+			onVoiceDisconnect()
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVoiceConnecting() {
+	if len(eventBus.onVoiceConnectings) > 0 {
+		for _, onVoiceConnecting := range eventBus.onVoiceConnectings {
+			onVoiceConnecting()
+		}
+	}
+}
+
+func (t *EventBusTrigger) TriggerOnVoiceConnection(state enums.VoiceConnectionState) {
+	if len(eventBus.onVoiceConnections) > 0 {
+		for _, onVoiceConnection := range eventBus.onVoiceConnections {
+			onVoiceConnection(state)
 		}
 	}
 }
