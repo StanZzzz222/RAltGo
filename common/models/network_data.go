@@ -26,7 +26,7 @@ func NewNetworkData(id uint32, objectType enums.ObjectType) *NetworkData {
 }
 
 func (n *NetworkData) SetSyncedMetaData(key string, value any) {
-	var warpper = lib.GetWarpper()
+	var warpper = lib.GetWrapper()
 	n.syncedMetaData.Store(key, value)
 	mvalues := NewMValues(value)
 	warpper.SetNetworkData(n.networdId, n.networkObjectType, enums.NetworkSyncedMeta, key, mvalues.Dump())
@@ -48,7 +48,7 @@ func (n *NetworkData) HasSyncedMetaData(key string) bool {
 func (n *NetworkData) SetStreamSyncedMetaData(key string, value any) {
 	switch n.networkObjectType {
 	case enums.Player, enums.Vehicle, enums.Ped:
-		var warpper = lib.GetWarpper()
+		var warpper = lib.GetWrapper()
 		n.streamSyncedMetaData.Store(key, value)
 		mvalues := NewMValues(value)
 		warpper.SetNetworkData(n.networdId, n.networkObjectType, enums.NetworkStreamSyncedMeta, key, mvalues.Dump())

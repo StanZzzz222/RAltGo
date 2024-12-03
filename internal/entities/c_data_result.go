@@ -41,7 +41,7 @@ type CDataResult struct {
 }
 
 func ConverCDataResult(cresPtr uintptr) *CDataResult {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	if cresPtr == 0 {
 		return nil
 	}

@@ -15,7 +15,7 @@ import (
 */
 
 func CreateCheckpoint(checkPointType check_point_type.CheckPointType, position *models.Vector3, radius, height float32, color *models.Rgba, streamingDistance uint32) *models.ICheckpoint {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var c = &models.ICheckpoint{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	ret, freePtrFunc := w.CreateCheckpoint(uint8(checkPointType), posData, posMetaData, radius, height, color.R, color.G, color.B, color.A, streamingDistance)

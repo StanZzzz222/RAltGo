@@ -226,7 +226,7 @@ func (bus *EventBus) OnVoiceConnection(callback OnVoiceConnectionCallback) {
 }
 
 func (bus *EventBus) OnClientEvent(eventName string, callback any) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	t := reflect.TypeOf(callback)
 	if t.Kind() == reflect.Func {
 		if !checkZeroEventArgs(callback) {

@@ -15,7 +15,7 @@ File: blip.go
 */
 
 func CreateBlipPoint(global bool, spriteId, color uint32, name string, position *models.Vector3) *models.IBlip {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
@@ -33,7 +33,7 @@ func CreateBlipPoint(global bool, spriteId, color uint32, name string, position 
 }
 
 func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint32, name string, position *models.Vector3) *models.IBlip {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
@@ -52,7 +52,7 @@ func CreateBlipPointSomePlayers(players []*models.IPlayer, spriteId, color uint3
 }
 
 func CreateBlipArea(global bool, color uint32, name string, position *models.Vector3, width, height float32) *models.IBlip {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
@@ -69,7 +69,7 @@ func CreateBlipArea(global bool, color uint32, name string, position *models.Vec
 }
 
 func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name string, position *models.Vector3, width, height float32) *models.IBlip {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var blip = &models.IBlip{}
 	posData := uint64(math.Float32bits(position.X)) | (uint64(math.Float32bits(position.Y)) << 32)
 	posMetadata := uint64(math.Float32bits(position.Z)) << 32
@@ -88,7 +88,7 @@ func CreateBlipAreaSomePlayers(players []*models.IPlayer, color uint32, name str
 }
 
 func CreateBlipRadius(global bool, color uint32, name string, position *models.Vector3, radius float32, outline bool) *models.IBlip {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var blip = &models.IBlip{}
 	var spriteId = 9
 	if outline {
@@ -110,7 +110,7 @@ func CreateBlipRadius(global bool, color uint32, name string, position *models.V
 }
 
 func CreateBlipRadiusSomePlayers(players []*models.IPlayer, color uint32, name string, position *models.Vector3, radius float32, outline bool) *models.IBlip {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var blip = &models.IBlip{}
 	var spriteId = 9
 	if outline {

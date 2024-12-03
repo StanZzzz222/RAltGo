@@ -36,7 +36,7 @@ func (p *IPed) NewIPed(id, model uint32, position, rotation *Vector3) *IPed {
 		currentWeapon: weapon_hash.Fist,
 		armour:        0,
 		maxHealth:     200,
-		warpper:       lib.GetWarpper(),
+		warpper:       lib.GetWrapper(),
 		BaseObject:    NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 		NetworkData:   NewNetworkData(id, enums.Ped),
 		EntityData:    NewEntityData(id, enums.Ped),

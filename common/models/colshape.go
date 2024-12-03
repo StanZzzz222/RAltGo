@@ -70,7 +70,7 @@ func (c *IColshape) NewIColshape(id uint32, colshapeType uint32, position *Vecto
 		position:     position,
 		dimension:    hash_enums.DefaultDimension,
 		datas:        &sync.Map{},
-		warpper:      lib.GetWarpper(),
+		warpper:      lib.GetWrapper(),
 		NetworkData:  NewNetworkData(id, enums.Colshape),
 	}
 }

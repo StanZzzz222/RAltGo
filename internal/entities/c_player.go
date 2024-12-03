@@ -31,7 +31,7 @@ type CPlayer struct {
 }
 
 func ConvertCPlayer(cPtr uintptr) *CPlayer {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	cPlayer := (*C.CPlayer)(unsafe.Pointer(cPtr))
 	if cPlayer == nil {
 		return nil

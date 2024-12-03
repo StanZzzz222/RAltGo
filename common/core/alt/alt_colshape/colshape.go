@@ -16,7 +16,7 @@ import (
 */
 
 func CreateColshapeCircle(position *models.Vector3, radius float32) *models.IColshape {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	ret, freePtrFunc := w.CreateColshape(colshape_type.Circle, posData, posMetaData, 0, 0, radius, 0)
@@ -32,7 +32,7 @@ func CreateColshapeCircle(position *models.Vector3, radius float32) *models.ICol
 }
 
 func CreateColshapeSphere(position *models.Vector3, radius float32) *models.IColshape {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	ret, freePtrFunc := w.CreateColshape(colshape_type.Sphere, posData, posMetaData, 0, 0, radius, 0)
@@ -48,7 +48,7 @@ func CreateColshapeSphere(position *models.Vector3, radius float32) *models.ICol
 }
 
 func CreateColshapeRectangle(pointPosition *models.Vector3, secondPointPosition *models.Vector3) *models.IColshape {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(pointPosition.X))|(uint64(math.Float32bits(pointPosition.Y))<<32), uint64(math.Float32bits(pointPosition.Z))<<32
 	secondPosData, secondPosMetaData := uint64(math.Float32bits(secondPointPosition.X))|(uint64(math.Float32bits(secondPointPosition.Y))<<32), uint64(math.Float32bits(secondPointPosition.Z))<<32
@@ -65,7 +65,7 @@ func CreateColshapeRectangle(pointPosition *models.Vector3, secondPointPosition 
 }
 
 func CreateColshapeCuboid(pointPosition *models.Vector3, secondPointPosition *models.Vector3) *models.IColshape {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(pointPosition.X))|(uint64(math.Float32bits(pointPosition.Y))<<32), uint64(math.Float32bits(pointPosition.Z))<<32
 	secondPosData, secondPosMetaData := uint64(math.Float32bits(secondPointPosition.X))|(uint64(math.Float32bits(secondPointPosition.Y))<<32), uint64(math.Float32bits(secondPointPosition.Z))<<32
@@ -82,7 +82,7 @@ func CreateColshapeCuboid(pointPosition *models.Vector3, secondPointPosition *mo
 }
 
 func CreateColshapeCylinder(pointPosition *models.Vector3, radius, height float32) *models.IColshape {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var c = &models.IColshape{}
 	posData, posMetaData := uint64(math.Float32bits(pointPosition.X))|(uint64(math.Float32bits(pointPosition.Y))<<32), uint64(math.Float32bits(pointPosition.Z))<<32
 	ret, freePtrFunc := w.CreateColshape(colshape_type.Cylinder, posData, posMetaData, 0, 0, radius, height)
@@ -98,7 +98,7 @@ func CreateColshapeCylinder(pointPosition *models.Vector3, radius, height float3
 }
 
 func CreateColshapePolygon(minZ, maxZ float32, points []*models.Vector3) *models.IColshape {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var c = &models.IColshape{}
 	pointsBytes, _ := json.Marshal(points)
 	ret, freePtrFunc := w.CreatePolygonColshape(colshape_type.Polygon, minZ, maxZ, pointsBytes)

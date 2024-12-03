@@ -25,7 +25,7 @@ type Wrapper struct {
 	windows *windows_wrapper.WindowsWrapper
 }
 
-var warpper *Wrapper
+var wrapper *Wrapper
 var taskQueue = utils.NewTaskQueue()
 
 //export onTick
@@ -37,13 +37,13 @@ func onTick() {
 }
 
 func init() {
-	warpper = &Wrapper{
+	wrapper = &Wrapper{
 		windows: &windows_wrapper.WindowsWrapper{},
 	}
 }
 
 func GetWrapper() *Wrapper {
-	return warpper
+	return wrapper
 }
 
 func (w *Wrapper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {

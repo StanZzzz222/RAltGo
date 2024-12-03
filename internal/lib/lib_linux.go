@@ -24,7 +24,7 @@ type Wrapper struct {
 	syscall *syscall_warpper.SyscallWrapper
 }
 
-var warpper *Wrapper
+var wrapper *Wrapper
 var taskQueue = utils.NewTaskQueue()
 
 //export onTick
@@ -36,13 +36,13 @@ func onTick() {
 }
 
 func init() {
-	warpper = &Wrapper{
+	wrapper = &Wrapper{
 		syscall: &syscall_warpper.SyscallWrapper{},
 	}
 }
 
 func GetWrapper() *Wrapper {
-	return warpper
+	return wrapper
 }
 
 func (w *Wrapper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {

@@ -78,17 +78,17 @@ func SendBroadcast(message string) {
 }
 
 func KickPlayer(player *models.IPlayer, reason string) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.KickPlayer, int64(player.GetId()), reason)
 }
 
 func StopServer() {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.StopServer, int64(0), "")
 }
 
 func ToggleWorldProfiler(toggleWorldProfiler bool) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	value := 0
 	if toggleWorldProfiler {
 		value = 1
@@ -97,82 +97,82 @@ func ToggleWorldProfiler(toggleWorldProfiler bool) {
 }
 
 func SetStreamingDistance(streamingDistance uint32) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerStreamingDistance, int64(streamingDistance), "")
 }
 
 func SetMigrationDistance(migrationDistance uint32) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerMigrationDistance, int64(migrationDistance), "")
 }
 
 func SetPassword(password string) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerPassword, 0, password)
 }
 
 func SetColShapeTickRate(colshapeTickRate uint32) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerColShapeTickRate, int64(colshapeTickRate), "")
 }
 
 func SetMigrationTickRate(migrationTickRate uint32) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerMigrationTickRate, int64(migrationTickRate), "")
 }
 
 func SetMaxStreamingObjects(maxStreamingObjects uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerMaxStreamingObjects, int64(maxStreamingObjects), "")
 }
 
 func SetMaxStreamingPeds(maxStreamingPeds uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerMaxStreamingPeds, int64(maxStreamingPeds), "")
 }
 
 func SetMaxStreamingVehicles(maxStreamingVehicles uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerMaxStreamingVehicles, int64(maxStreamingVehicles), "")
 }
 
 func SetMigrationThreadCount(migrationThreadCount uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerMigrationThreadCount, int64(migrationThreadCount), "")
 }
 
 func SetStreamerThreadCount(streamerThreadCount uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerStreamerThreadCount, int64(streamerThreadCount), "")
 }
 
 func SetStreamingTickRate(streamingTickRate uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerStreamingTickRate, int64(streamingTickRate), "")
 }
 
 func SetSyncReceiveThreadCount(syncReceiveThreadCount uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerSyncReceiveThreadCount, int64(syncReceiveThreadCount), "")
 }
 
 func SetSyncSendThreadCount(syncSendThreadCount uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerSyncSendThreadCount, int64(syncSendThreadCount), "")
 }
 
 func SetVoiceExternal(host string, port uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerVoiceExternal, int64(port), host)
 }
 
 func SetVoiceExternalPublic(host string, port uint16) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	w.SetServerData(enums.ServerVoiceExternalPublic, int64(port), host)
 }
 
 func GetNetTime() uint32 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.NetTime, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -183,7 +183,7 @@ func GetNetTime() uint32 {
 }
 
 func GetStreamingDistance() uint32 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerStreamingDistance, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -194,7 +194,7 @@ func GetStreamingDistance() uint32 {
 }
 
 func GetMigrationDistance() uint32 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerMigrationDistance, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -205,7 +205,7 @@ func GetMigrationDistance() uint32 {
 }
 
 func GetColShapeTickRate() uint32 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerColShapeTickRate, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -216,7 +216,7 @@ func GetColShapeTickRate() uint32 {
 }
 
 func GetMigrationTickRate() uint32 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerMigrationTickRate, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -227,7 +227,7 @@ func GetMigrationTickRate() uint32 {
 }
 
 func GetMaxStreamingObjects() uint16 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerMaxStreamingObjects, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -238,7 +238,7 @@ func GetMaxStreamingObjects() uint16 {
 }
 
 func GetMaxStreamingPeds() uint16 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerMaxStreamingPeds, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -249,7 +249,7 @@ func GetMaxStreamingPeds() uint16 {
 }
 
 func GetMaxStreamingVehicles() uint16 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerMaxStreamingVehicles, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -260,7 +260,7 @@ func GetMaxStreamingVehicles() uint16 {
 }
 
 func GetMigrationThreadCount() uint8 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerMigrationThreadCount, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -271,7 +271,7 @@ func GetMigrationThreadCount() uint8 {
 }
 
 func GetStreamerThreadCount() uint8 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerStreamerThreadCount, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -282,7 +282,7 @@ func GetStreamerThreadCount() uint8 {
 }
 
 func GetStreamingTickRate() uint32 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerStreamingTickRate, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -293,7 +293,7 @@ func GetStreamingTickRate() uint32 {
 }
 
 func GetSyncReceiveThreadCount() uint8 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerSyncReceiveThreadCount, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -304,7 +304,7 @@ func GetSyncReceiveThreadCount() uint8 {
 }
 
 func GetSyncSendThreadCount() uint8 {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerSyncSendThreadCount, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -315,7 +315,7 @@ func GetSyncSendThreadCount() uint8 {
 }
 
 func GetVoiceConnectionState() enums.VoiceConnectionState {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerVoiceConnectionState, 0)
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -326,7 +326,7 @@ func GetVoiceConnectionState() enums.VoiceConnectionState {
 }
 
 func GetAmmoHashForWeaponHash(weaponHash weapon_hash.ModelHash) ammo_type.AmmoHash {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerAmmoHashForWeaponHash, uint32(weaponHash))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {
@@ -337,7 +337,7 @@ func GetAmmoHashForWeaponHash(weaponHash weapon_hash.ModelHash) ammo_type.AmmoHa
 }
 
 func GetAmmoHashForWeaponName(weaponName string) ammo_type.AmmoHash {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	ret, freeDataResultFunc := w.GetServerData(enums.ServerAmmoHashForWeaponHash, common.Hash(weaponName))
 	cDataResult := entities.ConverCDataResult(ret)
 	if cDataResult != nil {

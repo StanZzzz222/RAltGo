@@ -77,7 +77,7 @@ func (v *IVehicle) NewIVehicle(id, model uint32, numberplate string, primaryColo
 		lockState:        vehicle_lock_state_type.VehicleLockNone,
 		lightState:       vehicle_light_state_type.VehicleLightOff,
 		neonColor:        &Rgba{R: 0, G: 0, B: 0, A: 0},
-		warpper:          lib.GetWarpper(),
+		warpper:          lib.GetWrapper(),
 		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 		NetworkData:      NewNetworkData(id, enums.Vehicle),
 		EntityData:       NewEntityData(id, enums.Vehicle),

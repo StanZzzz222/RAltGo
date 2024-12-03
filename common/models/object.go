@@ -67,7 +67,7 @@ func (o *IObject) NewIObject(id, model uint32, position, rotation *Vector3) *IOb
 		model:            model,
 		alpha:            255,
 		textureVariation: 0,
-		warpper:          lib.GetWarpper(),
+		warpper:          lib.GetWrapper(),
 		BaseObject:       NewBaseObject(position, rotation, hash_enums.DefaultDimension, false, true, true),
 		NetworkData:      NewNetworkData(id, enums.Object),
 		EntityData:       NewEntityData(id, enums.Object),

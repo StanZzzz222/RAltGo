@@ -15,7 +15,7 @@ import (
 */
 
 func CreateMarker(markerType marker_type.MarkerType, position *models.Vector3, color *models.Rgba) *models.IMarker {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var m = &models.IMarker{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	ret, freePtrFunc := w.CreateMarker(uint8(markerType), posData, posMetaData, color.R, color.G, color.B, color.A)

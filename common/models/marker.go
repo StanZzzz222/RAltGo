@@ -68,7 +68,7 @@ func (m *IMarker) NewIMarker(id uint32, markerType uint8, position *Vector3) *IM
 		dir:         nil,
 		scale:       nil,
 		color:       nil,
-		warpper:     lib.GetWarpper(),
+		warpper:     lib.GetWrapper(),
 		NetworkData: NewNetworkData(id, enums.Marker),
 	}
 }

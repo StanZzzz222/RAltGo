@@ -16,7 +16,7 @@ import (
 */
 
 func CreatePed(model string, position, rotation *models.Vector3) *models.IPed {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var p = &models.IPed{}
 	var posData, posMetaData = int64(math.Float32bits(position.X)) | (int64(math.Float32bits(position.Y)) << 32), uint64(math.Float32bits(position.Z)) << 32
 	var rotData, rotMetaData = int64(math.Float32bits(rotation.X)) | (int64(math.Float32bits(rotation.Y)) << 32), uint64(math.Float32bits(rotation.Z)) << 32
@@ -33,7 +33,7 @@ func CreatePed(model string, position, rotation *models.Vector3) *models.IPed {
 }
 
 func CreateStreamPed(model string, position, rotation *models.Vector3, streamingDistance uint32) *models.IPed {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var p = &models.IPed{}
 	var posData, posMetaData = int64(math.Float32bits(position.X)) | (int64(math.Float32bits(position.Y)) << 32), uint64(math.Float32bits(position.Z)) << 32
 	var rotData, rotMetaData = int64(math.Float32bits(rotation.X)) | (int64(math.Float32bits(rotation.Y)) << 32), uint64(math.Float32bits(rotation.Z)) << 32
@@ -50,7 +50,7 @@ func CreateStreamPed(model string, position, rotation *models.Vector3, streaming
 }
 
 func CreatePedByHash(model ped_hash.ModelHash, position, rotation *models.Vector3) *models.IPed {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var p = &models.IPed{}
 	var posData, posMetaData = int64(math.Float32bits(position.X)) | (int64(math.Float32bits(position.Y)) << 32), uint64(math.Float32bits(position.Z)) << 32
 	var rotData, rotMetaData = int64(math.Float32bits(rotation.X)) | (int64(math.Float32bits(rotation.Y)) << 32), uint64(math.Float32bits(rotation.Z)) << 32
@@ -67,7 +67,7 @@ func CreatePedByHash(model ped_hash.ModelHash, position, rotation *models.Vector
 }
 
 func CreateStreamPedByHash(model ped_hash.ModelHash, position, rotation *models.Vector3, streamingDistance uint32) *models.IPed {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var p = &models.IPed{}
 	var posData, posMetaData = int64(math.Float32bits(position.X)) | (int64(math.Float32bits(position.Y)) << 32), uint64(math.Float32bits(position.Z)) << 32
 	var rotData, rotMetaData = int64(math.Float32bits(rotation.X)) | (int64(math.Float32bits(rotation.Y)) << 32), uint64(math.Float32bits(rotation.Z)) << 32

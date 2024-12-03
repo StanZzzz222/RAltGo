@@ -18,7 +18,7 @@ func EmitLocalEvent(eventName string, args ...any) {
 }
 
 func EmitAllPlayer(eventName string, args ...any) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	s := scheduler.NewScheduler()
 	s.AddTask(func() {
 		var mvalues = models.NewMValues(args...)
@@ -28,7 +28,7 @@ func EmitAllPlayer(eventName string, args ...any) {
 }
 
 func EmitSomePlayers(players []*models.IPlayer, eventName string, args ...any) {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	s := scheduler.NewScheduler()
 	mvalues := models.NewMValues(args...)
 	mvaluesDumps := mvalues.Dump()

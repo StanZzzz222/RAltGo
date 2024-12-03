@@ -14,7 +14,7 @@ import (
 */
 
 func CreateVirtualEntityGroup(maxEntitiesInStream uint32) *models.IVirtualEntityGroup {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var virtualEntityGroup = &models.IVirtualEntityGroup{}
 	ret, freePtrFunc := w.CreateVirtualEntityGroup(maxEntitiesInStream)
 	cVirtualEntityGroup := entities.ConvertCVirtualEntityGroup(ret)

@@ -81,7 +81,7 @@ func (b *IBlip) NewIBlip(id, blipType, spriteId, color uint32, name string, rot 
 		attached:      false,
 		dimension:     hash_enums.DefaultDimension,
 		players:       &sync.Map{},
-		warpper:       lib.GetWarpper(),
+		warpper:       lib.GetWrapper(),
 		NetworkData:   NewNetworkData(id, enums.Blip),
 	}
 }

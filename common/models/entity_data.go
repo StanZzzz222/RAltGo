@@ -23,7 +23,7 @@ type EntityData struct {
 }
 
 func NewEntityData(id uint32, objectType enums.ObjectType) *EntityData {
-	return &EntityData{id, objectType, lib.GetWarpper()}
+	return &EntityData{id, objectType, lib.GetWrapper()}
 }
 
 func (e *EntityData) GetNetOwner() *IPlayer {

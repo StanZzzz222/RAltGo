@@ -56,7 +56,7 @@ func (c *ICheckpoint) NewICheckPoint(id uint32, checkPointType uint8, position *
 		nextPosition:   nil,
 		color:          nil,
 		iconColor:      nil,
-		warpper:        lib.GetWarpper(),
+		warpper:        lib.GetWrapper(),
 		NetworkData:    NewNetworkData(id, enums.CheckPoint),
 		EntityData:     NewEntityData(id, enums.CheckPoint),
 	}

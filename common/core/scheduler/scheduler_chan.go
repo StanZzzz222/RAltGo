@@ -13,7 +13,7 @@ import (
 var schedulerChan = make(chan func())
 
 func init() {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	go func() {
 		for {
 			select {

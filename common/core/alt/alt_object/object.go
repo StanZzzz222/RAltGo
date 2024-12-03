@@ -15,7 +15,7 @@ import (
 */
 
 func CreateObject(model uint32, position, rotation *models.Vector3) *models.IObject {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var o = &models.IObject{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	rotData, rotMetaData := uint64(math.Float32bits(rotation.X))|(uint64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32
@@ -33,7 +33,7 @@ func CreateObject(model uint32, position, rotation *models.Vector3) *models.IObj
 
 func CreateObjectByModelName(model string, position, rotation *models.Vector3) *models.IObject {
 	var modelHash = common.Hash(model)
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var o = &models.IObject{}
 	posData, posMetaData := uint64(math.Float32bits(position.X))|(uint64(math.Float32bits(position.Y))<<32), uint64(math.Float32bits(position.Z))<<32
 	rotData, rotMetaData := uint64(math.Float32bits(rotation.X))|(uint64(math.Float32bits(rotation.Y))<<32), uint64(math.Float32bits(rotation.Z))<<32

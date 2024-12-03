@@ -50,7 +50,7 @@ func (v *IVoiceChannel) NewIVoiceChannel(id uint32, spatial bool, maxDistance fl
 		spatial:     spatial,
 		maxDistance: maxDistance,
 		players:     &sync.Map{},
-		warpper:     lib.GetWarpper(),
+		warpper:     lib.GetWrapper(),
 		NetworkData: NewNetworkData(id, enums.VoiceChannel),
 	}
 }

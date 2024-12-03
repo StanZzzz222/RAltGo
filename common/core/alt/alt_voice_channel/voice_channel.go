@@ -13,7 +13,7 @@ import (
 */
 
 func CreateVoiceChannel(maxDistance float32) *models.IVoiceChannel {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var v = &models.IVoiceChannel{}
 	ret, freePtrFunc := w.CreateVoiceChannel(false, maxDistance)
 	cVoiceChannel := entities.ConvertCVoiceChannel(ret)
@@ -28,7 +28,7 @@ func CreateVoiceChannel(maxDistance float32) *models.IVoiceChannel {
 }
 
 func CreateVoiceChannelSpatial() *models.IVoiceChannel {
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var v = &models.IVoiceChannel{}
 	ret, freePtrFunc := w.CreateVoiceChannel(true, 0)
 	cVoiceChannel := entities.ConvertCVoiceChannel(ret)

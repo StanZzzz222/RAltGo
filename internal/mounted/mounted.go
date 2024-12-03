@@ -33,7 +33,7 @@ func Mounted() {}
 //export onModuleInit
 func onModuleInit(cAltvVersion, core, cResourceName, cResourceHandlers, cModuleHandlers unsafe.Pointer) bool {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	return w.ModuleMain(uintptr(cAltvVersion), uintptr(core), uintptr(cResourceName), uintptr(cResourceHandlers), uintptr(cModuleHandlers))
 }
 
@@ -105,7 +105,7 @@ func onStop() {
 //export onPlayerConnect
 func onPlayerConnect(cPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var player = &models.IPlayer{}
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
@@ -119,7 +119,7 @@ func onPlayerConnect(cPtr uintptr) {
 //export onPlayerDisconnect
 func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -133,7 +133,7 @@ func onPlayerDisconnect(cPtr, cReasonPtr uintptr) {
 //export onEnterVehicle
 func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
@@ -148,7 +148,7 @@ func onEnterVehicle(cPtr, cvPtr uintptr, seat uint8) {
 //export onEnteringVehicle
 func onEnteringVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
@@ -163,7 +163,7 @@ func onEnteringVehicle(cPtr, cvPtr uintptr, seat uint8) {
 //export onConsoleCommand
 func onConsoleCommand(cNamePtr, cArgsPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var args []string
 	sArgs := w.PtrMarshalGoString(cArgsPtr)
 	_ = json.Unmarshal([]byte(sArgs), &args)
@@ -195,7 +195,7 @@ func onNetOwnerChange(objectType uint8, entityId, oldNetOwnerId, newNetOwnerId u
 //export onPlayerSpawn
 func onPlayerSpawn(cPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -206,7 +206,7 @@ func onPlayerSpawn(cPtr uintptr) {
 //export onInteriorChange
 func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -217,7 +217,7 @@ func onInteriorChange(cPtr uintptr, oldInterior, newInterior uint32) {
 //export onPlayerDimensionChange
 func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -228,7 +228,7 @@ func onPlayerDimensionChange(cPtr uintptr, oldDimension, newDimension int32) {
 //export onChangeVehicleSeat
 func onChangeVehicleSeat(cPtr, cvPtr uintptr, oldSeat, newSeat uint8) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
@@ -243,7 +243,7 @@ func onChangeVehicleSeat(cPtr, cvPtr uintptr, oldSeat, newSeat uint8) {
 //export onLeaveVehicle
 func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cPlayer != nil && cVehicle != nil {
@@ -258,7 +258,7 @@ func onLeaveVehicle(cPtr, cvPtr uintptr, seat uint8) {
 //export onEnterColshape
 func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var colshapeEntityType = colshape_entity_type.ColshapeEntityType(cType)
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
@@ -291,7 +291,7 @@ func onEnterColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 //export onLeaveColshape
 func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var colshapeEntityType = colshape_entity_type.ColshapeEntityType(cType)
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
@@ -322,14 +322,14 @@ func onLeaveColshape(cType uint8, cPtr, cvPtr, ccPtr uintptr) {
 //export onClientEvent
 func onClientEvent(cPlayerId uint32, cEventNamePtr, cEventArgsPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	alt_events.Triggers().TriggerOnClientEvent(models.GetPools().GetPlayer(cPlayerId), w.PtrMarshalGoString(cEventNamePtr), w.PtrMarshalGoString(cEventArgsPtr))
 }
 
 //export onPlayerDeath
 func onPlayerDeath(cPtr uintptr, isNil, objectType, objectId uint8, weaponHash uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -360,7 +360,7 @@ func onPlayerDeath(cPtr uintptr, isNil, objectType, objectId uint8, weaponHash u
 //export onPlayerDamage
 func onPlayerDamage(cPtr uintptr, isNil, objectType, objectId uint8, healthDamage, armourDamage uint16) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -391,7 +391,7 @@ func onPlayerDamage(cPtr uintptr, isNil, objectType, objectId uint8, healthDamag
 //export onPlayerWeaponChange
 func onPlayerWeaponChange(cPtr uintptr, oldWeaponHash, newWeaponHash uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -402,7 +402,7 @@ func onPlayerWeaponChange(cPtr uintptr, oldWeaponHash, newWeaponHash uint32) {
 //export onPlayerConnectDenied
 func onPlayerConnectDenied(cReason uint8, cNamePtr, cIpPtr uintptr, passwordHash uint64, isDebug bool, cBranchPtr uintptr, majorVersion, minorVersion uint16, cCdnUrlPtr uintptr, discordId int64) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	alt_events.Triggers().TriggerOnPlayerConnectDenied(denied_reason_type.DeniedReason(cReason), w.PtrMarshalGoString(cNamePtr), w.PtrMarshalGoString(cIpPtr),
 		passwordHash, isDebug, w.PtrMarshalGoString(cBranchPtr), majorVersion, minorVersion, w.PtrMarshalGoString(cCdnUrlPtr), discordId)
 }
@@ -410,7 +410,7 @@ func onPlayerConnectDenied(cReason uint8, cNamePtr, cIpPtr uintptr, passwordHash
 //export onPlayerHeal
 func onPlayerHeal(cPtr uintptr, oldHealth, newHealth, oldArmour, newArmour uint16) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -421,7 +421,7 @@ func onPlayerHeal(cPtr uintptr, oldHealth, newHealth, oldArmour, newArmour uint1
 //export onPlayerRequestControl
 func onPlayerRequestControl(cPtr uintptr, objectType, objectId uint8) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -450,7 +450,7 @@ func onPlayerRequestControl(cPtr uintptr, objectType, objectId uint8) {
 //export onVehicleAttach
 func onVehicleAttach(cvPtr, caPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	var cAttached = entities.ConvertCVehicle(caPtr)
 	if cVehicle != nil && cAttached != nil {
@@ -465,7 +465,7 @@ func onVehicleAttach(cvPtr, caPtr uintptr) {
 //export onVehicleDetach
 func onVehicleDetach(cvPtr, cdPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	var cDetached = entities.ConvertCVehicle(cdPtr)
 	if cVehicle != nil && cDetached != nil {
@@ -480,7 +480,7 @@ func onVehicleDetach(cvPtr, cdPtr uintptr) {
 //export onVehicleDestroy
 func onVehicleDestroy(cvPtr uintptr) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cVehicle != nil {
 		defer w.FreeVehicle(cvPtr)
@@ -491,7 +491,7 @@ func onVehicleDestroy(cvPtr uintptr) {
 //export onVehicleDamage
 func onVehicleDamage(cvPtr uintptr, isNil, objectType, objectId uint8, bodyHealthDamage, bodyAdditionalHealthDamage, engineHealthDamage, petrolTankHealthDamage, weapon uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cVehicle != nil {
 		if isNil != 0 {
@@ -522,7 +522,7 @@ func onVehicleDamage(cvPtr uintptr, isNil, objectType, objectId uint8, bodyHealt
 //export onVehicleHorn
 func onVehicleHorn(cvPtr, cPtr uintptr, state bool) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cVehicle != nil && cPlayer != nil {
@@ -535,7 +535,7 @@ func onVehicleHorn(cvPtr, cPtr uintptr, state bool) {
 //export onVehicleSiren
 func onVehicleSiren(cvPtr uintptr, state bool) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cVehicle = entities.ConvertCVehicle(cvPtr)
 	if cVehicle != nil {
 		defer w.FreeVehicle(cvPtr)
@@ -546,7 +546,7 @@ func onVehicleSiren(cvPtr uintptr, state bool) {
 //export onExplosion
 func onExplosion(cPtr uintptr, isNil, objectType, objectId uint8, x, y, z float32, explosionType int8, explosionFx uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPlayer(cPtr)
 	if cPlayer != nil {
 		defer w.FreePlayer(cPtr)
@@ -577,7 +577,7 @@ func onExplosion(cPtr uintptr, isNil, objectType, objectId uint8, x, y, z float3
 //export onPedDeath
 func onPedDeath(cPtr uintptr, isNil, objectType, objectId uint8, weaponHash uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPed = entities.ConvertCPed(cPtr)
 	if cPed != nil {
 		defer w.FreePed(cPtr)
@@ -608,7 +608,7 @@ func onPedDeath(cPtr uintptr, isNil, objectType, objectId uint8, weaponHash uint
 //export onGivePedScriptedTask
 func onGivePedScriptedTask(cPtr, cPedPtr uintptr, taskType uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPlayer = entities.ConvertCPed(cPtr)
 	var cPed = entities.ConvertCPed(cPedPtr)
 	if cPed != nil {
@@ -620,7 +620,7 @@ func onGivePedScriptedTask(cPtr, cPedPtr uintptr, taskType uint32) {
 //export onPedDamage
 func onPedDamage(cPtr uintptr, isNil, objectType, objectId uint8, healthDamage, armourDamage uint16, weaponHash uint32) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPed = entities.ConvertCPed(cPtr)
 	if cPed != nil {
 		defer w.FreePed(cPtr)
@@ -651,7 +651,7 @@ func onPedDamage(cPtr uintptr, isNil, objectType, objectId uint8, healthDamage, 
 //export onPedHeal
 func onPedHeal(cPtr uintptr, oldHealth, newHealth, oldArmour, newArmour uint16) {
 	defer panicRecover()
-	var w = lib.GetWarpper()
+	var w = lib.GetWrapper()
 	var cPed = entities.ConvertCPed(cPtr)
 	if cPed != nil {
 		defer w.FreePed(cPtr)
