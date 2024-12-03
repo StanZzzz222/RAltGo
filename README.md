@@ -22,6 +22,10 @@
 
 **<font color="red">Note: Since the author has other things to do, he can only try to spend as much time as possible to update. You can rest assured that I will keep updating in my free time</font>**
 
+`Note: Currently not available on Linux platform`
+
+
+
 **We know many people may be concerned about the performance of this module, so we've added benchmarks to the examples resources. The current code and results are below. We think it is great to be able to achieve the current data. Of course, we will look for opportunities to continue to optimize it in the future as we continue to update it.**
 
 **Note: If you have fully tested part of the benchmark performance on the sample resources, you can calculate the TPS based on the time taken and the number of processes in the benchmark performance to calculate whether it can support your server. After our many tests, we can calculate that the current TPS of this module can fully support: 0-1800 people on the server side. With continued optimization and development in the future, we hope that it can eventually support 0-4000 people. Server side. Of course, what we need now is to implement all server-side APIs**
