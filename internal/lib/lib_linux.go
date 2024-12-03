@@ -21,7 +21,7 @@ import (
 */
 
 type Wrapper struct {
-	syscall *syscall_warpper.SyscallWarrper
+	syscall *syscall_warpper.SyscallWrapper
 }
 
 var warpper *Wrapper
@@ -37,7 +37,7 @@ func onTick() {
 
 func init() {
 	warpper = &Wrapper{
-		syscall: &syscall_warpper.SyscallWarrper{},
+		syscall: &syscall_warpper.SyscallWrapper{},
 	}
 }
 

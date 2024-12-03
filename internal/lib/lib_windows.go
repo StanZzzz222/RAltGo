@@ -22,7 +22,7 @@ import (
 */
 
 type Wrapper struct {
-	windows *windows_wrapper.WindowsWarrper
+	windows *windows_wrapper.WindowsWrapper
 }
 
 var warpper *Wrapper
@@ -38,7 +38,7 @@ func onTick() {
 
 func init() {
 	warpper = &Wrapper{
-		windows: &windows_wrapper.WindowsWarrper{},
+		windows: &windows_wrapper.WindowsWrapper{},
 	}
 }
 
