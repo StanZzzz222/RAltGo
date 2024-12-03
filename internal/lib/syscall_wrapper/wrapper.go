@@ -21,7 +21,7 @@ import (
 /*
    Create by zyx
    Date Time: 2024/9/5
-   File: warpper.go
+   File: wrapper.go
 */
 
 var dllPath string
@@ -73,7 +73,7 @@ var getServerDataProc *syscall.Proc
 var getColshapeDataProc *syscall.Proc
 var getDataProc *syscall.Proc
 
-type SyscallWarrper struct{}
+type SyscallWrapper struct{}
 
 func init() {
 	if runtime.GOOS != "windows" {
@@ -137,7 +137,7 @@ func init() {
 	}
 }
 
-func (w *SyscallWarrper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
+func (w *SyscallWrapper) ModuleMain(altVersion, core, resourceName, resourceHandlers, moduleHandlers uintptr) bool {
 	ret, _, err := mainProc.Call(altVersion, core, resourceName, resourceHandlers, moduleHandlers)
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("load mounted failed: %v", err.Error())
@@ -146,7 +146,7 @@ func (w *SyscallWarrper) ModuleMain(altVersion, core, resourceName, resourceHand
 	return ret != 0
 }
 
-func (w *SyscallWarrper) SetVirtualEntityData(id uint32, virtualEntityDataType enums.VirtualEntityDataType, data int64, metaData uint64) {
+func (w *SyscallWrapper) SetVirtualEntityData(id uint32, virtualEntityDataType enums.VirtualEntityDataType, data int64, metaData uint64) {
 	_, _, err := setVirtualEntityDataProc.Call(uintptr(id), uintptr(virtualEntityDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set virtual entity data failed: %v", err.Error())
@@ -154,7 +154,7 @@ func (w *SyscallWarrper) SetVirtualEntityData(id uint32, virtualEntityDataType e
 	}
 }
 
-func (w *SyscallWarrper) SetPedData(id uint32, pedDataType enums.PedDataType, data int64) {
+func (w *SyscallWrapper) SetPedData(id uint32, pedDataType enums.PedDataType, data int64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set player data failed: %v", err.Error())
@@ -162,7 +162,7 @@ func (w *SyscallWarrper) SetPedData(id uint32, pedDataType enums.PedDataType, da
 	}
 }
 
-func (w *SyscallWarrper) SetCheckpointData(id uint32, checkpointDataType enums.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
+func (w *SyscallWrapper) SetCheckpointData(id uint32, checkpointDataType enums.CheckpointDataType, data int64, metaData uint64, otherData float32, r, g, b, a uint8) {
 	_, _, err := setCheckpointDataProc.Call(uintptr(id), uintptr(checkpointDataType), uintptr(data), uintptr(metaData), uintptr(math.Float32bits(otherData)), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set checkpoint data failed: %v", err.Error())
@@ -170,7 +170,7 @@ func (w *SyscallWarrper) SetCheckpointData(id uint32, checkpointDataType enums.C
 	}
 }
 
-func (w *SyscallWarrper) SetMarkerData(id uint32, markerDataType enums.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
+func (w *SyscallWrapper) SetMarkerData(id uint32, markerDataType enums.MarkerDataType, data int64, metaData uint64, r, g, b, a uint8) {
 	_, _, err := setMarkerDataProc.Call(uintptr(id), uintptr(markerDataType), uintptr(data), uintptr(metaData), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set marker data failed: %v", err.Error())
@@ -178,7 +178,7 @@ func (w *SyscallWarrper) SetMarkerData(id uint32, markerDataType enums.MarkerDat
 	}
 }
 
-func (w *SyscallWarrper) SetObjectData(id uint32, objectDataType enums.ObjectDataType, data int64, metaData uint64) {
+func (w *SyscallWrapper) SetObjectData(id uint32, objectDataType enums.ObjectDataType, data int64, metaData uint64) {
 	_, _, err := setObjectDataProc.Call(uintptr(id), uintptr(objectDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set object data failed: %v", err.Error())
@@ -186,7 +186,7 @@ func (w *SyscallWarrper) SetObjectData(id uint32, objectDataType enums.ObjectDat
 	}
 }
 
-func (w *SyscallWarrper) SetColshapeData(id uint32, colshapeDataType enums.ColshapeDataType, data int64, metaData uint64) {
+func (w *SyscallWrapper) SetColshapeData(id uint32, colshapeDataType enums.ColshapeDataType, data int64, metaData uint64) {
 	_, _, err := setColshapeDataProc.Call(uintptr(id), uintptr(colshapeDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set colshape data failed: %v", err.Error())
@@ -194,7 +194,7 @@ func (w *SyscallWarrper) SetColshapeData(id uint32, colshapeDataType enums.Colsh
 	}
 }
 
-func (w *SyscallWarrper) Emit(id uint32, eventName, data string) {
+func (w *SyscallWrapper) Emit(id uint32, eventName, data string) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
 	dataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(data)
 	defer func() {
@@ -208,7 +208,7 @@ func (w *SyscallWarrper) Emit(id uint32, eventName, data string) {
 	}
 }
 
-func (w *SyscallWarrper) EmitAllPlayer(eventName, data string) {
+func (w *SyscallWrapper) EmitAllPlayer(eventName, data string) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
 	dataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(data)
 	defer func() {
@@ -222,7 +222,7 @@ func (w *SyscallWarrper) EmitAllPlayer(eventName, data string) {
 	}
 }
 
-func (w *SyscallWarrper) OnClientEvent(eventName string, eventArgsDump string) {
+func (w *SyscallWrapper) OnClientEvent(eventName string, eventArgsDump string) {
 	eventNamePtr, freeEventNameCStringFunc := w.GoStringMarshalPtr(eventName)
 	argsDumpDataPtr, freeArgsDumpDataCStringFunc := w.GoStringMarshalPtr(eventArgsDump)
 	defer func() {
@@ -236,7 +236,7 @@ func (w *SyscallWarrper) OnClientEvent(eventName string, eventArgsDump string) {
 	}
 }
 
-func (w *SyscallWarrper) SetServerData(setType int32, data int64, strData string) (uintptr, func()) {
+func (w *SyscallWrapper) SetServerData(setType int32, data int64, strData string) (uintptr, func()) {
 	var strDataPtr uintptr
 	var freeDataCStringFunc func()
 	if len(strData) >= 0 {
@@ -256,7 +256,7 @@ func (w *SyscallWarrper) SetServerData(setType int32, data int64, strData string
 	return ret, freeDataResultFunc
 }
 
-func (w *SyscallWarrper) GetServerData(getType int32, data uint32) (uintptr, func()) {
+func (w *SyscallWrapper) GetServerData(getType int32, data uint32) (uintptr, func()) {
 	ret, _, err := getServerDataProc.Call(uintptr(getType), uintptr(data))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("get server data failed: %v", err.Error())
@@ -270,7 +270,7 @@ func (w *SyscallWarrper) GetServerData(getType int32, data uint32) (uintptr, fun
 	return ret, freeDataResultFunc
 }
 
-func (w *SyscallWarrper) GetColshapeData(id uint32, objectType enums.ObjectType, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
+func (w *SyscallWrapper) GetColshapeData(id uint32, objectType enums.ObjectType, dataType enums.ColshapeDataType, entityType enums.ObjectType, data int64, metaData uint64) (uintptr, func()) {
 	ret, _, err := getColshapeDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(entityType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("get colshape data failed: %v", err.Error())
@@ -284,7 +284,7 @@ func (w *SyscallWarrper) GetColshapeData(id uint32, objectType enums.ObjectType,
 	return ret, freeDataResultFunc
 }
 
-func (w *SyscallWarrper) GetData(id uint32, objectType enums.ObjectType, dataType uint8) (uintptr, func()) {
+func (w *SyscallWrapper) GetData(id uint32, objectType enums.ObjectType, dataType uint8) (uintptr, func()) {
 	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("get data failed: %v", err.Error())
@@ -298,7 +298,7 @@ func (w *SyscallWarrper) GetData(id uint32, objectType enums.ObjectType, dataTyp
 	return ret, freeDataResultFunc
 }
 
-func (w *SyscallWarrper) GetMetaData(id uint32, objectType enums.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
+func (w *SyscallWrapper) GetMetaData(id uint32, objectType enums.ObjectType, dataType uint8, metaData int64) (uintptr, func()) {
 	ret, _, err := getDataProc.Call(uintptr(id), uintptr(objectType), uintptr(dataType), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("get meta data failed: %v", err.Error())
@@ -312,7 +312,7 @@ func (w *SyscallWarrper) GetMetaData(id uint32, objectType enums.ObjectType, dat
 	return ret, freeDataResultFunc
 }
 
-func (w *SyscallWarrper) SetPedMetaData(id uint32, pedDataType enums.PedDataType, data int64, metaData uint64) {
+func (w *SyscallWrapper) SetPedMetaData(id uint32, pedDataType enums.PedDataType, data int64, metaData uint64) {
 	_, _, err := setPedDataProc.Call(uintptr(id), uintptr(pedDataType), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set player data failed: %v", err.Error())
@@ -320,7 +320,7 @@ func (w *SyscallWarrper) SetPedMetaData(id uint32, pedDataType enums.PedDataType
 	}
 }
 
-func (w *SyscallWarrper) SetBlipData(id uint32, blipDataType enums.BlipDataType, data int64) {
+func (w *SyscallWrapper) SetBlipData(id uint32, blipDataType enums.BlipDataType, data int64) {
 	_, _, err := setBlipDataProc.Call(uintptr(id), uintptr(blipDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set blip data failed: %v", err.Error())
@@ -328,7 +328,7 @@ func (w *SyscallWarrper) SetBlipData(id uint32, blipDataType enums.BlipDataType,
 	}
 }
 
-func (w *SyscallWarrper) SetBlipMetaData(id uint32, blipDataType enums.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
+func (w *SyscallWrapper) SetBlipMetaData(id uint32, blipDataType enums.BlipDataType, data int64, metaData uint64, strData string, r, g, b, a uint8) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -342,7 +342,7 @@ func (w *SyscallWarrper) SetBlipMetaData(id uint32, blipDataType enums.BlipDataT
 	}
 }
 
-func (w *SyscallWarrper) SetVehicleData(id uint32, vehicleDataType enums.VehicleDataType, data int64) {
+func (w *SyscallWrapper) SetVehicleData(id uint32, vehicleDataType enums.VehicleDataType, data int64) {
 	_, _, err := setVehicleDataProc.Call(uintptr(id), uintptr(vehicleDataType), uintptr(data), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set vehicle_hash data failed: %v", err.Error())
@@ -350,7 +350,7 @@ func (w *SyscallWarrper) SetVehicleData(id uint32, vehicleDataType enums.Vehicle
 	}
 }
 
-func (w *SyscallWarrper) SetVehicleMetaData(id uint32, vehicleDataType enums.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
+func (w *SyscallWrapper) SetVehicleMetaData(id uint32, vehicleDataType enums.VehicleDataType, data int64, metaData uint64, strData string, l, r, t, b uint8) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -364,7 +364,7 @@ func (w *SyscallWarrper) SetVehicleMetaData(id uint32, vehicleDataType enums.Veh
 	}
 }
 
-func (w *SyscallWarrper) SetPlayerMetaData(id uint32, playerDataType enums.PlayerDataType, data int64, metaData uint64) {
+func (w *SyscallWrapper) SetPlayerMetaData(id uint32, playerDataType enums.PlayerDataType, data int64, metaData uint64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set player data failed: %v", err.Error())
@@ -372,7 +372,7 @@ func (w *SyscallWarrper) SetPlayerMetaData(id uint32, playerDataType enums.Playe
 	}
 }
 
-func (w *SyscallWarrper) SetPlayerMetaModelData(id uint32, playerDataType enums.PlayerDataType, model uint32, data int64, metaData uint64) {
+func (w *SyscallWrapper) SetPlayerMetaModelData(id uint32, playerDataType enums.PlayerDataType, model uint32, data int64, metaData uint64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(model), uintptr(data), uintptr(metaData))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set player data failed: %v", err.Error())
@@ -380,7 +380,7 @@ func (w *SyscallWarrper) SetPlayerMetaModelData(id uint32, playerDataType enums.
 	}
 }
 
-func (w *SyscallWarrper) SetPlayerHeadData(id uint32, playerDataType enums.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
+func (w *SyscallWrapper) SetPlayerHeadData(id uint32, playerDataType enums.PlayerDataType, shape1, shape2, shape3, skin1, skin2, skin3 uint32, shapeMix, skinMix, thirdMix float32) {
 	_, _, err := setPlayerHeadDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(shape1), uintptr(shape2), uintptr(shape3), uintptr(skin1), uintptr(skin2), uintptr(skin3), uintptr(math.Float32bits(shapeMix)), uintptr(math.Float32bits(skinMix)), uintptr(math.Float32bits(thirdMix)))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set player head data failed: %v", err.Error())
@@ -388,7 +388,7 @@ func (w *SyscallWarrper) SetPlayerHeadData(id uint32, playerDataType enums.Playe
 	}
 }
 
-func (w *SyscallWarrper) GetEntityData(id uint32, dataType, networkDataType uint8) (uintptr, func()) {
+func (w *SyscallWrapper) GetEntityData(id uint32, dataType, networkDataType uint8) (uintptr, func()) {
 	ret, _, err := getEntityDataProc.Call(uintptr(id), uintptr(dataType), uintptr(networkDataType))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("get entity data failed: %v", err.Error())
@@ -402,7 +402,7 @@ func (w *SyscallWarrper) GetEntityData(id uint32, dataType, networkDataType uint
 	return ret, freeDataResultFunc
 }
 
-func (w *SyscallWarrper) SetEntityData(id uint32, dataType, entityDataType, entityType uint8, data uint64, metaData uint32, attachData string) {
+func (w *SyscallWrapper) SetEntityData(id uint32, dataType, entityDataType, entityType uint8, data uint64, metaData uint32, attachData string) {
 	attachDataPtr, freeAttachDataCStringFunc := w.GoStringMarshalPtr(attachData)
 	defer freeAttachDataCStringFunc()
 	_, _, err := setEntityDataProc.Call(uintptr(id), uintptr(dataType), uintptr(entityDataType), uintptr(entityType), uintptr(data), uintptr(metaData), attachDataPtr)
@@ -412,7 +412,7 @@ func (w *SyscallWarrper) SetEntityData(id uint32, dataType, entityDataType, enti
 	}
 }
 
-func (w *SyscallWarrper) SetVoiceChannelData(id uint32, voiceChannelDataType uint8, data int64) {
+func (w *SyscallWrapper) SetVoiceChannelData(id uint32, voiceChannelDataType uint8, data int64) {
 	_, _, err := setVoiceChannelDataProc.Call(uintptr(id), uintptr(voiceChannelDataType), uintptr(data))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set voice channel data failed: %v", err.Error())
@@ -420,7 +420,7 @@ func (w *SyscallWarrper) SetVoiceChannelData(id uint32, voiceChannelDataType uin
 	}
 }
 
-func (w *SyscallWarrper) SetNetworkData(id uint32, dataType, networkDataType uint8, keysData, valuesData string) {
+func (w *SyscallWrapper) SetNetworkData(id uint32, dataType, networkDataType uint8, keysData, valuesData string) {
 	keysDataPtr, freeDataCStringFunc := w.GoStringMarshalPtr(keysData)
 	valuesDataPtr, freeValuesDataCStringFunc := w.GoStringMarshalPtr(valuesData)
 	defer func() {
@@ -434,7 +434,7 @@ func (w *SyscallWarrper) SetNetworkData(id uint32, dataType, networkDataType uin
 	}
 }
 
-func (w *SyscallWarrper) SetPlayerData(id uint32, playerDataType enums.PlayerDataType, data int64) {
+func (w *SyscallWrapper) SetPlayerData(id uint32, playerDataType enums.PlayerDataType, data int64) {
 	_, _, err := setPlayerDataProc.Call(uintptr(id), uintptr(playerDataType), uintptr(0), uintptr(data), uintptr(0))
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("set player data failed: %v", err.Error())
@@ -442,7 +442,7 @@ func (w *SyscallWarrper) SetPlayerData(id uint32, playerDataType enums.PlayerDat
 	}
 }
 
-func (w *SyscallWarrper) CreateVoiceChannel(spatial uint8, maxDistance float32) (uintptr, func()) {
+func (w *SyscallWrapper) CreateVoiceChannel(spatial uint8, maxDistance float32) (uintptr, func()) {
 	ret, _, err := createVoiceChannelProc.Call(uintptr(spatial), uintptr(math.Float32bits(maxDistance)))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create voice channel failed: %v", err.Error())
@@ -456,7 +456,7 @@ func (w *SyscallWarrper) CreateVoiceChannel(spatial uint8, maxDistance float32) 
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateVirtualEntityGroup(maxEntitiesInStream uint32) (uintptr, func()) {
+func (w *SyscallWrapper) CreateVirtualEntityGroup(maxEntitiesInStream uint32) (uintptr, func()) {
 	ret, _, err := createVirtualEntityGroupProc.Call(uintptr(maxEntitiesInStream))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create virtual entity group failed: %v", err.Error())
@@ -470,7 +470,7 @@ func (w *SyscallWarrper) CreateVirtualEntityGroup(maxEntitiesInStream uint32) (u
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateVirtualEntity(groupId uint32, posData, metaData uint64, streamingDistance uint32) (uintptr, func()) {
+func (w *SyscallWrapper) CreateVirtualEntity(groupId uint32, posData, metaData uint64, streamingDistance uint32) (uintptr, func()) {
 	ret, _, err := createVirtualEntityProc.Call(uintptr(groupId), uintptr(posData), uintptr(metaData), uintptr(streamingDistance))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create virtual entity group failed: %v", err.Error())
@@ -484,7 +484,7 @@ func (w *SyscallWarrper) CreateVirtualEntity(groupId uint32, posData, metaData u
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {
+func (w *SyscallWrapper) CreateCheckpoint(checkPointType uint8, posData, posMetaData uint64, radius, height float32, r, g, b, a uint8, streamingDistance uint32) (uintptr, func()) {
 	ret, _, err := createCheckpointProc.Call(uintptr(checkPointType), uintptr(posData), uintptr(posMetaData), uintptr(math.Float32bits(radius)), uintptr(math.Float32bits(height)), uintptr(r), uintptr(g), uintptr(b), uintptr(a), uintptr(streamingDistance))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create checkpoint failed: %v", err.Error())
@@ -498,7 +498,7 @@ func (w *SyscallWarrper) CreateCheckpoint(checkPointType uint8, posData, posMeta
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateMarker(markerType uint8, posData, posMetaData uint64, r, g, b, a uint8) (uintptr, func()) {
+func (w *SyscallWrapper) CreateMarker(markerType uint8, posData, posMetaData uint64, r, g, b, a uint8) (uintptr, func()) {
 	ret, _, err := createMarkerProc.Call(uintptr(markerType), uintptr(posData), uintptr(posMetaData), uintptr(r), uintptr(g), uintptr(b), uintptr(a))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create marker failed: %v", err.Error())
@@ -512,7 +512,7 @@ func (w *SyscallWarrper) CreateMarker(markerType uint8, posData, posMetaData uin
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateObject(model uint32, posData, posMetaData, rotData, rotMetaData uint64) (uintptr, func()) {
+func (w *SyscallWrapper) CreateObject(model uint32, posData, posMetaData, rotData, rotMetaData uint64) (uintptr, func()) {
 	ret, _, err := createObjectProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create object failed: %v", err.Error())
@@ -526,7 +526,7 @@ func (w *SyscallWarrper) CreateObject(model uint32, posData, posMetaData, rotDat
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
+func (w *SyscallWrapper) CreateVehicle(model uint32, posData, posMetaData, rotData, rotMetaData uint64, numberplate uintptr, primaryColor, secondColor uint8) (uintptr, func()) {
 	ret, _, err := createVehicleProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), numberplate, uintptr(primaryColor), uintptr(secondColor))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create vehicle failed: %v", err.Error())
@@ -540,7 +540,7 @@ func (w *SyscallWarrper) CreateVehicle(model uint32, posData, posMetaData, rotDa
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreatePed(model uint32, posData, posMetaData, rotData, rotMetaData uint64, streamingDistance uint32) (uintptr, func()) {
+func (w *SyscallWrapper) CreatePed(model uint32, posData, posMetaData, rotData, rotMetaData uint64, streamingDistance uint32) (uintptr, func()) {
 	ret, _, err := createPedProc.Call(uintptr(model), uintptr(posData), uintptr(posMetaData), uintptr(rotData), uintptr(rotMetaData), uintptr(streamingDistance))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create vehicle_hash failed: %v", err.Error())
@@ -554,7 +554,7 @@ func (w *SyscallWarrper) CreatePed(model uint32, posData, posMetaData, rotData, 
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, strData string, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
+func (w *SyscallWrapper) CreateBlip(blipType blip_type.BlipType, spriteId, color uint32, strData string, posData, posMetaData uint64, width, height, radius float32) (uintptr, func()) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	if len(strData) > 0 {
@@ -574,7 +574,7 @@ func (w *SyscallWarrper) CreateBlip(blipType blip_type.BlipType, spriteId, color
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreateColshape(colshapeType colshape_type.ColshapeType, posData, posMetaData, secondPosData, secondPosMetaData uint64, radius, height float32) (uintptr, func()) {
+func (w *SyscallWrapper) CreateColshape(colshapeType colshape_type.ColshapeType, posData, posMetaData, secondPosData, secondPosMetaData uint64, radius, height float32) (uintptr, func()) {
 	ret, _, err := createColshapeProc.Call(uintptr(colshapeType), uintptr(posData), uintptr(posMetaData), uintptr(secondPosData), uintptr(secondPosMetaData), uintptr(math.Float32bits(radius)), uintptr(math.Float32bits(height)))
 	if err != nil && err.Error() != "The operation completed successfully." && err.Error() != "The system could not find the environment option that was entered." {
 		logger.Logger().LogErrorf("create colshape failed: %v", err.Error())
@@ -588,7 +588,7 @@ func (w *SyscallWarrper) CreateColshape(colshapeType colshape_type.ColshapeType,
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) CreatePolygonColshape(colshapeType colshape_type.ColshapeType, minZ, maxZ float32, pointsData []byte) (uintptr, func()) {
+func (w *SyscallWrapper) CreatePolygonColshape(colshapeType colshape_type.ColshapeType, minZ, maxZ float32, pointsData []byte) (uintptr, func()) {
 	var freeCStringFunc func()
 	var strPtr = uintptr(0)
 	var strData = string(pointsData)
@@ -609,7 +609,7 @@ func (w *SyscallWarrper) CreatePolygonColshape(colshapeType colshape_type.Colsha
 	return ret, freePtrFunc
 }
 
-func (w *SyscallWarrper) Free(ptr uintptr) {
+func (w *SyscallWrapper) Free(ptr uintptr) {
 	_, _, err := freeProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free failed: %v", err.Error())
@@ -617,7 +617,7 @@ func (w *SyscallWarrper) Free(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreePlayer(ptr uintptr) {
+func (w *SyscallWrapper) FreePlayer(ptr uintptr) {
 	_, _, err := freePlayerProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free player failed: %v", err.Error())
@@ -625,7 +625,7 @@ func (w *SyscallWarrper) FreePlayer(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeVehicle(ptr uintptr) {
+func (w *SyscallWrapper) FreeVehicle(ptr uintptr) {
 	_, _, err := freeVehicleProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free vehicle_hash failed: %v", err.Error())
@@ -633,7 +633,7 @@ func (w *SyscallWarrper) FreeVehicle(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeBlip(ptr uintptr) {
+func (w *SyscallWrapper) FreeBlip(ptr uintptr) {
 	_, _, err := freeBlipProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free blip failed: %v", err.Error())
@@ -641,7 +641,7 @@ func (w *SyscallWarrper) FreeBlip(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreePed(ptr uintptr) {
+func (w *SyscallWrapper) FreePed(ptr uintptr) {
 	_, _, err := freePedProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free ped failed: %v", err.Error())
@@ -649,7 +649,7 @@ func (w *SyscallWarrper) FreePed(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeColshape(ptr uintptr) {
+func (w *SyscallWrapper) FreeColshape(ptr uintptr) {
 	_, _, err := freeColshapeProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free colshape failed: %v", err.Error())
@@ -657,7 +657,7 @@ func (w *SyscallWarrper) FreeColshape(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeCheckpoint(ptr uintptr) {
+func (w *SyscallWrapper) FreeCheckpoint(ptr uintptr) {
 	_, _, err := freeCheckpointProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free checkpoint failed: %v", err.Error())
@@ -665,7 +665,7 @@ func (w *SyscallWarrper) FreeCheckpoint(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeMarker(ptr uintptr) {
+func (w *SyscallWrapper) FreeMarker(ptr uintptr) {
 	_, _, err := freeMarkerProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free marker failed: %v", err.Error())
@@ -673,7 +673,7 @@ func (w *SyscallWarrper) FreeMarker(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeObject(ptr uintptr) {
+func (w *SyscallWrapper) FreeObject(ptr uintptr) {
 	_, _, err := freeObjectProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free object failed: %v", err.Error())
@@ -681,7 +681,7 @@ func (w *SyscallWarrper) FreeObject(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeVoiceChannel(ptr uintptr) {
+func (w *SyscallWrapper) FreeVoiceChannel(ptr uintptr) {
 	_, _, err := freeVoiceChannelProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free voice channel failed: %v", err.Error())
@@ -689,7 +689,7 @@ func (w *SyscallWarrper) FreeVoiceChannel(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeVirtualEntityGroup(ptr uintptr) {
+func (w *SyscallWrapper) FreeVirtualEntityGroup(ptr uintptr) {
 	_, _, err := freeVirtualEntityGroupProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free virtual entity group failed: %v", err.Error())
@@ -697,7 +697,7 @@ func (w *SyscallWarrper) FreeVirtualEntityGroup(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeVirtualEntity(ptr uintptr) {
+func (w *SyscallWrapper) FreeVirtualEntity(ptr uintptr) {
 	_, _, err := freeVirtualEntityProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free virtual entity failed: %v", err.Error())
@@ -705,7 +705,7 @@ func (w *SyscallWarrper) FreeVirtualEntity(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) FreeDataResult(ptr uintptr) {
+func (w *SyscallWrapper) FreeDataResult(ptr uintptr) {
 	_, _, err := freeDataResultProc.Call(ptr)
 	if err != nil && err.Error() != "The operation completed successfully." {
 		logger.Logger().LogErrorf("free data result failed: %v", err.Error())
@@ -713,12 +713,12 @@ func (w *SyscallWarrper) FreeDataResult(ptr uintptr) {
 	}
 }
 
-func (w *SyscallWarrper) GoStringMarshalPtr(s string) (uintptr, func()) {
+func (w *SyscallWrapper) GoStringMarshalPtr(s string) (uintptr, func()) {
 	cStr := C.CString(s)
 	return uintptr(unsafe.Pointer(cStr)), func() { C.free(unsafe.Pointer(cStr)) }
 }
 
-func (w *SyscallWarrper) PtrMarshalGoString(ret uintptr) string {
+func (w *SyscallWrapper) PtrMarshalGoString(ret uintptr) string {
 	cStr := (*C.char)(unsafe.Pointer(ret))
 	defer w.Free(ret)
 	return C.GoString(cStr)
