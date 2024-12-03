@@ -19,7 +19,7 @@ type IObject struct {
 	model            uint32
 	alpha            uint8
 	textureVariation uint8
-	warpper          *lib.Warpper
+	warpper          *lib.Wrapper
 	*BaseObject
 	*NetworkData
 	*EntityData

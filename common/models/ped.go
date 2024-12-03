@@ -23,7 +23,7 @@ type IPed struct {
 	armour        uint16
 	maxHealth     uint16
 	currentWeapon weapon_hash.ModelHash
-	warpper       *lib.Warpper
+	warpper       *lib.Wrapper
 	*BaseObject
 	*NetworkData
 	*EntityData

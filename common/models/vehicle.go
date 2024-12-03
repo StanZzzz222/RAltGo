@@ -56,7 +56,7 @@ type IVehicle struct {
 	primaryColorRgb     *Rgba
 	secondColorRgb      *Rgba
 	neonColor           *Rgba
-	warpper             *lib.Warpper
+	warpper             *lib.Wrapper
 	*BaseObject
 	*NetworkData
 	*EntityData

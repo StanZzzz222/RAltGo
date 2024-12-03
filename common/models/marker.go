@@ -28,7 +28,7 @@ type IMarker struct {
 	dir        *Vector3
 	scale      *Vector3
 	color      *Rgba
-	warpper    *lib.Warpper
+	warpper    *lib.Wrapper
 	*NetworkData
 }
 

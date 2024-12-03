@@ -19,7 +19,7 @@ type SyncId uint16
 type EntityData struct {
 	entityId         uint32
 	entityObjectType enums.ObjectType
-	warpper          *lib.Warpper
+	warpper          *lib.Wrapper
 }
 
 func NewEntityData(id uint32, objectType enums.ObjectType) *EntityData {

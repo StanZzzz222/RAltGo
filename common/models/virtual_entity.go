@@ -19,7 +19,7 @@ type IVirtualEntity struct {
 	position          *Vector3
 	visible           bool
 	dimension         int32
-	warpper           *lib.Warpper
+	warpper           *lib.Wrapper
 	*NetworkData
 }
 

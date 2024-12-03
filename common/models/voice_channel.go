@@ -18,7 +18,7 @@ type IVoiceChannel struct {
 	spatial     bool
 	maxDistance float32
 	players     *sync.Map
-	warpper     *lib.Warpper
+	warpper     *lib.Wrapper
 	*NetworkData
 }
 

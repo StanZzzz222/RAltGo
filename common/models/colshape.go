@@ -24,7 +24,7 @@ type IColshape struct {
 	playersOnly  bool
 	dimension    int32
 	datas        *sync.Map
-	warpper      *lib.Warpper
+	warpper      *lib.Wrapper
 	*NetworkData
 }
 

@@ -59,7 +59,7 @@ type IBlip struct {
 	position                 *Vector3
 	scale                    *Vector3
 	players                  *sync.Map
-	warpper                  *lib.Warpper
+	warpper                  *lib.Wrapper
 	*NetworkData
 }
 

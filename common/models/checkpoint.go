@@ -26,7 +26,7 @@ type ICheckpoint struct {
 	nextPosition   *Vector3
 	color          *Rgba
 	iconColor      *Rgba
-	warpper        *lib.Warpper
+	warpper        *lib.Wrapper
 	*NetworkData
 	*EntityData
 }

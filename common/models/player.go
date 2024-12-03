@@ -44,7 +44,7 @@ type IPlayer struct {
 	currentWeapon      weapon_hash.ModelHash
 	invincible         bool
 	time               time.Time
-	warpper            *lib.Warpper
+	warpper            *lib.Wrapper
 	*BaseObject
 	*NetworkData
 	*EntityData
