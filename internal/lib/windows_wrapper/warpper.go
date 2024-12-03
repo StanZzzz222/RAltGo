@@ -1,6 +1,6 @@
 //go:build windows
 
-package windows_warpper
+package windows_wrapper
 
 // #include <stdlib.h>
 import "C"
